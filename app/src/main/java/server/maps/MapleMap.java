@@ -87,6 +87,10 @@ public class MapleMap {
     // The length comes out of the attacker's own packet, so it is not something to trust outright.
     private static final short MAX_DEATH_DELAY = 1000;
 
+    // How far inside the end of a platform a drop is held when the fan-out throws it past that end.
+    // An item resting with its point right on the edge hangs half of itself over the gap next to it.
+    private static final int PLATFORM_EDGE_MARGIN = 8;
+
     private final Map<Integer, MapObject> mapobjects = new LinkedHashMap<>();
     private final Set<Integer> selfDestructives = new LinkedHashSet<>();
     private final Collection<SpawnPoint> monsterSpawn = Collections.synchronizedList(new LinkedList<>());
@@ -103,6 +107,9 @@ public class MapleMap {
     private final List<Runnable> statUpdateRunnables = new ArrayList(50);
     private final List<Rect> areas = new ArrayList<>();
     private FootholdTree footholds = null;
+    // Every foothold of this map by its id, so the chain of footholds joined end to end along a
+    // platform can be followed by the prev/next ids the map data gives.
+    private Map<Integer, Foothold> footholdsById = Collections.emptyMap();
     private Pair<Integer, Integer> xLimits;  // caches the min and max x's with available footholds
     private final Rect mapArea = new Rect();
     private final int mapid;
@@ -481,23 +488,93 @@ public class MapleMap {
         removeMapObject(obj.getObjectId());
     }
 
+    // The height of a foothold's surface at a given x. Foothold.calculateFooting rounds the slope
+    // to a whole number, which flattens every ramp shorter than one pixel per pixel, so the
+    // surface is worked out from the two ends instead.
+    private static int footingY(final Foothold fh, final int x) {
+        if (fh.isWall() || fh.getY1() == fh.getY2()) {
+            return fh.getY1();
+        }
+
+        double s1 = Math.abs(fh.getY2() - fh.getY1());
+        double s2 = Math.abs(fh.getX2() - fh.getX1());
+        double s5 = Math.cos(Math.atan(s2 / s1)) * (Math.abs(x - fh.getX1()) / Math.cos(Math.atan(s1 / s2)));
+
+        if (fh.getY2() < fh.getY1()) {
+            return fh.getY1() - (int) s5;
+        }
+
+        return fh.getY1() + (int) s5;
+    }
+
     private Point calcPointBelow(Point initial) {
         Foothold fh = footholds.findBelow(initial);
         if (fh == null) {
             return null;
         }
-        int dropY = fh.getY1();
-        if (!fh.isWall() && fh.getY1() != fh.getY2()) {
-            double s1 = Math.abs(fh.getY2() - fh.getY1());
-            double s2 = Math.abs(fh.getX2() - fh.getX1());
-            double s5 = Math.cos(Math.atan(s2 / s1)) * (Math.abs(initial.x - fh.getX1()) / Math.cos(Math.atan(s1 / s2)));
-            if (fh.getY2() < fh.getY1()) {
-                dropY = fh.getY1() - (int) s5;
-            } else {
-                dropY = fh.getY1() + (int) s5;
+
+        return new Point(initial.x, footingY(fh, initial.x));
+    }
+
+    private Foothold footholdById(final int id) {
+        return id == 0 ? null : footholdsById.get(id);
+    }
+
+    /**
+     * Keeps a drop on the stretch of platform the dropper was standing on. The fan-out measures
+     * sideways from the dropper and the ground under the spot it reaches is whichever platform
+     * happens to cover that x - the search runs through every layer - so an item thrown past the
+     * end of the dropper's own platform comes to rest in a place nothing can be walked to. Reading
+     * the resting point back off the dropper's own platform also settles the argument over where
+     * the item lies: every client is shown and every pickup is checked against this one position.
+     */
+    private Point keepOnPlatform(final Point dropper, final Point dropPos) {
+        // A standing point is a whole pixel while a slope puts the surface a fraction off it, so
+        // the platform someone stands on is searched for from just above their feet.
+        Foothold start = footholds == null ? null : footholds.findBelow(new Point(dropper.x, dropper.y - 2));
+
+        if (start == null) {
+            return dropPos;
+        }
+
+        List<Foothold> platform = new LinkedList<>();
+        platform.add(start);
+        int left = start.getX1();
+        int right = start.getX2();
+
+        // Follow the links on both sides as long as each reaches further out than the last, which
+        // ends the walk at the last platform of the stretch - and at a wall, whose two horizontal
+        // components are the same place.
+        for (Foothold fh = footholdById(start.getPrev()); fh != null && fh.getX1() < left; fh = footholdById(fh.getPrev())) {
+            left = fh.getX1();
+
+            if (!fh.isWall()) {
+                platform.add(fh);
             }
         }
-        return new Point(initial.x, dropY);
+
+        for (Foothold fh = footholdById(start.getNext()); fh != null && fh.getX2() > right; fh = footholdById(fh.getNext())) {
+            right = fh.getX2();
+
+            if (!fh.isWall()) {
+                platform.add(fh);
+            }
+        }
+
+        // Shorter than twice the margin and the platform has no room to be kept off the edge of,
+        // so the edge itself is all that is left to hold the item inside.
+        int margin = Math.min(PLATFORM_EDGE_MARGIN, (right - left) / 2);
+        int x = Math.min(Math.max(dropPos.x, left + margin), right - margin);
+        int y = dropPos.y;
+
+        for (Foothold fh : platform) {
+            if (fh.getX1() <= x && fh.getX2() >= x) {
+                y = footingY(fh, x);
+                break;
+            }
+        }
+
+        return new Point(x, y);
     }
 
     public void generateMapDropRangeCache() {
@@ -565,6 +642,14 @@ public class MapleMap {
         }
 
         return ret;
+    }
+
+    /**
+     * As calcDropPos, but with the resting point kept on the stretch of platform the dropper stood
+     * on - which is where the player who killed it is standing to pick the item up.
+     */
+    public Point calcDropPos(final Point initial, final Point fallback, final Point dropper) {
+        return keepOnPlatform(dropper, calcDropPos(initial, fallback));
     }
 
     public boolean canDeployDoor(Point pos) {
@@ -679,7 +764,7 @@ public class MapleMap {
                             mesos = Integer.MAX_VALUE;
                         }
 
-                        spawnMesoDrop(mesos, calcDropPos(pos, mob.getPosition()), mob, chr, false, droptype,
+                        spawnMesoDrop(mesos, calcDropPos(pos, mob.getPosition(), mob.getPosition()), mob, chr, false, droptype,
                                 delay);
                     }
                 } else {
@@ -688,7 +773,7 @@ public class MapleMap {
                     } else {
                         idrop = new Item(de.itemId, (short) 0, (short) (de.Maximum != 1 ? Randomizer.nextInt(de.Maximum - de.Minimum) + de.Minimum : 1));
                     }
-                    spawnDrop(idrop, calcDropPos(pos, mob.getPosition()), mob, chr, droptype, de.questid, delay);
+                    spawnDrop(idrop, calcDropPos(pos, mob.getPosition(), mob.getPosition()), mob, chr, droptype, de.questid, delay);
                 }
                 index++;
             }
@@ -717,7 +802,7 @@ public class MapleMap {
                     } else {
                         idrop = new Item(de.itemId, (short) 0, (short) (de.Maximum != 1 ? Randomizer.nextInt(de.Maximum - de.Minimum) + de.Minimum : 1));
                     }
-                    spawnDrop(idrop, calcDropPos(pos, mob.getPosition()), mob, chr, droptype, de.questid, delay);
+                    spawnDrop(idrop, calcDropPos(pos, mob.getPosition(), mob.getPosition()), mob, chr, droptype, de.questid, delay);
                     d++;
                 }
             }
@@ -3020,8 +3105,13 @@ public class MapleMap {
         return areas.get(index);
     }
 
-    public void setFootholds(FootholdTree footholds) {
+    public void setFootholds(final FootholdTree footholds, final List<Foothold> allFootholds) {
         this.footholds = footholds;
+
+        footholdsById = new HashMap<>(allFootholds.size() * 2);
+        for (final Foothold fh : allFootholds) {
+            footholdsById.put(fh.getId(), fh);
+        }
     }
 
     public FootholdTree getFootholds() {
@@ -4408,6 +4498,7 @@ public class MapleMap {
 
         event = null;
         footholds = null;
+        footholdsById = Collections.emptyMap();
         portals.clear();
         mapEffect = null;
 

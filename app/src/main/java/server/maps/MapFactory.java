@@ -248,7 +248,7 @@ public class MapFactory {
         for (Foothold fh : allFootholds) {
             fTree.insert(fh);
         }
-        map.setFootholds(fTree);
+        map.setFootholds(fTree, allFootholds);
         if (mapData.getChildByPath("area") != null) {
             for (Data area : mapData.getChildByPath("area")) {
                 int x1 = DataTool.getInt(area.getChildByPath("x1"));

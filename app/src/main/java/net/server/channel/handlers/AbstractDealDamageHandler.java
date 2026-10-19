@@ -58,6 +58,8 @@ public abstract class AbstractDealDamageHandler extends AbstractPacketHandler {
 
     private static final int EXPLODED_MESO_SPREAD_DELAY = 100;
     private static final int EXPLODED_MESO_MAX_DELAY = 1000;
+    private static final int REPORTED_SHIFT_X = 700;
+    private static final int REPORTED_SHIFT_Y = 500;
 
     public static class AttackInfo {
 
@@ -93,8 +95,27 @@ public abstract class AbstractDealDamageHandler extends AbstractPacketHandler {
         }
     }
 
-    // TODO: add position
-    public record AttackTarget(short delay, List<Integer> damageLines) {
+    // The position is the spot the attacker saw the monster standing at; null when the packet
+    // carries none.
+    public record AttackTarget(short delay, Point position, List<Integer> damageLines) {
+    }
+
+    // The client walks its mobs around on its own and never says where they got to, so on the
+    // server every monster is still standing exactly where it spawned. Loot is fanned out around
+    // that stale point, which is why two players killing the same mob disagree about where its
+    // drops land. The claim is only held for as long as this one target is being settled - see the
+    // restore in applyAttack - so nothing else on the server ever sees it, and a client cannot
+    // walk a monster anywhere: every packet is measured against the spawn point it started from.
+    private static void adoptReportedPosition(Monster monster, Point reported) {
+        if (reported == null || (reported.x == 0 && reported.y == 0)) {
+            return;
+        }
+
+        Point stored = monster.getPosition();
+        int x = Math.max(stored.x - REPORTED_SHIFT_X, Math.min(reported.x, stored.x + REPORTED_SHIFT_X));
+        int y = Math.max(stored.y - REPORTED_SHIFT_Y, Math.min(reported.y, stored.y + REPORTED_SHIFT_Y));
+
+        monster.setPosition(new Point(x, y));
     }
 
     protected void applyAttack(AttackInfo attack, final Character player, int attackCount) {
@@ -166,6 +187,9 @@ public abstract class AbstractDealDamageHandler extends AbstractPacketHandler {
             for (Map.Entry<Integer, AttackTarget> target : attack.targets.entrySet()) {
                 final Monster monster = map.getMonsterByOid(target.getKey());
                 if (monster != null) {
+                    final Point serverPos = monster.getPosition();
+                    adoptReportedPosition(monster, target.getValue().position());
+
                     double dx = monster.getPosition().x - player.getPosition().x;
                     double dy = monster.getPosition().y - player.getPosition().y;
                     double distance = Math.sqrt(dx * dx + dy * dy);
@@ -484,6 +508,11 @@ public abstract class AbstractDealDamageHandler extends AbstractPacketHandler {
                                 }
                             }
                         }
+
+                        // Everything this attack could leave behind - loot and the death broadcast -
+                        // has already taken the reported position in, synchronously. Put the monster
+                        // back where the server keeps it so no other view of the map shifts.
+                        monster.setPosition(serverPos);
                     }
                 }
         } catch (Exception e) {
@@ -500,14 +529,34 @@ public abstract class AbstractDealDamageHandler extends AbstractPacketHandler {
             animationTime = fixedTime;
         }
 
+        // Where the monster stands while this blow is being settled, which for a blow coming from
+        // applyAttack is the position the attacker reported. Held on to because the wait below
+        // gives applyAttack time to put the monster back at its spawn point first, and the loot a
+        // killing blow leaves is measured off whatever position the monster is held at.
+        final Point deathPos = new Point(monster.getPosition());
+
         if (animationTime > 0) { // be sure to only use LIMITED ATTACKS with animation time here
             TimerManager.getInstance().schedule(() -> {
-                map.broadcastMessage(PacketCreator.damageMonster(monster.getObjectId(), damage), monster.getPosition());
-                map.damageMonster(attacker, monster, damage);
+                map.broadcastMessage(PacketCreator.damageMonster(monster.getObjectId(), damage), deathPos);
+                settleDelayedBlow(attacker, map, monster, damage, deathPos);
             }, animationTime);
         } else {
             map.broadcastMessage(PacketCreator.damageMonster(monster.getObjectId(), damage), monster.getPosition());
             map.damageMonster(attacker, monster, damage);
+        }
+    }
+
+    // Runs a blow that was held back for the skill's animation, with the monster stood where the
+    // attacker saw it for as long as the blow is being worked out - the same claim applyAttack makes
+    // while it settles a target, released again before this returns.
+    private static void settleDelayedBlow(final Character attacker, final MapleMap map, final Monster monster, final int damage, final Point deathPos) {
+        final Point serverPos = monster.getPosition();
+
+        monster.setPosition(deathPos);
+        try {
+            map.damageMonster(attacker, monster, damage);
+        } finally {
+            monster.setPosition(serverPos);
         }
     }
 
@@ -834,7 +883,7 @@ public abstract class AbstractDealDamageHandler extends AbstractPacketHandler {
             if (ret.skill != Corsair.RAPID_FIRE || ret.skill != Aran.HIDDEN_FULL_DOUBLE || ret.skill != Aran.HIDDEN_FULL_TRIPLE || ret.skill != Aran.HIDDEN_OVER_DOUBLE || ret.skill != Aran.HIDDEN_OVER_TRIPLE) {
                 p.skip(4);
             }
-            ret.targets.put(oid, new AttackTarget(delay, damageLines));
+            ret.targets.put(oid, new AttackTarget(delay, curPos, damageLines));
         }
         if (ret.skill == NightWalker.POISON_BOMB) { // Poison Bomb
             p.skip(4);
@@ -878,7 +927,7 @@ public abstract class AbstractDealDamageHandler extends AbstractPacketHandler {
         attackInfo.attackDelay = attackDelay;
 
         Map<Integer, AttackTarget> targets = new HashMap<>();
-        targetDamage.forEach((id, damage) -> targets.put(id, new AttackTarget(attackDelay, damage)));
+        targetDamage.forEach((id, damage) -> targets.put(id, new AttackTarget(attackDelay, null, damage)));
         attackInfo.targets = targets;
         return attackInfo;
     }
