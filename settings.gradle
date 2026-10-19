@@ -6,7 +6,9 @@ pluginManagement {
     }
 }
 dependencyResolutionManagement {
-    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    // The machine-wide init.gradle injects the aliyun mirrors as project repositories; this
+    // project used to reject those outright, so no build of it could start at all here.
+    repositoriesMode.set(RepositoriesMode.PREFER_PROJECT)
     repositories {
         google()
         mavenCentral()

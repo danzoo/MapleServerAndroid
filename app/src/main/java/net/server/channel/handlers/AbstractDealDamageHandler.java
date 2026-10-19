@@ -398,11 +398,12 @@ public abstract class AbstractDealDamageHandler extends AbstractPacketHandler {
                                 StatEffect mortal = mortalBlow.getEffect(skillLevel);
                                 if (monster.getHp() <= (monster.getStats().getHp() * mortal.getX()) / 100) {
                                     if (Randomizer.rand(1, 100) <= mortal.getY()) {
-                                        map.damageMonster(player, monster, Integer.MAX_VALUE, target.getValue().delay());  // thanks Conrad for noticing reduced EXP gain from skill kill                                    }
+                                        map.damageMonster(player, monster, Integer.MAX_VALUE, target.getValue().delay());  // thanks Conrad for noticing reduced EXP gain from skill kill
                                     }
                                 }
                             }
                         }
+                    }
                         if (attack.skill != 0) {
                             if (attackEffect.getFixDamage() != -1) {
                                 if (totDamageToOneMonster != attackEffect.getFixDamage() && totDamageToOneMonster != 0) {
@@ -485,7 +486,6 @@ public abstract class AbstractDealDamageHandler extends AbstractPacketHandler {
                         }
                     }
                 }
-            }
         } catch (Exception e) {
             log.error("applyAttack error", e);
         }

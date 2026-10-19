@@ -83,6 +83,10 @@ public class MapleMap {
     private static final List<MapObjectType> rangedMapobjectTypes = Arrays.asList(MapObjectType.SHOP, MapObjectType.ITEM, MapObjectType.NPC, MapObjectType.MONSTER, MapObjectType.DOOR, MapObjectType.SUMMON, MapObjectType.REACTOR);
     private static final Map<Integer, Pair<Integer, Integer>> dropBoundsCache = new HashMap<>(100);
 
+    // Longest a mob death and its loot may be held back to line up with the blow that caused it.
+    // The length comes out of the attacker's own packet, so it is not something to trust outright.
+    private static final short MAX_DEATH_DELAY = 1000;
+
     private final Map<Integer, MapObject> mapobjects = new LinkedHashMap<>();
     private final Set<Integer> selfDestructives = new LinkedHashSet<>();
     private final Collection<SpawnPoint> monsterSpawn = Collections.synchronizedList(new LinkedList<>());
@@ -1263,6 +1267,12 @@ public class MapleMap {
     }
 
     public boolean damageMonster(final Character chr, final Monster monster, final int damage, short delay) {
+        if (delay < 0) {
+            delay = 0;
+        } else if (delay > MAX_DEATH_DELAY) {
+            delay = MAX_DEATH_DELAY;
+        }
+
         if (monster.getId() == MobId.ZAKUM_1) {
             for (MapObject object : chr.getMap().getMapObjects()) {
                 Monster mons = chr.getMap().getMonsterByOid(object.getObjectId());
@@ -1427,8 +1437,26 @@ public class MapleMap {
             e.printStackTrace();
         } finally {     // thanks resinate for pointing out a memory leak possibly from an exception thrown
             monster.dispatchMonsterKilled(true);
-            broadcastMessage(PacketCreator.killMonster(monster.getObjectId(), animation), monster.getPosition());
+            broadcastMonsterDeath(monster, animation, dropDelay);
         }
+    }
+
+    private void broadcastMonsterDeath(final Monster monster, final int animation, short delay) {
+        final int oid = monster.getObjectId();
+
+        if (delay <= 0) {
+            broadcastMessage(PacketCreator.killMonster(oid, animation), monster.getPosition());
+            return;
+        }
+
+        // The client tells us how long its attack animation takes to land, and holds its own damage
+        // numbers back for that long. Broadcasting the death the moment the packet arrives kills the
+        // mob in front of everyone on the map while the player is still mid-swing. The mob is already
+        // gone from the server side by now, so only the picture waits.
+        final Point mobpos = monster.getPosition();
+        final Point pos = new Point(mobpos.x, mobpos.y);
+
+        TimerManager.getInstance().schedule(() -> broadcastMessage(PacketCreator.killMonster(oid, animation), pos), delay);
     }
 
     public void killFriendlies(Monster mob) {
