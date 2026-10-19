@@ -58,8 +58,6 @@ public abstract class AbstractDealDamageHandler extends AbstractPacketHandler {
 
     private static final int EXPLODED_MESO_SPREAD_DELAY = 100;
     private static final int EXPLODED_MESO_MAX_DELAY = 1000;
-    private static final int REPORTED_SHIFT_X = 700;
-    private static final int REPORTED_SHIFT_Y = 500;
 
     public static class AttackInfo {
 
@@ -104,18 +102,31 @@ public abstract class AbstractDealDamageHandler extends AbstractPacketHandler {
     // server every monster is still standing exactly where it spawned. Loot is fanned out around
     // that stale point, which is why two players killing the same mob disagree about where its
     // drops land. The claim is only held for as long as this one target is being settled - see the
-    // restore in applyAttack - so nothing else on the server ever sees it, and a client cannot
-    // walk a monster anywhere: every packet is measured against the spawn point it started from.
-    private static void adoptReportedPosition(Monster monster, Point reported) {
+    // restore in applyAttack - so nothing else on the server ever sees it.
+    //
+    // How far the reported point is allowed to sit from the player who says it hit that monster.
+    // Measuring the claim against the monster's own server position, as this used to, bounds it by
+    // a place the monster stopped being a long time ago: a mob that had come down more than the
+    // tolerance from the ledge it spawned on had its reported height cut off mid-air, and the loot
+    // it left burst out of that nothing. The attacker is the one party that has to be near the
+    // monster to hit it, and the server is told where the attacker is, so that is what the claim
+    // gets checked against. A client still cannot put a monster anywhere it likes: the report is
+    // only ever believed within reach of the player making it, and only for this one settlement.
+    private static final int REPORTED_REACH = 2000;
+
+    private static void adoptReportedPosition(Monster monster, Point reported, Point attacker) {
         if (reported == null || (reported.x == 0 && reported.y == 0)) {
             return;
         }
 
-        Point stored = monster.getPosition();
-        int x = Math.max(stored.x - REPORTED_SHIFT_X, Math.min(reported.x, stored.x + REPORTED_SHIFT_X));
-        int y = Math.max(stored.y - REPORTED_SHIFT_Y, Math.min(reported.y, stored.y + REPORTED_SHIFT_Y));
+        double dx = reported.x - attacker.x;
+        double dy = reported.y - attacker.y;
 
-        monster.setPosition(new Point(x, y));
+        if (Math.sqrt(dx * dx + dy * dy) > REPORTED_REACH) {
+            return;
+        }
+
+        monster.setPosition(new Point(reported.x, reported.y));
     }
 
     protected void applyAttack(AttackInfo attack, final Character player, int attackCount) {
@@ -188,7 +199,7 @@ public abstract class AbstractDealDamageHandler extends AbstractPacketHandler {
                 final Monster monster = map.getMonsterByOid(target.getKey());
                 if (monster != null) {
                     final Point serverPos = monster.getPosition();
-                    adoptReportedPosition(monster, target.getValue().position());
+                    adoptReportedPosition(monster, target.getValue().position(), player.getPosition());
 
                     double dx = monster.getPosition().x - player.getPosition().x;
                     double dy = monster.getPosition().y - player.getPosition().y;

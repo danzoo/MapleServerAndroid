@@ -87,10 +87,6 @@ public class MapleMap {
     // The length comes out of the attacker's own packet, so it is not something to trust outright.
     private static final short MAX_DEATH_DELAY = 1000;
 
-    // How far inside the end of a platform a drop is held when the fan-out throws it past that end.
-    // An item resting with its point right on the edge hangs half of itself over the gap next to it.
-    private static final int PLATFORM_EDGE_MARGIN = 8;
-
     private final Map<Integer, MapObject> mapobjects = new LinkedHashMap<>();
     private final Set<Integer> selfDestructives = new LinkedHashSet<>();
     private final Collection<SpawnPoint> monsterSpawn = Collections.synchronizedList(new LinkedList<>());
@@ -521,12 +517,15 @@ public class MapleMap {
     }
 
     /**
-     * Keeps a drop on the stretch of platform the dropper was standing on. The fan-out measures
-     * sideways from the dropper and the ground under the spot it reaches is whichever platform
-     * happens to cover that x - the search runs through every layer - so an item thrown past the
-     * end of the dropper's own platform comes to rest in a place nothing can be walked to. Reading
-     * the resting point back off the dropper's own platform also settles the argument over where
-     * the item lies: every client is shown and every pickup is checked against this one position.
+     * Keeps a drop on the stretch of platform the dropper was standing on, but only as far as that
+     * stretch reaches. The fan-out measures sideways from the dropper and the ground under the spot
+     * it reaches is whichever platform happens to cover that x - the search runs through every
+     * layer - so a drop whose x still lies on the dropper's own platform can be settled into the
+     * space beneath it, where nothing can be walked to; the resting point is read back off the
+     * dropper's platform to stop that. A drop thrown past either end is left where the ground below
+     * put it, because falling off the edge of a platform to the one under it is how loot always
+     * behaved. Reading the resting point back here also settles the argument over where the item
+     * lies: every client is shown and every pickup is checked against this one position.
      */
     private Point keepOnPlatform(final Point dropper, final Point dropPos) {
         // A standing point is a whole pixel while a slope puts the surface a fraction off it, so
@@ -561,20 +560,17 @@ public class MapleMap {
             }
         }
 
-        // Shorter than twice the margin and the platform has no room to be kept off the edge of,
-        // so the edge itself is all that is left to hold the item inside.
-        int margin = Math.min(PLATFORM_EDGE_MARGIN, (right - left) / 2);
-        int x = Math.min(Math.max(dropPos.x, left + margin), right - margin);
-        int y = dropPos.y;
+        if (dropPos.x < left || dropPos.x > right) {
+            return dropPos;
+        }
 
         for (Foothold fh : platform) {
-            if (fh.getX1() <= x && fh.getX2() >= x) {
-                y = footingY(fh, x);
-                break;
+            if (fh.getX1() <= dropPos.x && fh.getX2() >= dropPos.x) {
+                return new Point(dropPos.x, footingY(fh, dropPos.x));
             }
         }
 
-        return new Point(x, y);
+        return dropPos;
     }
 
     public void generateMapDropRangeCache() {
