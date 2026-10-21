@@ -1,0 +1,19 @@
+pluginManagement {
+    repositories {
+        gradlePluginPortal()
+        mavenCentral()
+        google()
+    }
+}
+
+dependencyResolutionManagement {
+    // The machine-wide init.gradle injects aliyun mirrors as project repositories; PREFER_PROJECT
+    // keeps this build from rejecting them (same workaround as the Android server project).
+    repositoriesMode.set(RepositoriesMode.PREFER_PROJECT)
+    repositories {
+        mavenCentral()
+        google()
+    }
+}
+
+rootProject.name = 'MapleServerDesktop'

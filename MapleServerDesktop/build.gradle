@@ -1,0 +1,69 @@
+plugins {
+    id 'java'
+    id 'application'
+}
+
+group = 'com.mapleserver'
+version = '1.0'
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.release = 21
+    options.encoding = 'UTF-8'
+}
+
+repositories {
+    mavenCentral()
+    google()
+}
+
+dependencies {
+    // Android's built-in SQLite is replaced by the Xerial JDBC driver on the desktop JVM; the
+    // android.database.sqlite.* classes under src/main/java are thin shims over this.
+    implementation 'org.xerial:sqlite-jdbc:3.45.3.0'
+
+    // Networking (same as the Android server).
+    implementation 'io.netty:netty-all:4.1.100.Final'
+
+    // Config file parsing.
+    implementation 'com.esotericsoftware.yamlbeans:yamlbeans:1.15'
+    implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.16.1'
+
+    // Only the JdbiException / RowMapper types are referenced by the core; keep the dep so those
+    // imports resolve.
+    implementation 'org.jdbi:jdbi3-core:3.37.1'
+
+    // Scripting: match the Android build's exact Rhino so the JSR-223 "rhino" engine provides
+    // importPackage/importClass in the global scope (plain org.mozilla:rhino-engine 1.7.15 does
+    // not, which breaks every event/npc/quest script with "importPackage is not defined").
+    // rhino-android is a plain-Java repackaged Rhino and runs fine on the desktop JVM.
+    implementation 'io.apisense:rhino-android:1.1.1'
+
+    // Logging: logback-classic replaces logback-android (LogcatAppender -> ConsoleAppender).
+    implementation 'org.slf4j:slf4j-api:2.0.17'
+    implementation 'ch.qos.logback:logback-classic:1.5.6'
+
+    // Concurrency documentation annotations.
+    implementation 'net.jcip:jcip-annotations:1.0'
+}
+
+application {
+    mainClass = 'desktop.DesktopServerMain'
+    // rhino-android bundles the pre-JPMS com.sun.script.javascript.RhinoScriptEngine, which reaches
+    // into java.base internals that JDK 21 encapsulates. Export the one package it touches so the
+    // old engine can initialise on a modern JVM.
+    applicationDefaultJvmArgs = [
+            '-Xmx2048m',
+            '-Djava.net.preferIPv4Stack=true',
+            '--add-exports=java.base/sun.security.action=ALL-UNNAMED'
+    ]
+}
+
+// `installDist` produces build/install/MapleServerDesktop/bin/*.bat for Windows deployment.
+tasks.named('run') {
+    workingDir = projectDir
+}
