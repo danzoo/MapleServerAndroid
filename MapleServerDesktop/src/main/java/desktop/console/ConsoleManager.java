@@ -48,6 +48,7 @@ public class ConsoleManager {
     public ConsoleManager() {
         register("help", "", "List all console commands", this::cmdHelp);
         register("online", "", "List online characters (name, level, map, world/channel)", this::cmdOnline);
+        register("where", "<name>", "Show an online character's current map id", this::cmdWhere);
         register("spawn", "<mapid> <mobid> [qty]", "Summon mob(s) on a map", this::cmdSpawn);
         register("clearmob", "<mapid>", "Kill all mobs on a map (no drops)", this::cmdClearMob);
         register("announce", "<text...>", "Broadcast a server notice to all online players", this::cmdAnnounce);
@@ -57,6 +58,8 @@ public class ConsoleManager {
         // aliases
         commands.put("killall", commands.get("clearmob"));
         commands.put("clear", commands.get("clearmob"));
+        commands.put("whereis", commands.get("where"));
+        commands.put("getmap", commands.get("where"));
     }
 
     private void register(String name, String usage, String description, Handler handler) {
@@ -136,6 +139,24 @@ public class ConsoleManager {
             }
         }
         System.out.println("Online: " + total);
+    }
+
+    private void cmdWhere(String[] args) {
+        if (args.length < 1) {
+            System.out.println("Syntax: where <name>");
+            return;
+        }
+        for (Channel ch : channels()) {
+            Character c = ch.getPlayerStorage().getCharacterByName(args[0]);
+            if (c != null) {
+                MapleMap map = safeMap(c);
+                System.out.println(c.getName() + " is on map " + (map != null ? map.getId() : "?")
+                        + "  Lv" + c.getLevel()
+                        + "  [world " + ch.getWorld() + "/ch " + ch.getId() + "]");
+                return;
+            }
+        }
+        System.out.println("No online character named: " + args[0]);
     }
 
     private void cmdSpawn(String[] args) {

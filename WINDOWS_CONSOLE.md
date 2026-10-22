@@ -50,6 +50,7 @@ Admin console ready. Type 'help' for commands.
 |------|------|------|
 | `help` | `help` | 列出全部命令 |
 | `online` | `online` | 列出各世界/频道的在线角色（名字、等级、地图、角色 id） |
+| `where` | `where <名字>` | 查看指定在线角色当前所在地图 id；别名 `whereis`、`getmap` |
 | `spawn` | `spawn <mapid> <mobid> [qty]` | 在指定地图召唤怪物，`qty` 默认 1 |
 | `clearmob` | `clearmob <mapid>` | 清空指定地图的全部怪物（**不掉落**）；别名 `killall`、`clear` |
 | `announce` | `announce <文本...>` | 向所有在线玩家广播一条服务器公告 |
@@ -74,7 +75,18 @@ World 0 / Channel 1:
 Online: 1
 ```
 
-先用它拿到玩家所在的 **mapid**，再对该地图做 `spawn` / `clearmob`。
+先用它拿到玩家所在的 **mapid**，再对该地图做 `spawn` / `clearmob`。只想查某一个人时用 `where` 更快。
+
+### where — 查某个玩家所在地图
+
+```
+> where Dan
+Dan is on map 100000000  Lv30  [world 0/ch 1]
+```
+
+- `<名字>` 目标在线角色名；不在线时提示 `No online character named: xxx`。
+- 回显该角色当前 **mapid**、等级，以及所在 `[world/ch]`（正好对应 `spawn`/`clearmob` 需要的 mapid 与作用频道）。
+- 别名：`whereis <名字>`、`getmap <名字>` 等价。
 
 ### spawn — 召唤怪物
 
