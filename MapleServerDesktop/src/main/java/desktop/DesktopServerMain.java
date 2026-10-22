@@ -1,6 +1,7 @@
 package desktop;
 
 import android.content.Context;
+import desktop.console.ConsoleManager;
 import net.server.Server;
 
 import java.io.File;
@@ -43,7 +44,13 @@ public class DesktopServerMain {
         seedConfigFile(assetsDir, context.getFilesDir());
 
         Server.getInstance(context);
+
         Server.main(new String[]{"-Xmx2048m", "-Dwz-path=wz", "-Djava.net.preferIPv4Stack=true"});
+
+        // Server.main() returns once the core reports "online", so start the stdin admin console
+        // afterwards: every command then runs against a fully-initialised server. The console is a
+        // daemon thread and exits quietly if stdin is not attached (background launch).
+        new ConsoleManager().start();
     }
 
     private static void seedConfigFile(File assetsDir, File filesDir) {
