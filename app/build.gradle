@@ -12,6 +12,17 @@ android {
     namespace = 'com.mapleserver'
     compileSdk 35
 
+    // The pure-Java server core lives in ../server-core and is shared verbatim with the Windows
+    // desktop build (MapleServerDesktop). This module only adds the Android shell (com/mapleserver
+    // Kotlin/Compose) and the platform-specific config/LogBackConfig (logback-android version).
+    sourceSets {
+        main {
+            java {
+                srcDirs += '../server-core'
+            }
+        }
+    }
+
     defaultConfig {
         applicationId "com.mapleserver"
         minSdkVersion 31

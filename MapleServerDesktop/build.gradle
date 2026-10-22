@@ -21,6 +21,18 @@ repositories {
     google()
 }
 
+// The pure-Java server core is shared with the Android build: it lives in ../server-core and is
+// compiled here alongside this module's own sources (the android.* / androidx.* desktop shims,
+// desktop.DesktopServerMain, and the platform-specific config/LogBackConfig console version).
+// Editing a core file once now feeds both the APK and the Windows distribution.
+sourceSets {
+    main {
+        java {
+            srcDirs = ['src/main/java', '../server-core']
+        }
+    }
+}
+
 dependencies {
     // Android's built-in SQLite is replaced by the Xerial JDBC driver on the desktop JVM; the
     // android.database.sqlite.* classes under src/main/java are thin shims over this.
