@@ -14,6 +14,7 @@ import tools.PacketCreator;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -45,6 +46,15 @@ public class ConsoleManager {
 
     private final Map<String, Command> commands = new LinkedHashMap<>();
 
+    // True only when a real terminal is attached. Closing that terminal (or Ctrl+Z / Ctrl+D on it)
+    // ends stdin, which is the signal to take the whole server down with it; a launch without any
+    // console (background/service) also sees stdin end immediately and must keep serving instead.
+    private final boolean consoleAttached = System.console() != null;
+
+    // How long the graceful shutdown gets to finish after the console closes before the process is
+    // halted outright.
+    private static final long SHUTDOWN_GRACE_MILLIS = 10_000;
+
     public ConsoleManager() {
         register("help", "", "List all console commands", this::cmdHelp);
         register("online", "", "List online characters (name, level, map, world/channel)", this::cmdOnline);
@@ -75,13 +85,16 @@ public class ConsoleManager {
     private void loop() {
         System.out.println();
         System.out.println("Admin console ready. Type 'help' for commands.");
-        BufferedReader in = new BufferedReader(new InputStreamReader(System.in, StandardCharsets.UTF_8));
+        BufferedReader in = new BufferedReader(new InputStreamReader(System.in, consoleCharset()));
         try {
             while (true) {
                 System.out.print("> ");
                 System.out.flush();
                 String line = in.readLine();
                 if (line == null) {
+                    if (consoleAttached) {
+                        shutdownServer();
+                    }
                     break; // stdin closed
                 }
                 line = line.trim();
@@ -279,7 +292,42 @@ public class ConsoleManager {
         System.out.println("Gave " + amount + " exp to " + victim.getName() + " (now Lv" + victim.getLevel() + ")");
     }
 
+    // Closing the console window ends stdin. Take the JVM down through the core's own shutdown path
+    // so worlds, channels, listening sockets and worker threads stop before the process exits,
+    // instead of leaving a headless server holding the ports. The graceful path is raced against a
+    // grace period: if some shutdown wait (e.g. a channel that never reports finished) hangs, the
+    // process is halted anyway so closing the console always ends every server process.
+    private static void shutdownServer() {
+        System.out.println("Console closed - shutting the server down.");
+        System.out.flush();
+
+        Thread graceful = new Thread(() -> Server.getInstance().shutdown(false).run(), "ConsoleShutdown");
+        graceful.setDaemon(true);
+        graceful.start();
+
+        try {
+            graceful.join(SHUTDOWN_GRACE_MILLIS);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+
+        Runtime.getRuntime().halt(0);
+    }
+
     // ------------------------------------------------------------------ helpers
+
+    // The console speaks the OS codepage (GBK on a Chinese Windows terminal), not UTF-8. Reading
+    // stdin as UTF-8 there turns every typed CJK character into U+FFFD, which then rides the packet
+    // to the client as a tofu box. stdin.encoding is the attached console's charset on JDK 19+.
+    private static Charset consoleCharset() {
+        String name = System.getProperty("stdin.encoding",
+                System.getProperty("native.encoding", "UTF-8"));
+        try {
+            return Charset.forName(name);
+        } catch (Exception e) {
+            return StandardCharsets.UTF_8;
+        }
+    }
 
     private static List<Channel> channels() {
         List<Channel> all = Server.getInstance().getAllChannels();

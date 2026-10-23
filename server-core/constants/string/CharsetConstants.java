@@ -37,7 +37,8 @@ public class CharsetConstants {
         LANGUAGE_US("US-ASCII"),
         LANGUAGE_PT_BR("ISO-8859-1"),
         LANGUAGE_THAI("TIS620"),
-        LANGUAGE_KOREAN("MS949");
+        LANGUAGE_KOREAN("MS949"),
+        LANGUAGE_UTF8("UTF-8");
 
         private final String charset;
 
@@ -78,13 +79,15 @@ public class CharsetConstants {
     }
 
     private static Charset loadCharset() {
-        String configCharset = "US-ASCII";//loadCharsetFromConfig();
+        // Packet strings go on the wire as UTF-8: the client decodes them as UTF-8 and can render
+        // every code point, so a single-byte charset here would turn any CJK character into '?'.
+        String configCharset = "UTF-8";//loadCharsetFromConfig();
         if (configCharset != null) {
             Language language = Language.fromCharset(configCharset);
             return Charset.forName(language.getCharset());
         }
 
-        return StandardCharsets.US_ASCII;
+        return StandardCharsets.UTF_8;
     }
 
     private static class StrippedYamlConfig {
