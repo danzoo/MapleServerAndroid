@@ -1065,7 +1065,10 @@ public class Client extends ChannelInboundHandlerAdapter {
 
             clear();
         } else {
-            if (!Server.getInstance().hasCharacteridInTransition(this)) {
+            // Asking the server whether this client still has a character mid-transition only works
+            // with IP validation on; with it off the lookup answers 'yes' for everyone, which used to
+            // leave the account flagged as loggedin after every cleanup that landed here.
+            if (!inTransition) {
                 updateLoginState(Client.LOGIN_NOTLOGGEDIN);
             }
 
@@ -1164,7 +1167,10 @@ public class Client extends ChannelInboundHandlerAdapter {
                 if (lastPong < pingedAt) {
                     if (ioChannel.isActive()) {
                         log.info("Disconnected {} due to idling. Reason: {}", remoteAddress, event.state());
-                        updateLoginState(Client.LOGIN_NOTLOGGEDIN);
+                        // Dropping the channel is enough: channelInactive runs the full cleanup,
+                        // which clears the account's login state while the account id is still known.
+                        // Doing it here instead would wipe the id first (updateLoginState resets it),
+                        // leaving the later write to target no row at all and the account stuck.
                         disconnectSession();
                     }
                 }

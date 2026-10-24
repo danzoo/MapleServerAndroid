@@ -96,9 +96,12 @@ public final class PlayerLoggedinHandler extends AbstractPacketHandler {
         final int cid = p.readInt(); // TODO: investigate if this is the "client id" supplied in PacketCreator#getServerIP()
         final Server server = Server.getInstance();
 
-        if (!c.tryacquireClient()) {
+        // the client lock is released in the finally below, so the early returns below cannot strand it
+        final boolean acquired = c.tryacquireClient();
+        if (!acquired) {
             // thanks MedicOP for assisting on concurrency protection here
             c.sendPacket(PacketCreator.getAfterLoginError(10));
+            return;
         }
 
         try {
@@ -179,14 +182,17 @@ public final class PlayerLoggedinHandler extends AbstractPacketHandler {
                 try {
                     int state = c.getLoginState();
                     if (state != Client.LOGIN_SERVER_TRANSITION || !allowLogin) {
+                        if (state == Client.LOGIN_LOGGEDIN) {
+                            // Releasing the account here, before the id is wiped, so that a session
+                            // which died without running its own cleanup cannot keep the account
+                            // flagged as loggedin forever - every later attempt would then be
+                            // rejected, and only a server restart would clear it.
+                            c.updateLoginState(Client.LOGIN_NOTLOGGEDIN);
+                        }
                         c.setPlayer(null);
                         c.setAccID(0);
 
-                        if (state == Client.LOGIN_LOGGEDIN) {
-                            c.disconnect(true, false);
-                        } else {
-                            c.sendPacket(PacketCreator.getAfterLoginError(7));
-                        }
+                        c.sendPacket(PacketCreator.getAfterLoginError(7));
 
                         return;
                     }
