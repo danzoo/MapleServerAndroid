@@ -48,7 +48,21 @@ public class LifeFactory {
         Set<Integer> ret = new HashSet<>();
 
         DataProvider uiDataWZ = DataProviderFactory.getDataProvider(WZFiles.UI);
-        for (Data bossData : uiDataWZ.getData("UIWindow.img").getChildByPath("MobGage/Mob").getChildren()) {
+        // Newer wz moved the boss hp-bar sprite set out of UIWindow.img into UIWindow2.img.
+        Data bossSet = null;
+        for (String windowImg : new String[] {"UIWindow2.img", "UIWindow.img"}) {
+            Data windowData = uiDataWZ.getData(windowImg);
+            bossSet = windowData == null ? null : windowData.getChildByPath("MobGage/Mob");
+            if (bossSet != null) {
+                break;
+            }
+        }
+        if (bossSet == null) {
+            log.warn("No UI window MobGage/Mob entry found - boss hp bars fall back to the regular gauge");
+            return ret;
+        }
+
+        for (Data bossData : bossSet.getChildren()) {
             ret.add(Integer.valueOf(bossData.getName()));
         }
 

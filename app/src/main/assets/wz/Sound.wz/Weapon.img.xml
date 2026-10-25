@@ -1,10 +1,35 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <imgdir name="Weapon.img">
-  <imgdir name="swordL">
+  <imgdir name="barehands">
+    <sound name="Attack"/>
+    <sound name="Attack2"/>
+  </imgdir>
+  <imgdir name="bow">
+    <sound name="Attack"/>
+    <sound name="Attack2"/>
+  </imgdir>
+  <imgdir name="cBow">
+    <sound name="Attack"/>
+    <sound name="Attack2"/>
+  </imgdir>
+  <imgdir name="cane">
     <sound name="Attack"/>
   </imgdir>
-  <imgdir name="swordS">
+  <imgdir name="cannon">
     <sound name="Attack"/>
+    <sound name="Attack2"/>
+  </imgdir>
+  <imgdir name="dualBow">
+    <sound name="Attack"/>
+    <sound name="Attack2"/>
+  </imgdir>
+  <imgdir name="gun">
+    <sound name="Attack"/>
+    <sound name="Attack2"/>
+  </imgdir>
+  <imgdir name="knuckle">
+    <sound name="Attack"/>
+    <sound name="Attack2"/>
   </imgdir>
   <imgdir name="mace">
     <sound name="Attack"/>
@@ -15,27 +40,25 @@
   <imgdir name="spear">
     <sound name="Attack"/>
   </imgdir>
-  <imgdir name="bow">
+  <imgdir name="swordB">
     <sound name="Attack"/>
-    <sound name="Attack2"/>
   </imgdir>
-  <imgdir name="cBow">
+  <imgdir name="swordK">
     <sound name="Attack"/>
-    <sound name="Attack2"/>
+  </imgdir>
+  <imgdir name="swordL">
+    <sound name="Attack"/>
+  </imgdir>
+  <imgdir name="swordS">
+    <sound name="Attack"/>
+  </imgdir>
+  <imgdir name="swordZB">
+    <sound name="Attack"/>
+  </imgdir>
+  <imgdir name="swordZL">
+    <sound name="Attack"/>
   </imgdir>
   <imgdir name="tGlove">
-    <sound name="Attack"/>
-    <sound name="Attack2"/>
-  </imgdir>
-  <imgdir name="knuckle">
-    <sound name="Attack"/>
-    <sound name="Attack2"/>
-  </imgdir>
-  <imgdir name="barehands">
-    <sound name="Attack"/>
-    <sound name="Attack2"/>
-  </imgdir>
-  <imgdir name="gun">
     <sound name="Attack"/>
     <sound name="Attack2"/>
   </imgdir>

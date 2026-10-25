@@ -435,13 +435,32 @@ public final class Channel {
         getWorldServer().resetDisabledServerMessages();
     }
 
+    // Event scripts whose init() reaches a map that the shipped resource baseline does not
+    // carry. Loading them only produces a startup stack trace, and callers that look them up
+    // fall back to the 0_EXAMPLE manager instead of failing, so keep them out of the list.
+    // Drop an entry here once its map goes back into Assets\v209\img_develop.
+    private static final Set<String> DISABLED_EVENTS = new HashSet<>(Arrays.asList(
+            // ride & instance transports
+            "AirPlane", "Boats", "Cabin", "Elevator", "Genie", "RockSpirit", "RockSpiritVIP",
+            "Subway", "Trains", "q3239",
+            // area bosses, each schedules its spawn map right after boot
+            "AreaBossBamboo", "AreaBossCentipede", "AreaBossDeo", "AreaBossDoor1", "AreaBossDoor2",
+            "AreaBossDoor3", "AreaBossDoor4", "AreaBossDoor5", "AreaBossDoor6", "AreaBossDyle",
+            "AreaBossEliza1", "AreaBossFaust1", "AreaBossFaust2", "AreaBossKimera",
+            "AreaBossKingClang", "AreaBossKingSageCat", "AreaBossLeviathan", "AreaBossMano",
+            "AreaBossNineTailedFox", "AreaBossSeruf", "AreaBossSnackBar", "AreaBossStumpy",
+            "AreaBossTaeRoon", "AreaBossTimer1", "AreaBossTimer2", "AreaBossTimer3", "AreaBossZeno"));
+
     private static String[] getEvents() {
         List<String> events = new ArrayList<>();
         AssetManager assetManager = Server.getInstance().getContext().getAssets();
         try {
             String[] stream = assetManager.list("scripts/event");
             for (String fileName : stream) {
-                events.add(fileName.substring(0, fileName.length() - 3));
+                String scriptName = fileName.substring(0, fileName.length() - 3);
+                if (!DISABLED_EVENTS.contains(scriptName)) {
+                    events.add(scriptName);
+                }
             }
         } catch (IOException e) {
             log.warn("Unable to load events !");

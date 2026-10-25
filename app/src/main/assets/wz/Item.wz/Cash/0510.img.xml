@@ -2,6 +2,7 @@
 <imgdir name="0510.img">
   <imgdir name="05100000">
     <imgdir name="info">
+      <int name="cash" value="1"/>
       <canvas name="icon" width="30" height="32">
         <vector name="origin" x="-2" y="32"/>
         <int name="z" value="0"/>
@@ -10,7 +11,6 @@
         <vector name="origin" x="-2" y="32"/>
         <int name="z" value="0"/>
       </canvas>
-      <int name="cash" value="1"/>
       <string name="path" value="Sound/Jukebox.img/Congratulation"/>
     </imgdir>
   </imgdir>

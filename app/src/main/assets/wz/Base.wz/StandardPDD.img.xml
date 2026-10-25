@@ -7,6 +7,7 @@
   </imgdir>
   <imgdir name="1">
     <int name="10" value="54"/>
+    <int name="100" value="494"/>
     <int name="12" value="57"/>
     <int name="15" value="83"/>
     <int name="20" value="106"/>
@@ -26,11 +27,10 @@
     <int name="85" value="388"/>
     <int name="90" value="440"/>
     <int name="95" value="446"/>
-    <int name="100" value="494"/>
   </imgdir>
   <imgdir name="2">
-    <int name="8" value="25"/>
     <int name="10" value="31"/>
+    <int name="100" value="266"/>
     <int name="13" value="40"/>
     <int name="15" value="49"/>
     <int name="18" value="54"/>
@@ -51,16 +51,17 @@
     <int name="70" value="184"/>
     <int name="75" value="190"/>
     <int name="78" value="198"/>
+    <int name="8" value="25"/>
     <int name="80" value="212"/>
     <int name="85" value="218"/>
     <int name="88" value="226"/>
     <int name="90" value="240"/>
     <int name="95" value="246"/>
     <int name="98" value="254"/>
-    <int name="100" value="266"/>
   </imgdir>
   <imgdir name="3">
     <int name="10" value="32"/>
+    <int name="100" value="298"/>
     <int name="15" value="49"/>
     <int name="20" value="65"/>
     <int name="25" value="80"/>
@@ -77,10 +78,10 @@
     <int name="85" value="244"/>
     <int name="90" value="270"/>
     <int name="95" value="276"/>
-    <int name="100" value="298"/>
   </imgdir>
   <imgdir name="4">
     <int name="10" value="42"/>
+    <int name="100" value="331"/>
     <int name="15" value="60"/>
     <int name="20" value="76"/>
     <int name="22" value="85"/>
@@ -100,10 +101,10 @@
     <int name="85" value="297"/>
     <int name="90" value="325"/>
     <int name="95" value="331"/>
-    <int name="100" value="331"/>
   </imgdir>
   <imgdir name="5">
     <int name="10" value="24"/>
+    <int name="100" value="309"/>
     <int name="15" value="43"/>
     <int name="20" value="56"/>
     <int name="25" value="69"/>
@@ -119,6 +120,5 @@
     <int name="80" value="239"/>
     <int name="85" value="245"/>
     <int name="90" value="271"/>
-    <int name="100" value="309"/>
   </imgdir>
 </imgdir>

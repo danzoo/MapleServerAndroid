@@ -53,8 +53,8 @@
       <int name="price" value="150"/>
     </imgdir>
     <imgdir name="spec">
-      <int name="seal" value="1"/>
       <int name="curse" value="1"/>
+      <int name="seal" value="1"/>
     </imgdir>
   </imgdir>
   <imgdir name="02050004">
@@ -68,11 +68,11 @@
       <int name="price" value="200"/>
     </imgdir>
     <imgdir name="spec">
+      <int name="curse" value="1"/>
+      <int name="darkness" value="1"/>
       <int name="poison" value="1"/>
       <int name="seal" value="1"/>
-      <int name="darkness" value="1"/>
       <int name="weakness" value="1"/>
-      <int name="curse" value="1"/>
     </imgdir>
   </imgdir>
   <imgdir name="02050005">

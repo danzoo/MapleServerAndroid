@@ -2,6 +2,7 @@
 <imgdir name="0546.img">
   <imgdir name="05460000">
     <imgdir name="info">
+      <int name="cash" value="1"/>
       <canvas name="icon" width="29" height="30">
         <vector name="origin" x="-2" y="30"/>
         <int name="z" value="0"/>
@@ -11,7 +12,6 @@
         <int name="z" value="0"/>
       </canvas>
       <int name="slotMax" value="1"/>
-      <int name="cash" value="1"/>
     </imgdir>
   </imgdir>
 </imgdir>

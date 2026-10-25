@@ -9,9 +9,9 @@
   </imgdir>
   <imgdir name="stand">
     <canvas name="0" width="54" height="80">
+      <int name="delay" value="500"/>
       <vector name="origin" x="26" y="80"/>
       <int name="z" value="0"/>
-      <int name="delay" value="500"/>
     </canvas>
   </imgdir>
 </imgdir>

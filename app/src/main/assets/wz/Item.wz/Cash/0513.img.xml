@@ -2,13 +2,13 @@
 <imgdir name="0513.img">
   <imgdir name="05130000">
     <imgdir name="info">
+      <int name="cash" value="1"/>
       <canvas name="icon" width="31" height="31">
         <vector name="origin" x="-1" y="31"/>
       </canvas>
       <canvas name="iconRaw" width="31" height="30">
         <vector name="origin" x="-1" y="31"/>
       </canvas>
-      <int name="cash" value="1"/>
       <int name="recoveryRate" value="30"/>
     </imgdir>
   </imgdir>

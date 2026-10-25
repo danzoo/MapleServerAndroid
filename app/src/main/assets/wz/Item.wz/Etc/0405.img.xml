@@ -8,10 +8,10 @@
       <canvas name="iconRaw" width="27" height="27">
         <vector name="origin" x="-3" y="30"/>
       </canvas>
-      <int name="slotMax" value="1"/>
-      <string name="tradeBlock" value="1"/>
       <int name="only" value="1"/>
+      <int name="slotMax" value="1"/>
       <int name="timeLimited" value="1"/>
+      <string name="tradeBlock" value="1"/>
     </imgdir>
   </imgdir>
   <imgdir name="04055001">
@@ -22,10 +22,10 @@
       <canvas name="iconRaw" width="27" height="27">
         <vector name="origin" x="-3" y="30"/>
       </canvas>
-      <int name="slotMax" value="1"/>
-      <string name="tradeBlock" value="1"/>
       <int name="only" value="1"/>
+      <int name="slotMax" value="1"/>
       <int name="timeLimited" value="1"/>
+      <string name="tradeBlock" value="1"/>
     </imgdir>
   </imgdir>
   <imgdir name="04055004">
@@ -36,8 +36,8 @@
       <canvas name="iconRaw" width="32" height="23">
         <vector name="origin" x="0" y="28"/>
       </canvas>
-      <int name="timeLimited" value="1"/>
       <int name="slotMax" value="1"/>
+      <int name="timeLimited" value="1"/>
       <string name="tradeBlock" value="1"/>
     </imgdir>
   </imgdir>
@@ -49,8 +49,8 @@
       <canvas name="iconRaw" width="32" height="23">
         <vector name="origin" x="0" y="27"/>
       </canvas>
-      <int name="timeLimited" value="1"/>
       <int name="slotMax" value="1"/>
+      <int name="timeLimited" value="1"/>
       <string name="tradeBlock" value="1"/>
     </imgdir>
   </imgdir>

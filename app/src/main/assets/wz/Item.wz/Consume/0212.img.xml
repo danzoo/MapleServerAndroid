@@ -8,8 +8,8 @@
       <canvas name="iconRaw" width="23" height="31">
         <vector name="origin" x="-5" y="32"/>
       </canvas>
-      <int name="slotMax" value="200"/>
       <int name="price" value="15"/>
+      <int name="slotMax" value="200"/>
     </imgdir>
     <imgdir name="spec">
       <int name="0" value="5000000"/>

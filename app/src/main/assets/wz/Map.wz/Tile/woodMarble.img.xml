@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <imgdir name="woodMarble.img">
-  <imgdir name="info">
-  </imgdir>
   <imgdir name="bsc">
     <canvas name="0" width="90" height="60">
       <vector name="origin" x="0" y="0"/>
@@ -152,40 +150,6 @@
         <vector name="foothold" x="-90" y="-26"/>
         <vector name="foothold" x="0" y="-86"/>
       </extended>
-    </canvas>
-  </imgdir>
-  <imgdir name="slRU">
-    <canvas name="0" width="90" height="89">
-      <vector name="origin" x="0" y="89"/>
-      <int name="z" value="-3"/>
-      <extended name="foothold">
-        <vector name="foothold" x="0" y="-86"/>
-        <vector name="foothold" x="90" y="-26"/>
-      </extended>
-    </canvas>
-  </imgdir>
-  <imgdir name="slLD">
-    <canvas name="0" width="90" height="73">
-      <vector name="origin" x="90" y="0"/>
-      <int name="z" value="-3"/>
-    </canvas>
-    <canvas name="1" width="90" height="74">
-      <vector name="origin" x="90" y="0"/>
-      <int name="z" value="-3"/>
-    </canvas>
-  </imgdir>
-  <imgdir name="slRD">
-    <canvas name="0" width="90" height="72">
-      <vector name="origin" x="0" y="0"/>
-      <imgdir name="map">
-      </imgdir>
-      <int name="z" value="-3"/>
-    </canvas>
-    <canvas name="1" width="90" height="73">
-      <vector name="origin" x="0" y="0"/>
-      <imgdir name="map">
-      </imgdir>
-      <int name="z" value="-3"/>
     </canvas>
   </imgdir>
 </imgdir>

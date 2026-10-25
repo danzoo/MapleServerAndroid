@@ -2,6 +2,7 @@
 <imgdir name="0537.img">
   <imgdir name="05370000">
     <imgdir name="info">
+      <int name="cash" value="1"/>
       <canvas name="icon" width="29" height="29">
         <vector name="origin" x="-2" y="29"/>
       </canvas>
@@ -10,11 +11,11 @@
       </canvas>
       <canvas name="sample" width="80" height="68">
       </canvas>
-      <int name="cash" value="1"/>
     </imgdir>
   </imgdir>
   <imgdir name="05370001">
     <imgdir name="info">
+      <int name="cash" value="1"/>
       <canvas name="icon" width="29" height="29">
         <vector name="origin" x="-2" y="29"/>
       </canvas>
@@ -23,7 +24,6 @@
       </canvas>
       <canvas name="sample" width="80" height="68">
       </canvas>
-      <int name="cash" value="1"/>
     </imgdir>
   </imgdir>
 </imgdir>

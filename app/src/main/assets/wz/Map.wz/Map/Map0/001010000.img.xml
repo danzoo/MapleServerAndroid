@@ -5,7 +5,7 @@
     <int name="cloud" value="0"/>
     <int name="town" value="0"/>
     <int name="returnMap" value="1000000"/>
-    <float name="mobRate" value="1.6"/>
+    <float name="mobRate" value="1.6000001"/>
     <string name="bgm" value="Bgm00/RestNPeace"/>
     <string name="mapDesc" value=""/>
     <int name="forcedReturn" value="999999999"/>
@@ -103,7 +103,7 @@
   <imgdir name="life">
     <imgdir name="3">
       <string name="type" value="m"/>
-      <string name="id" value="0100101"/>
+      <string name="id" value="0130101"/>
       <int name="x" value="-451"/>
       <int name="y" value="-227"/>
       <int name="f" value="0"/>
@@ -114,7 +114,7 @@
     </imgdir>
     <imgdir name="4">
       <string name="type" value="m"/>
-      <string name="id" value="0100101"/>
+      <string name="id" value="0130101"/>
       <int name="x" value="-370"/>
       <int name="y" value="-229"/>
       <int name="f" value="0"/>
@@ -151,7 +151,7 @@
     </imgdir>
     <imgdir name="9">
       <string name="type" value="m"/>
-      <string name="id" value="0100101"/>
+      <string name="id" value="0130101"/>
       <int name="x" value="-292"/>
       <int name="y" value="-40"/>
       <int name="mobTime" value="0"/>

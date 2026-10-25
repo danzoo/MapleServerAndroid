@@ -232,17 +232,17 @@
       <canvas name="iconRaw" width="30" height="30">
         <vector name="origin" x="-1" y="31"/>
       </canvas>
+      <int name="notSale" value="1"/>
+      <int name="only" value="1"/>
       <int name="price" value="1"/>
       <int name="slotMax" value="1"/>
-      <int name="only" value="1"/>
-      <int name="tradeBlock" value="1"/>
-      <int name="notSale" value="1"/>
       <int name="timeLimited" value="1"/>
+      <int name="tradeBlock" value="1"/>
     </imgdir>
     <imgdir name="spec">
+      <int name="ignoreContinent" value="1"/>
       <int name="moveTo" value="229010000"/>
       <int name="returnMapQR" value="7640"/>
-      <int name="ignoreContinent" value="1"/>
     </imgdir>
   </imgdir>
   <imgdir name="02031001">
@@ -253,16 +253,16 @@
       <canvas name="iconRaw" width="29" height="29">
         <vector name="origin" x="-2" y="31"/>
       </canvas>
+      <int name="notSale" value="1"/>
       <int name="price" value="500"/>
       <int name="slotMax" value="1"/>
-      <int name="tradeBlock" value="1"/>
-      <int name="notSale" value="1"/>
       <int name="timeLimited" value="1"/>
+      <int name="tradeBlock" value="1"/>
     </imgdir>
     <imgdir name="spec">
+      <int name="ignoreContinent" value="1"/>
       <int name="moveTo" value="970000000"/>
       <int name="returnMapQR" value="7686"/>
-      <int name="ignoreContinent" value="1"/>
     </imgdir>
   </imgdir>
   <imgdir name="02031002">
@@ -273,16 +273,16 @@
       <canvas name="iconRaw" width="29" height="29">
         <vector name="origin" x="-2" y="31"/>
       </canvas>
+      <int name="notSale" value="1"/>
       <int name="price" value="1"/>
       <int name="slotMax" value="1"/>
-      <int name="tradeBlock" value="1"/>
-      <int name="notSale" value="1"/>
       <int name="timeLimited" value="1"/>
+      <int name="tradeBlock" value="1"/>
     </imgdir>
     <imgdir name="spec">
+      <int name="ignoreContinent" value="1"/>
       <int name="moveTo" value="922231000"/>
       <int name="returnMapQR" value="10038"/>
-      <int name="ignoreContinent" value="1"/>
     </imgdir>
   </imgdir>
   <imgdir name="02031003">
@@ -293,16 +293,16 @@
       <canvas name="iconRaw" width="29" height="29">
         <vector name="origin" x="-2" y="31"/>
       </canvas>
+      <int name="notSale" value="1"/>
       <int name="price" value="1"/>
       <int name="slotMax" value="1"/>
-      <int name="tradeBlock" value="1"/>
-      <int name="notSale" value="1"/>
       <int name="timeLimited" value="1"/>
+      <int name="tradeBlock" value="1"/>
     </imgdir>
     <imgdir name="spec">
+      <int name="ignoreContinent" value="1"/>
       <int name="moveTo" value="910020000"/>
       <int name="returnMapQR" value="10061"/>
-      <int name="ignoreContinent" value="1"/>
     </imgdir>
   </imgdir>
   <imgdir name="02031004">
@@ -313,15 +313,15 @@
       <canvas name="iconRaw" width="32" height="32">
         <vector name="origin" x="0" y="32"/>
       </canvas>
+      <int name="notSale" value="1"/>
       <int name="price" value="1"/>
       <int name="slotMax" value="1"/>
       <int name="tradeBlock" value="1"/>
-      <int name="notSale" value="1"/>
     </imgdir>
     <imgdir name="spec">
+      <int name="ignoreContinent" value="1"/>
       <int name="moveTo" value="130000000"/>
       <int name="returnMapQR" value="1056"/>
-      <int name="ignoreContinent" value="1"/>
     </imgdir>
   </imgdir>
   <imgdir name="02031006">
@@ -332,17 +332,17 @@
       <canvas name="iconRaw" width="29" height="29">
         <vector name="origin" x="-2" y="31"/>
       </canvas>
-      <int name="price" value="500"/>
-      <string name="only" value="1"/>
-      <int name="slotMax" value="1"/>
-      <int name="tradeBlock" value="1"/>
       <int name="notSale" value="1"/>
+      <string name="only" value="1"/>
+      <int name="price" value="500"/>
+      <int name="slotMax" value="1"/>
       <int name="timeLimited" value="1"/>
+      <int name="tradeBlock" value="1"/>
     </imgdir>
     <imgdir name="spec">
+      <int name="ignoreContinent" value="1"/>
       <int name="moveTo" value="970000100"/>
       <int name="returnMapQR" value="7752"/>
-      <int name="ignoreContinent" value="1"/>
     </imgdir>
   </imgdir>
   <imgdir name="02031008">
@@ -353,15 +353,15 @@
       <canvas name="iconRaw" width="31" height="16">
         <vector name="origin" x="-1" y="24"/>
       </canvas>
+      <int name="notSale" value="1"/>
       <int name="price" value="1"/>
       <int name="slotMax" value="1"/>
       <int name="tradeBlock" value="1"/>
-      <int name="notSale" value="1"/>
     </imgdir>
     <imgdir name="spec">
+      <int name="ignoreContinent" value="1"/>
       <int name="moveTo" value="140000000"/>
       <int name="returnMapQR" value="1057"/>
-      <int name="ignoreContinent" value="1"/>
     </imgdir>
   </imgdir>
   <imgdir name="02032000">
@@ -372,9 +372,9 @@
       <canvas name="iconRaw" width="27" height="34">
         <vector name="origin" x="-3" y="33"/>
       </canvas>
-      <int name="price" value="1"/>
       <int name="notSale" value="1"/>
       <int name="pquest" value="1"/>
+      <int name="price" value="1"/>
     </imgdir>
     <imgdir name="spec">
       <int name="randomMoveInFieldSet" value="1"/>

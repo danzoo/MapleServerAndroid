@@ -20,14 +20,14 @@
     <imgdir name="logo">
       <imgdir name="0">
         <canvas name="0" width="397" height="219">
-          <vector name="origin" x="198" y="109"/>
+          <vector name="origin" x="165" y="123"/>
           <int name="z" value="0"/>
           <int name="a0" value="0"/>
           <int name="a1" value="255"/>
-          <int name="delay" value="8000"/>
+          <int name="delay" value="5000"/>
         </canvas>
         <canvas name="1" width="397" height="219">
-          <vector name="origin" x="198" y="109"/>
+          <vector name="origin" x="165" y="123"/>
           <int name="z" value="0"/>
           <int name="a0" value="255"/>
         </canvas>
@@ -2302,6 +2302,16 @@
           <vector name="origin" x="145" y="60"/>
           <int name="z" value="0"/>
           <int name="delay" value="60"/>
+        </canvas>
+      </imgdir>
+    </imgdir>
+    <imgdir name="default">
+      <imgdir name="0">
+        <canvas name="0" width="800" height="600">
+          <string name="_hash" value="a6e55cec78462a6f3ed19b3a5e9197d2bc7cd067c6dee844d5946567bf1a72ec"/>
+          <int name="delay" value="70"/>
+          <vector name="origin" x="400" y="300"/>
+          <int name="z" value="0"/>
         </canvas>
       </imgdir>
     </imgdir>

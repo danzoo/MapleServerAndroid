@@ -77,6 +77,17 @@
       <int name="price" value="300"/>
     </imgdir>
   </imgdir>
+  <imgdir name="04010007">
+    <imgdir name="info">
+      <canvas name="icon" width="32" height="28">
+        <vector name="origin" x="-2" y="28"/>
+      </canvas>
+      <canvas name="iconRaw" width="32" height="27">
+        <vector name="origin" x="-2" y="28"/>
+      </canvas>
+      <int name="price" value="150"/>
+    </imgdir>
+  </imgdir>
   <imgdir name="04011000">
     <imgdir name="info">
       <canvas name="icon" width="30" height="25">
@@ -163,17 +174,6 @@
         <vector name="origin" x="-2" y="30"/>
       </canvas>
       <int name="price" value="8000"/>
-    </imgdir>
-  </imgdir>
-  <imgdir name="04010007">
-    <imgdir name="info">
-      <canvas name="icon" width="32" height="28">
-        <vector name="origin" x="-2" y="28"/>
-      </canvas>
-      <canvas name="iconRaw" width="32" height="27">
-        <vector name="origin" x="-2" y="28"/>
-      </canvas>
-      <int name="price" value="150"/>
     </imgdir>
   </imgdir>
   <imgdir name="04011008">

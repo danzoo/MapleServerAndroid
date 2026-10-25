@@ -7,11 +7,10 @@
   </imgdir>
   <imgdir name="skill">
     <imgdir name="8001000">
+      <imgdir name="action">
+        <string name="0" value="stabO1"/>
+      </imgdir>
       <canvas name="icon" width="32" height="32">
-        <vector name="origin" x="0" y="32"/>
-        <int name="z" value="0"/>
-      </canvas>
-      <canvas name="iconMouseOver" width="32" height="32">
         <vector name="origin" x="0" y="32"/>
         <int name="z" value="0"/>
       </canvas>
@@ -19,9 +18,10 @@
         <vector name="origin" x="0" y="32"/>
         <int name="z" value="0"/>
       </canvas>
-      <imgdir name="action">
-        <string name="0" value="stabO1"/>
-      </imgdir>
+      <canvas name="iconMouseOver" width="32" height="32">
+        <vector name="origin" x="0" y="32"/>
+        <int name="z" value="0"/>
+      </canvas>
       <imgdir name="level">
         <imgdir name="1">
           <string name="hs" value="h1"/>
@@ -30,11 +30,10 @@
       </imgdir>
     </imgdir>
     <imgdir name="8001001">
+      <imgdir name="action">
+        <string name="0" value="alert2"/>
+      </imgdir>
       <canvas name="icon" width="32" height="32">
-        <vector name="origin" x="0" y="32"/>
-        <int name="z" value="0"/>
-      </canvas>
-      <canvas name="iconMouseOver" width="32" height="32">
         <vector name="origin" x="0" y="32"/>
         <int name="z" value="0"/>
       </canvas>
@@ -42,9 +41,10 @@
         <vector name="origin" x="0" y="32"/>
         <int name="z" value="0"/>
       </canvas>
-      <imgdir name="action">
-        <string name="0" value="alert2"/>
-      </imgdir>
+      <canvas name="iconMouseOver" width="32" height="32">
+        <vector name="origin" x="0" y="32"/>
+        <int name="z" value="0"/>
+      </canvas>
       <imgdir name="level">
         <imgdir name="1">
           <string name="hs" value="h1"/>

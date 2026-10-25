@@ -942,7 +942,7 @@ public class Server {
             try {
                 future.get();
             } catch (Exception e) {
-                log.error("Failed to run all startup-bound loading tasks" + e);
+                log.error("Failed to run all startup-bound loading tasks", e);
                 throw new IllegalStateException(e);
             }
         }

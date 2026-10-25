@@ -147,12 +147,19 @@ public class GenericPortal implements Portal {
             Character chr = c.getPlayer();
             if (!(chr.getChalkboard() != null && GameConstants.isFreeMarketRoom(getTargetMapId()))) {
                 MapleMap to = chr.getEventInstance() == null ? c.getChannelServer().getMapFactory().getMap(getTargetMapId()) : chr.getEventInstance().getMapInstance(getTargetMapId());
-                Portal pto = to.getPortal(getTarget());
-                if (pto == null) {// fallback for missing portals - no real life case anymore - interesting for not implemented areas
-                    pto = to.getPortal(0);
+                if (to == null) {
+                    // The shipped resource baseline carries only a few maps, so a portal can
+                    // legitimately lead nowhere. Leaving "changed" false below hands control
+                    // back to the client instead of throwing inside the packet handler.
+                    log.warn("Portal {} leads to map {} which is not part of this build", name, targetmap);
+                } else {
+                    Portal pto = to.getPortal(getTarget());
+                    if (pto == null) {// fallback for missing portals - no real life case anymore - interesting for not implemented areas
+                        pto = to.getPortal(0);
+                    }
+                    chr.changeMap(to, pto); //late resolving makes this harder but prevents us from loading the whole world at once
+                    changed = true;
                 }
-                chr.changeMap(to, pto); //late resolving makes this harder but prevents us from loading the whole world at once
-                changed = true;
             } else {
                 chr.dropMessage(5, "You cannot enter this map with the chalkboard opened.");
             }

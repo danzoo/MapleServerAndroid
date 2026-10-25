@@ -259,8 +259,8 @@
       <canvas name="iconRaw" width="27" height="27">
         <vector name="origin" x="-3" y="30"/>
       </canvas>
-      <int name="tradeBlock" value="1"/>
       <int name="price" value="0"/>
+      <int name="tradeBlock" value="1"/>
     </imgdir>
     <imgdir name="spec">
       <int name="mp" value="100"/>
@@ -274,8 +274,8 @@
       <canvas name="iconRaw" width="32" height="31">
         <vector name="origin" x="0" y="32"/>
       </canvas>
-      <int name="tradeBlock" value="1"/>
       <int name="price" value="0"/>
+      <int name="tradeBlock" value="1"/>
     </imgdir>
     <imgdir name="spec">
       <int name="mp" value="300"/>
@@ -289,8 +289,8 @@
       <canvas name="iconRaw" width="32" height="31">
         <vector name="origin" x="0" y="32"/>
       </canvas>
-      <int name="tradeBlock" value="1"/>
       <int name="price" value="0"/>
+      <int name="tradeBlock" value="1"/>
     </imgdir>
     <imgdir name="spec">
       <int name="hpR" value="100"/>
@@ -305,9 +305,9 @@
       <canvas name="iconRaw" width="27" height="27">
         <vector name="origin" x="-3" y="29"/>
       </canvas>
-      <int name="tradeBlock" value="1"/>
-      <int name="price" value="20"/>
       <int name="notSale" value="1"/>
+      <int name="price" value="20"/>
+      <int name="tradeBlock" value="1"/>
     </imgdir>
     <imgdir name="spec">
       <int name="hp" value="50"/>
@@ -321,9 +321,9 @@
       <canvas name="iconRaw" width="27" height="27">
         <vector name="origin" x="-3" y="29"/>
       </canvas>
+      <int name="notSale" value="1"/>
       <int name="price" value="80"/>
       <int name="tradeBlock" value="1"/>
-      <int name="notSale" value="1"/>
     </imgdir>
     <imgdir name="spec">
       <int name="mp" value="100"/>
@@ -337,9 +337,9 @@
       <canvas name="iconRaw" width="30" height="29">
         <vector name="origin" x="-1" y="30"/>
       </canvas>
+      <int name="notSale" value="1"/>
       <int name="price" value="50"/>
       <int name="tradeBlock" value="1"/>
-      <int name="notSale" value="1"/>
     </imgdir>
     <imgdir name="spec">
       <int name="hp" value="100"/>
@@ -353,9 +353,9 @@
       <canvas name="iconRaw" width="30" height="29">
         <vector name="origin" x="-1" y="30"/>
       </canvas>
+      <int name="notSale" value="1"/>
       <int name="price" value="50"/>
       <int name="tradeBlock" value="1"/>
-      <int name="notSale" value="1"/>
     </imgdir>
     <imgdir name="spec">
       <int name="mp" value="50"/>
@@ -470,8 +470,8 @@
         <vector name="origin" x="-4" y="29"/>
       </canvas>
       <canvas name="iconRaw" width="25" height="25">
-        <vector name="origin" x="-4" y="29"/>
         <string name="desc" value="천연 꿀을 모아 담은 단지이다.#nHP를 약 50% 회복신킨다.#nMP를 약 50% 회복시킨다."/>
+        <vector name="origin" x="-4" y="29"/>
       </canvas>
       <int name="price" value="250"/>
     </imgdir>
@@ -615,8 +615,8 @@
       <int name="price" value="1000"/>
     </imgdir>
     <imgdir name="spec">
-      <int name="eva" value="15"/>
       <int name="acc" value="9"/>
+      <int name="eva" value="15"/>
       <int name="time" value="480000"/>
     </imgdir>
   </imgdir>
@@ -796,8 +796,8 @@
       <int name="price" value="160"/>
     </imgdir>
     <imgdir name="spec">
-      <int name="pad" value="25"/>
       <int name="mad" value="60"/>
+      <int name="pad" value="25"/>
       <int name="time" value="1200000"/>
     </imgdir>
   </imgdir>
@@ -812,8 +812,8 @@
       <int name="price" value="25"/>
     </imgdir>
     <imgdir name="spec">
-      <int name="pdd" value="100"/>
       <int name="mdd" value="100"/>
+      <int name="pdd" value="100"/>
       <int name="time" value="600000"/>
     </imgdir>
   </imgdir>
@@ -825,9 +825,9 @@
       <canvas name="iconRaw" width="25" height="25">
         <vector name="origin" x="-4" y="29"/>
       </canvas>
+      <int name="notSale" value="1"/>
       <int name="price" value="1"/>
       <int name="tradeBlock" value="1"/>
-      <int name="notSale" value="1"/>
     </imgdir>
     <imgdir name="spec">
       <int name="speed" value="5"/>

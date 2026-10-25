@@ -28,16 +28,19 @@ import provider.wz.DataType;
 
 public class DataTool {
     public static String getString(Data data) {
-        return ((String) data.getData());
+        final Object value = data.getData();
+        // wz stores an absent value as an empty/void property, while some newer
+        // archives reuse the slot with another type; treat "not a string" as absent.
+        return value instanceof String ? (String) value : null;
     }
     private static final Logger log = LoggerFactory.getLogger(DataTool.class);
 
     public static String getString(Data data, String def) {
-        if (data == null || data.getData() == null) {
+        if (data == null) {
             return def;
-        } else {
-            return ((String) data.getData());
         }
+        final String value = getString(data);
+        return value != null ? value : def;
     }
 
     public static String getString(String path, Data data) {
@@ -49,18 +52,18 @@ public class DataTool {
     }
 
     public static double getDouble(Data data) {
-        return (Double) data.getData();
+        return ((Number) data.getData()).doubleValue();
     }
 
     public static float getFloat(Data data) {
-        return (Float) data.getData();
+        return ((Number) data.getData()).floatValue();
     }
 
     public static int getInt(Data data) {
         if (data == null || data.getData() == null) {
             return 0;// DEF?
         }
-        return (Integer) data.getData();
+        return ((Number) data.getData()).intValue();
     }
 
     public static int getInt(String path, Data data) {
@@ -110,10 +113,10 @@ public class DataTool {
             return Integer.parseInt(getString(data));
         } else {
             Object numData = data.getData();
-            if (numData instanceof Integer) {
-                return (Integer) numData;
+            if (numData instanceof Number) {
+                return ((Number) numData).intValue();
             } else {
-                return (Short) numData;
+                return def;
             }
         }
     }

@@ -10,46 +10,6 @@
     <int name="CategorySub" value="1"/>
     <string name="Name" value="Event"/>
   </imgdir>
-  <imgdir name="2">
-    <int name="Category" value="2"/>
-    <int name="CategorySub" value="0"/>
-    <string name="Name" value="Hat"/>
-  </imgdir>
-  <imgdir name="3">
-    <int name="Category" value="2"/>
-    <int name="CategorySub" value="1"/>
-    <string name="Name" value="Face"/>
-  </imgdir>
-  <imgdir name="4">
-    <int name="Category" value="2"/>
-    <int name="CategorySub" value="2"/>
-    <string name="Name" value="Eye"/>
-  </imgdir>
-  <imgdir name="5">
-    <int name="Category" value="2"/>
-    <int name="CategorySub" value="3"/>
-    <string name="Name" value="Overall"/>
-  </imgdir>
-  <imgdir name="6">
-    <int name="Category" value="2"/>
-    <int name="CategorySub" value="4"/>
-    <string name="Name" value="Top"/>
-  </imgdir>
-  <imgdir name="7">
-    <int name="Category" value="2"/>
-    <int name="CategorySub" value="5"/>
-    <string name="Name" value="Bottom"/>
-  </imgdir>
-  <imgdir name="8">
-    <int name="Category" value="2"/>
-    <int name="CategorySub" value="6"/>
-    <string name="Name" value="Shoes"/>
-  </imgdir>
-  <imgdir name="9">
-    <int name="Category" value="2"/>
-    <int name="CategorySub" value="7"/>
-    <string name="Name" value="Glove"/>
-  </imgdir>
   <imgdir name="10">
     <int name="Category" value="2"/>
     <int name="CategorySub" value="8"/>
@@ -75,6 +35,11 @@
     <int name="CategorySub" value="0"/>
     <string name="Name" value="Scroll"/>
   </imgdir>
+  <imgdir name="15">
+    <int name="Category" value="3"/>
+    <int name="CategorySub" value="1"/>
+    <string name="Name" value="Messenger"/>
+  </imgdir>
   <imgdir name="16">
     <int name="Category" value="3"/>
     <int name="CategorySub" value="2"/>
@@ -94,6 +59,11 @@
     <int name="Category" value="5"/>
     <int name="CategorySub" value="2"/>
     <string name="Name" value="Game"/>
+  </imgdir>
+  <imgdir name="2">
+    <int name="Category" value="2"/>
+    <int name="CategorySub" value="0"/>
+    <string name="Name" value="Hat"/>
   </imgdir>
   <imgdir name="20">
     <int name="Category" value="5"/>
@@ -145,9 +115,39 @@
     <int name="CategorySub" value="1"/>
     <string name="Name" value="How to Gift"/>
   </imgdir>
-  <imgdir name="15">
-    <int name="Category" value="3"/>
+  <imgdir name="3">
+    <int name="Category" value="2"/>
     <int name="CategorySub" value="1"/>
-    <string name="Name" value="Messenger"/>
+    <string name="Name" value="Face"/>
+  </imgdir>
+  <imgdir name="4">
+    <int name="Category" value="2"/>
+    <int name="CategorySub" value="2"/>
+    <string name="Name" value="Eye"/>
+  </imgdir>
+  <imgdir name="5">
+    <int name="Category" value="2"/>
+    <int name="CategorySub" value="3"/>
+    <string name="Name" value="Overall"/>
+  </imgdir>
+  <imgdir name="6">
+    <int name="Category" value="2"/>
+    <int name="CategorySub" value="4"/>
+    <string name="Name" value="Top"/>
+  </imgdir>
+  <imgdir name="7">
+    <int name="Category" value="2"/>
+    <int name="CategorySub" value="5"/>
+    <string name="Name" value="Bottom"/>
+  </imgdir>
+  <imgdir name="8">
+    <int name="Category" value="2"/>
+    <int name="CategorySub" value="6"/>
+    <string name="Name" value="Shoes"/>
+  </imgdir>
+  <imgdir name="9">
+    <int name="Category" value="2"/>
+    <int name="CategorySub" value="7"/>
+    <string name="Name" value="Glove"/>
   </imgdir>
 </imgdir>

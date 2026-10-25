@@ -8,135 +8,7 @@
       <vector name="origin" x="16" y="26"/>
     </canvas>
   </imgdir>
-  <imgdir name="200">
-    <canvas name="icon" width="32" height="26">
-      <vector name="origin" x="16" y="26"/>
-    </canvas>
-    <canvas name="iconRaw" width="32" height="18">
-      <vector name="origin" x="16" y="26"/>
-    </canvas>
-  </imgdir>
-  <imgdir name="300">
-    <canvas name="icon" width="32" height="26">
-      <vector name="origin" x="16" y="26"/>
-    </canvas>
-    <canvas name="iconRaw" width="32" height="18">
-      <vector name="origin" x="16" y="26"/>
-    </canvas>
-  </imgdir>
-  <imgdir name="400">
-    <canvas name="icon" width="32" height="26">
-      <vector name="origin" x="16" y="26"/>
-    </canvas>
-    <canvas name="iconRaw" width="32" height="18">
-      <vector name="origin" x="16" y="26"/>
-    </canvas>
-  </imgdir>
-  <imgdir name="500">
-    <canvas name="icon" width="32" height="26">
-      <vector name="origin" x="16" y="26"/>
-    </canvas>
-    <canvas name="iconRaw" width="32" height="18">
-      <vector name="origin" x="16" y="26"/>
-    </canvas>
-  </imgdir>
-  <imgdir name="600">
-    <canvas name="icon" width="32" height="26">
-      <vector name="origin" x="16" y="26"/>
-    </canvas>
-    <canvas name="iconRaw" width="32" height="18">
-      <vector name="origin" x="16" y="26"/>
-    </canvas>
-  </imgdir>
-  <imgdir name="700">
-    <canvas name="icon" width="32" height="26">
-      <vector name="origin" x="16" y="26"/>
-    </canvas>
-    <canvas name="iconRaw" width="32" height="18">
-      <vector name="origin" x="16" y="26"/>
-    </canvas>
-  </imgdir>
-  <imgdir name="800">
-    <canvas name="icon" width="32" height="26">
-      <vector name="origin" x="16" y="26"/>
-    </canvas>
-    <canvas name="iconRaw" width="32" height="18">
-      <vector name="origin" x="16" y="26"/>
-    </canvas>
-  </imgdir>
-  <imgdir name="900">
-    <canvas name="icon" width="32" height="26">
-      <vector name="origin" x="16" y="26"/>
-    </canvas>
-    <canvas name="iconRaw" width="32" height="18">
-      <vector name="origin" x="16" y="26"/>
-    </canvas>
-  </imgdir>
   <imgdir name="1000">
-    <canvas name="icon" width="32" height="26">
-      <vector name="origin" x="16" y="26"/>
-    </canvas>
-    <canvas name="iconRaw" width="32" height="18">
-      <vector name="origin" x="16" y="26"/>
-    </canvas>
-  </imgdir>
-  <imgdir name="2000">
-    <canvas name="icon" width="32" height="26">
-      <vector name="origin" x="16" y="26"/>
-    </canvas>
-    <canvas name="iconRaw" width="32" height="18">
-      <vector name="origin" x="16" y="26"/>
-    </canvas>
-  </imgdir>
-  <imgdir name="3000">
-    <canvas name="icon" width="32" height="26">
-      <vector name="origin" x="16" y="26"/>
-    </canvas>
-    <canvas name="iconRaw" width="32" height="18">
-      <vector name="origin" x="16" y="26"/>
-    </canvas>
-  </imgdir>
-  <imgdir name="4000">
-    <canvas name="icon" width="32" height="26">
-      <vector name="origin" x="16" y="26"/>
-    </canvas>
-    <canvas name="iconRaw" width="32" height="18">
-      <vector name="origin" x="16" y="26"/>
-    </canvas>
-  </imgdir>
-  <imgdir name="5000">
-    <canvas name="icon" width="32" height="26">
-      <vector name="origin" x="16" y="26"/>
-    </canvas>
-    <canvas name="iconRaw" width="32" height="18">
-      <vector name="origin" x="16" y="26"/>
-    </canvas>
-  </imgdir>
-  <imgdir name="6000">
-    <canvas name="icon" width="32" height="26">
-      <vector name="origin" x="16" y="26"/>
-    </canvas>
-    <canvas name="iconRaw" width="32" height="18">
-      <vector name="origin" x="16" y="26"/>
-    </canvas>
-  </imgdir>
-  <imgdir name="7000">
-    <canvas name="icon" width="32" height="26">
-      <vector name="origin" x="16" y="26"/>
-    </canvas>
-    <canvas name="iconRaw" width="32" height="18">
-      <vector name="origin" x="16" y="26"/>
-    </canvas>
-  </imgdir>
-  <imgdir name="8000">
-    <canvas name="icon" width="32" height="26">
-      <vector name="origin" x="16" y="26"/>
-    </canvas>
-    <canvas name="iconRaw" width="32" height="18">
-      <vector name="origin" x="16" y="26"/>
-    </canvas>
-  </imgdir>
-  <imgdir name="9000">
     <canvas name="icon" width="32" height="26">
       <vector name="origin" x="16" y="26"/>
     </canvas>
@@ -152,7 +24,31 @@
       <vector name="origin" x="16" y="26"/>
     </canvas>
   </imgdir>
+  <imgdir name="100000">
+    <canvas name="icon" width="32" height="26">
+      <vector name="origin" x="16" y="26"/>
+    </canvas>
+    <canvas name="iconRaw" width="32" height="18">
+      <vector name="origin" x="16" y="26"/>
+    </canvas>
+  </imgdir>
   <imgdir name="15000">
+    <canvas name="icon" width="32" height="26">
+      <vector name="origin" x="16" y="26"/>
+    </canvas>
+    <canvas name="iconRaw" width="32" height="18">
+      <vector name="origin" x="16" y="26"/>
+    </canvas>
+  </imgdir>
+  <imgdir name="200">
+    <canvas name="icon" width="32" height="26">
+      <vector name="origin" x="16" y="26"/>
+    </canvas>
+    <canvas name="iconRaw" width="32" height="18">
+      <vector name="origin" x="16" y="26"/>
+    </canvas>
+  </imgdir>
+  <imgdir name="2000">
     <canvas name="icon" width="32" height="26">
       <vector name="origin" x="16" y="26"/>
     </canvas>
@@ -176,6 +72,22 @@
       <vector name="origin" x="16" y="26"/>
     </canvas>
   </imgdir>
+  <imgdir name="300">
+    <canvas name="icon" width="32" height="26">
+      <vector name="origin" x="16" y="26"/>
+    </canvas>
+    <canvas name="iconRaw" width="32" height="18">
+      <vector name="origin" x="16" y="26"/>
+    </canvas>
+  </imgdir>
+  <imgdir name="3000">
+    <canvas name="icon" width="32" height="26">
+      <vector name="origin" x="16" y="26"/>
+    </canvas>
+    <canvas name="iconRaw" width="32" height="18">
+      <vector name="origin" x="16" y="26"/>
+    </canvas>
+  </imgdir>
   <imgdir name="30000">
     <canvas name="icon" width="32" height="26">
       <vector name="origin" x="16" y="26"/>
@@ -185,6 +97,22 @@
     </canvas>
   </imgdir>
   <imgdir name="35000">
+    <canvas name="icon" width="32" height="26">
+      <vector name="origin" x="16" y="26"/>
+    </canvas>
+    <canvas name="iconRaw" width="32" height="18">
+      <vector name="origin" x="16" y="26"/>
+    </canvas>
+  </imgdir>
+  <imgdir name="400">
+    <canvas name="icon" width="32" height="26">
+      <vector name="origin" x="16" y="26"/>
+    </canvas>
+    <canvas name="iconRaw" width="32" height="18">
+      <vector name="origin" x="16" y="26"/>
+    </canvas>
+  </imgdir>
+  <imgdir name="4000">
     <canvas name="icon" width="32" height="26">
       <vector name="origin" x="16" y="26"/>
     </canvas>
@@ -208,6 +136,22 @@
       <vector name="origin" x="16" y="26"/>
     </canvas>
   </imgdir>
+  <imgdir name="500">
+    <canvas name="icon" width="32" height="26">
+      <vector name="origin" x="16" y="26"/>
+    </canvas>
+    <canvas name="iconRaw" width="32" height="18">
+      <vector name="origin" x="16" y="26"/>
+    </canvas>
+  </imgdir>
+  <imgdir name="5000">
+    <canvas name="icon" width="32" height="26">
+      <vector name="origin" x="16" y="26"/>
+    </canvas>
+    <canvas name="iconRaw" width="32" height="18">
+      <vector name="origin" x="16" y="26"/>
+    </canvas>
+  </imgdir>
   <imgdir name="50000">
     <canvas name="icon" width="32" height="26">
       <vector name="origin" x="16" y="26"/>
@@ -217,6 +161,22 @@
     </canvas>
   </imgdir>
   <imgdir name="55000">
+    <canvas name="icon" width="32" height="26">
+      <vector name="origin" x="16" y="26"/>
+    </canvas>
+    <canvas name="iconRaw" width="32" height="18">
+      <vector name="origin" x="16" y="26"/>
+    </canvas>
+  </imgdir>
+  <imgdir name="600">
+    <canvas name="icon" width="32" height="26">
+      <vector name="origin" x="16" y="26"/>
+    </canvas>
+    <canvas name="iconRaw" width="32" height="18">
+      <vector name="origin" x="16" y="26"/>
+    </canvas>
+  </imgdir>
+  <imgdir name="6000">
     <canvas name="icon" width="32" height="26">
       <vector name="origin" x="16" y="26"/>
     </canvas>
@@ -240,6 +200,22 @@
       <vector name="origin" x="16" y="26"/>
     </canvas>
   </imgdir>
+  <imgdir name="700">
+    <canvas name="icon" width="32" height="26">
+      <vector name="origin" x="16" y="26"/>
+    </canvas>
+    <canvas name="iconRaw" width="32" height="18">
+      <vector name="origin" x="16" y="26"/>
+    </canvas>
+  </imgdir>
+  <imgdir name="7000">
+    <canvas name="icon" width="32" height="26">
+      <vector name="origin" x="16" y="26"/>
+    </canvas>
+    <canvas name="iconRaw" width="32" height="18">
+      <vector name="origin" x="16" y="26"/>
+    </canvas>
+  </imgdir>
   <imgdir name="70000">
     <canvas name="icon" width="32" height="26">
       <vector name="origin" x="16" y="26"/>
@@ -249,6 +225,22 @@
     </canvas>
   </imgdir>
   <imgdir name="75000">
+    <canvas name="icon" width="32" height="26">
+      <vector name="origin" x="16" y="26"/>
+    </canvas>
+    <canvas name="iconRaw" width="32" height="18">
+      <vector name="origin" x="16" y="26"/>
+    </canvas>
+  </imgdir>
+  <imgdir name="800">
+    <canvas name="icon" width="32" height="26">
+      <vector name="origin" x="16" y="26"/>
+    </canvas>
+    <canvas name="iconRaw" width="32" height="18">
+      <vector name="origin" x="16" y="26"/>
+    </canvas>
+  </imgdir>
+  <imgdir name="8000">
     <canvas name="icon" width="32" height="26">
       <vector name="origin" x="16" y="26"/>
     </canvas>
@@ -272,6 +264,22 @@
       <vector name="origin" x="16" y="26"/>
     </canvas>
   </imgdir>
+  <imgdir name="900">
+    <canvas name="icon" width="32" height="26">
+      <vector name="origin" x="16" y="26"/>
+    </canvas>
+    <canvas name="iconRaw" width="32" height="18">
+      <vector name="origin" x="16" y="26"/>
+    </canvas>
+  </imgdir>
+  <imgdir name="9000">
+    <canvas name="icon" width="32" height="26">
+      <vector name="origin" x="16" y="26"/>
+    </canvas>
+    <canvas name="iconRaw" width="32" height="18">
+      <vector name="origin" x="16" y="26"/>
+    </canvas>
+  </imgdir>
   <imgdir name="90000">
     <canvas name="icon" width="32" height="26">
       <vector name="origin" x="16" y="26"/>
@@ -281,14 +289,6 @@
     </canvas>
   </imgdir>
   <imgdir name="95000">
-    <canvas name="icon" width="32" height="26">
-      <vector name="origin" x="16" y="26"/>
-    </canvas>
-    <canvas name="iconRaw" width="32" height="18">
-      <vector name="origin" x="16" y="26"/>
-    </canvas>
-  </imgdir>
-  <imgdir name="100000">
     <canvas name="icon" width="32" height="26">
       <vector name="origin" x="16" y="26"/>
     </canvas>
