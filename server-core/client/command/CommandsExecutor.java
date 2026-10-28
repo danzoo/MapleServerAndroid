@@ -296,6 +296,7 @@ public class CommandsExecutor {
         addCommand("seed", 3, SeedCommand.class);
         addCommand("maxenergy", 3, MaxEnergyCommand.class);
         addCommand("killall", 3, KillAllCommand.class);
+        addCommand("banner", 3, BannerCommand.class);
         addCommand("notice", 3, NoticeCommand.class);
         addCommand("rip", 3, RipCommand.class);
         addCommand("openportal", 3, OpenPortalCommand.class);

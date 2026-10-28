@@ -1173,7 +1173,19 @@ public class PacketCreator {
      * @return The server message packet.
      */
     public static Packet serverMessage(String message) {
-        return serverMessage(4, (byte) 0, message, true, false, 0);
+        return serverMessage(message, 0);
+    }
+
+    /**
+     * Gets a server message packet for the banner across the top of the screen.
+     *
+     * @param message         The message to convey.
+     * @param durationSeconds How long the client is to hold the banner up; zero leaves it the
+     *                        client's own default.
+     * @return The server message packet.
+     */
+    public static Packet serverMessage(String message, int durationSeconds) {
+        return serverMessage(4, (byte) 0, message, true, false, 0, durationSeconds);
     }
 
     /**
@@ -1229,6 +1241,24 @@ public class PacketCreator {
      * @return The server notice packet.
      */
     private static Packet serverMessage(int type, int channel, String message, boolean servermessage, boolean megaEar, int npc) {
+        return serverMessage(type, channel, message, servermessage, megaEar, npc, 0);
+    }
+
+    /**
+     * Gets a server message packet.
+     * <p>
+     * Possible values for <code>type</code>:<br> 0: [Notice]<br> 1: Popup<br>
+     * 2: Megaphone<br> 3: Super Megaphone<br> 4: Scrolling message at top<br>
+     * 5: Pink Text<br> 6: Lightblue Text<br> 7: BroadCasting NPC
+     *
+     * @param type          The type of the notice.
+     * @param channel       The channel this notice was sent on.
+     * @param message       The message to convey.
+     * @param servermessage Is this a scrolling ticker?
+     * @param durationSeconds How long the ticker is to stay on screen, for type 4.
+     * @return The server message packet.
+     */
+    private static Packet serverMessage(int type, int channel, String message, boolean servermessage, boolean megaEar, int npc, int durationSeconds) {
         OutPacket p = OutPacket.create(SendOpcode.SERVERMESSAGE);
         p.writeByte(type);
         if (servermessage) {
@@ -1238,6 +1268,8 @@ public class PacketCreator {
         if (type == 3) {
             p.writeByte(channel - 1); // channel
             p.writeBool(megaEar);
+        } else if (type == 4) {
+            p.writeInt(durationSeconds);
         } else if (type == 6) {
             p.writeInt(0);
         } else if (type == 7) { // npc

@@ -5303,10 +5303,7 @@ public class Character extends AbstractCharacterObject {
     }
 
     public void resetPlayerAggro() {
-        if (getWorldServer().unregisterDisabledServerMessage(id)) {
-            client.announceServerMessage();
-        }
-
+        getWorldServer().unregisterDisabledServerMessage(id);
         setTargetHpBarHash(0);
         setTargetHpBarTime(0);
     }

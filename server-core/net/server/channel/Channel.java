@@ -254,7 +254,6 @@ public final class Channel {
 
     public void addPlayer(Character chr) {
         players.addPlayer(chr);
-        chr.sendPacket(PacketCreator.serverMessage(serverMessage));
     }
 
     public String getServerMessage() {

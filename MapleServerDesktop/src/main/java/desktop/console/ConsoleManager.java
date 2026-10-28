@@ -62,6 +62,7 @@ public class ConsoleManager {
         register("spawn", "<mapid> <mobid> [qty]", "Summon mob(s) on a map", this::cmdSpawn);
         register("clearmob", "<mapid>", "Kill all mobs on a map (no drops)", this::cmdClearMob);
         register("announce", "<text...>", "Broadcast a server notice to all online players", this::cmdAnnounce);
+        register("banner", "<seconds> <text...>", "Show the banner across the top of every screen for a number of seconds", this::cmdBanner);
         register("kick", "<name>", "Disconnect an online character", this::cmdKick);
         register("give", "<name> <itemid> [qty]", "Give item(s) to an online character", this::cmdGive);
         register("giveexp", "<name> <amount>", "Give experience to an online character", this::cmdGiveExp);
@@ -234,6 +235,38 @@ public class ConsoleManager {
             server.broadcastMessage(w.getId(), PacketCreator.serverNotice(6, text));
         }
         System.out.println("Announced to all worlds: " + text);
+    }
+
+    private void cmdBanner(String[] args) {
+        if (args.length < 2) {
+            System.out.println("Syntax: banner <seconds> <text...>");
+            return;
+        }
+
+        int seconds;
+        try {
+            seconds = Integer.parseInt(args[0]);
+        } catch (NumberFormatException e) {
+            System.out.println("Syntax: banner <seconds> <text...>");
+            return;
+        }
+
+        if (seconds < 1 || seconds > 3600) {
+            System.out.println("The banner can be held up for between 1 and 3600 seconds.");
+            return;
+        }
+
+        String text = String.join(" ", args).substring(args[0].length()).trim();
+        if (text.isEmpty()) {
+            System.out.println("Syntax: banner <seconds> <text...>");
+            return;
+        }
+
+        Server server = Server.getInstance();
+        for (net.server.world.World w : server.getWorlds()) {
+            server.broadcastMessage(w.getId(), PacketCreator.serverMessage(text, seconds));
+        }
+        System.out.println("Banner shown for " + seconds + "s on all worlds: " + text);
     }
 
     private void cmdKick(String[] args) {

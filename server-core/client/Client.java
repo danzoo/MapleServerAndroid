@@ -1435,31 +1435,18 @@ public class Client extends ChannelInboundHandlerAdapter {
         }
     }
 
-    private void announceDisableServerMessage() {
-        if (!this.getWorldServer().registerDisabledServerMessage(player.getId())) {
-            sendPacket(PacketCreator.serverMessage(""));
-        }
-    }
-
-    public void announceServerMessage() {
-        sendPacket(PacketCreator.serverMessage(this.getChannelServer().getServerMessage()));
-    }
-
     public synchronized void announceBossHpBar(Monster mm, final int mobHash, Packet packet) {
         long timeNow = System.currentTimeMillis();
         int targetHash = player.getTargetHpBarHash();
 
         if (mobHash != targetHash) {
             if (timeNow - player.getTargetHpBarTime() >= SECONDS.toMillis(5)) {
-                // is there a way to INTERRUPT this annoying thread running on the client that drops the boss bar after some time at every attack?
-                announceDisableServerMessage();
                 sendPacket(packet);
 
                 player.setTargetHpBarHash(mobHash);
                 player.setTargetHpBarTime(timeNow);
             }
         } else {
-            announceDisableServerMessage();
             sendPacket(packet);
 
             player.setTargetHpBarTime(timeNow);
