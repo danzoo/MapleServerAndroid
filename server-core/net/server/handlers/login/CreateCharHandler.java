@@ -23,8 +23,6 @@ package net.server.handlers.login;
 
 import client.Client;
 import client.creator.novice.BeginnerCreator;
-import client.creator.novice.LegendCreator;
-import client.creator.novice.NoblesseCreator;
 import net.AbstractPacketHandler;
 import net.packet.InPacket;
 import tools.PacketCreator;
@@ -50,14 +48,8 @@ public final class CreateCharHandler extends AbstractPacketHandler {
 
         int status;
         switch (job) {
-        case 0: // Knights of Cygnus
-            status = NoblesseCreator.createCharacter(c, name, face, hair + haircolor, skincolor, top, bottom, shoes, weapon, gender);
-            break;
         case 1: // Adventurer
             status = BeginnerCreator.createCharacter(c, name, face, hair + haircolor, skincolor, top, bottom, shoes, weapon, gender);
-            break;
-        case 2: // Aran
-            status = LegendCreator.createCharacter(c, name, face, hair + haircolor, skincolor, top, bottom, shoes, weapon, gender);
             break;
         default:
             c.sendPacket(PacketCreator.deleteCharResponse(0, 9));

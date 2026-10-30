@@ -114,6 +114,23 @@ public class MakeCharInfo {
         return this.charWeapons.contains(id);
     }
 
+    /**
+     * Takes in every look the other character creation pages used to offer, so
+     * that the Adventurer page alone can pick any of them.
+     */
+    public MakeCharInfo acceptAll(MakeCharInfo other) {
+        charFaces.addAll(other.charFaces);
+        charHairs.addAll(other.charHairs);
+        charHairColors.addAll(other.charHairColors);
+        charSkins.addAll(other.charSkins);
+        charTops.addAll(other.charTops);
+        charBottoms.addAll(other.charBottoms);
+        charShoes.addAll(other.charShoes);
+        charWeapons.addAll(other.charWeapons);
+
+        return this;
+    }
+
     public boolean verifyCharacter(Character character) {
         if (!verifyFaceId(character.getFace())) return false;
         if (!verifyHairId(character.getHair())) return false;

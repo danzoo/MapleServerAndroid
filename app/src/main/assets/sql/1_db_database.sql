@@ -14,7 +14,7 @@ CREATE TABLE IF NOT EXISTS `accounts` (
 ,  `nxCredit` integer DEFAULT NULL
 ,  `maplePoint` integer DEFAULT NULL
 ,  `nxPrepaid` integer DEFAULT NULL
-,  `characterslots` integer NOT NULL DEFAULT '3'
+,  `characterslots` integer NOT NULL DEFAULT '12'
 ,  `gender` integer NOT NULL DEFAULT '10'
 ,  `tempban` timestamp NOT NULL DEFAULT '2005-05-11 00:00:00'
 ,  `greason` integer NOT NULL DEFAULT '0'

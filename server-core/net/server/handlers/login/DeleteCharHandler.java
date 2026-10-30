@@ -74,7 +74,7 @@ public final class DeleteCharHandler extends AbstractPacketHandler {
                 }
 
                 if (ps2.moveToFirst()) {
-                    int rowcountIdx = ps.getColumnIndex("rowcount");
+                    int rowcountIdx = ps2.getColumnIndex("rowcount");
                     if (ps2.getInt(rowcountIdx) > 0) {
                         c.sendPacket(PacketCreator.deleteCharResponse(cid, 0x1A));
                         return;

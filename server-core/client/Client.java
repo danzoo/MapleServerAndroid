@@ -94,6 +94,10 @@ public class Client extends ChannelInboundHandlerAdapter {
     public static final int LOGIN_SERVER_TRANSITION = 1;
     public static final int LOGIN_LOGGEDIN = 2;
 
+    // Two full pages of eight in the character select screen; accounts created
+    // before this still hold their own (larger) count in the database.
+    public static final byte INITIAL_CHARACTER_SLOTS = 12;
+
     private final Type type;
     private final long sessionId;
     private final PacketProcessor packetProcessor;
@@ -114,7 +118,7 @@ public class Client extends ChannelInboundHandlerAdapter {
     private int gmlevel;
     private Set<String> macs = new HashSet<>();
     private Map<String, ScriptEngine> engines = new HashMap<>();
-    private byte characterSlots = 3;
+    private byte characterSlots = INITIAL_CHARACTER_SLOTS;
     private byte loginattempt = 0;
     private String pin = "";
     private int pinattempt = 0;
@@ -664,7 +668,7 @@ public class Client extends ChannelInboundHandlerAdapter {
                     pin = cursor.getString(pinIdx);
                     pic = cursor.getString(picIdx);
                     gender = (byte) cursor.getInt(genderIdx);
-                    characterSlots = (byte) cursor.getInt(characterslotsIdx);
+                    setCharacterSlots((byte) cursor.getInt(characterslotsIdx));
                     lang = cursor.getInt(languageIdx);
                     passhash = cursor.getString(passwordIdx);
                     tos = (byte) cursor.getInt(tosIdx);
@@ -1377,8 +1381,10 @@ public class Client extends ChannelInboundHandlerAdapter {
         return characterSlots;
     }
 
+    // Accounts predating the wider start still read back their own count, which
+    // is never allowed to fall below the current start value.
     public void setCharacterSlots(byte slots) {
-        characterSlots = slots;
+        characterSlots = (byte) Math.max(slots, INITIAL_CHARACTER_SLOTS);
     }
 
     public boolean canGainCharacterSlot() {

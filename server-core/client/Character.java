@@ -2139,7 +2139,7 @@ public class Character extends AbstractCharacterObject {
                 try (Cursor cursor1 = con.query("buddies", new String[]{"buddyid"}, "characterid = ?", new String[]{String.valueOf(cid)}, null, null, null)) {
                     int buddyColumnIndex = cursor1.getColumnIndex("buddyid");
                     while (cursor1.moveToNext()) {
-                        int buddyid = cursor.getInt(buddyColumnIndex);
+                        int buddyid = cursor1.getInt(buddyColumnIndex);
                         Character buddy = Server.getInstance().getWorld(world).getPlayerStorage().getCharacterById(buddyid);
 
                         if (buddy != null) {
@@ -2160,7 +2160,7 @@ public class Character extends AbstractCharacterObject {
                         while (cursor3.moveToNext()) {
                             int threadidIdx = cursor3.getColumnIndex("threadid");
                             if (threadidIdx != -1) {
-                                int threadId = cursor.getInt(threadidIdx);
+                                int threadId = cursor3.getInt(threadidIdx);
                                 String[] deleteArgs = {String.valueOf(threadId)};
                                 con.execSQL(deleteQuery, deleteArgs);
                             }
@@ -2174,17 +2174,17 @@ public class Character extends AbstractCharacterObject {
 
                 try (Cursor cursor2 = con.query("characters", new String[]{"id", "guildid", "guildrank", "name", "allianceRank"}, "id = ? AND accountid = ?", new String[]{String.valueOf(cid), String.valueOf(accId)}, null, null, null)) {
                     if (cursor2.moveToFirst()) {
-                        int guildidIdx = cursor.getColumnIndex("guildid");
-                        int nameIdx = cursor.getColumnIndex("name");
-                        int guildrankIdx = cursor.getColumnIndex("guildrank");
-                        int allianceRankIdx = cursor.getColumnIndex("allianceRank");
+                        int guildidIdx = cursor2.getColumnIndex("guildid");
+                        int nameIdx = cursor2.getColumnIndex("name");
+                        int guildrankIdx = cursor2.getColumnIndex("guildrank");
+                        int allianceRankIdx = cursor2.getColumnIndex("allianceRank");
                         if (guildidIdx != -1 &&
                                 nameIdx != -1 &&
                                 guildrankIdx != -1 &&
                                 allianceRankIdx != -1) {
-                            int guildId = cursor.getInt(guildidIdx);
+                            int guildId = cursor2.getInt(guildidIdx);
                             if (guildId > 0) {
-                                Server.getInstance().deleteGuildCharacter(new GuildCharacter(player, cid, 0, cursor.getString(nameIdx), (byte) -1, (byte) -1, 0, cursor.getInt(guildrankIdx), guildId, false, cursor.getInt(allianceRankIdx)));
+                                Server.getInstance().deleteGuildCharacter(new GuildCharacter(player, cid, 0, cursor2.getString(nameIdx), (byte) -1, (byte) -1, 0, cursor2.getInt(guildrankIdx), guildId, false, cursor2.getInt(allianceRankIdx)));
                             }
                         }
                     }

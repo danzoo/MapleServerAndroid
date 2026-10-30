@@ -15,12 +15,17 @@ public class MakeCharInfoValidator {
 
     static {
         Data data = DataProviderFactory.getDataProvider(WZFiles.ETC).getData("MakeCharInfo.img");
-        charFemale = new MakeCharInfo(data.getChildByPath("Info/CharFemale"));
-        charMale = new MakeCharInfo(data.getChildByPath("Info/CharMale"));
         orientCharFemale = new MakeCharInfo(data.getChildByPath("OrientCharFemale"));
         orientCharMale = new MakeCharInfo(data.getChildByPath("OrientCharMale"));
         premiumCharFemale = new MakeCharInfo(data.getChildByPath("PremiumCharFemale"));
         premiumCharMale = new MakeCharInfo(data.getChildByPath("PremiumCharMale"));
+
+        // The Adventurer page is the only creation page left, and it offers the
+        // looks the Noblesse and Legend pages used to be pinned to as well.
+        charFemale = new MakeCharInfo(data.getChildByPath("Info/CharFemale"))
+                .acceptAll(premiumCharFemale).acceptAll(orientCharFemale);
+        charMale = new MakeCharInfo(data.getChildByPath("Info/CharMale"))
+                .acceptAll(premiumCharMale).acceptAll(orientCharMale);
     }
 
     private static MakeCharInfo getMakeCharInfo(Character character) {

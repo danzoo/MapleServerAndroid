@@ -84,6 +84,7 @@ public final class LoginPasswordHandler implements PacketHandler {
                 values.put("password", YamlConfig.config.server.BCRYPT_MIGRATION ? BCrypt.hashpw(pwd, BCrypt.gensalt(6)) : hashpwSHA512(pwd));
                 values.put("birthday", DefaultDates.getBirthday().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
                 values.put("tempban", DefaultDates.getTempban().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+                values.put("characterslots", (int) Client.INITIAL_CHARACTER_SLOTS);   // databases created before the wider start still default to 3
                 long accountId = con.insert("accounts", null, values);
 
                 c.setAccID((int) accountId);
