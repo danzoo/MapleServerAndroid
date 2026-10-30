@@ -41,6 +41,14 @@ public class MakeCharInfoValidator {
         MakeCharInfo makeCharInfo = getMakeCharInfo(character);
         if (makeCharInfo == null) return false;
 
+        // Faces and hairs are no longer read off MakeCharInfo.img: which styles may be created is
+        // the server's own decision, kept in two tables. The colour rides in the last digit of the
+        // hair id, and is allowed simply because that style+colour pair has art.
+        boolean male = character.isMale();
+        if (!StyleAvailability.allows_face(character.getFace(), male)) return false;
+        if (!StyleAvailability.allows_hair(character.getHair(), male)) return false;
+        if (!StyleAvailability.has_hair_art(character.getHair())) return false;
+
         return makeCharInfo.verifyCharacter(character);
     }
 }

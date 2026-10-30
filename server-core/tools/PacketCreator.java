@@ -25,6 +25,7 @@ import android.graphics.Point;
 import client.Character;
 import client.*;
 import client.Character.SkillEntry;
+import client.creator.StyleAvailability;
 import client.inventory.*;
 import client.inventory.Equip.ScrollResult;
 import client.keybind.KeyBinding;
@@ -869,7 +870,25 @@ public class PacketCreator {
 
         p.writeByte(YamlConfig.config.server.ENABLE_PIC && !c.canBypassPic() ? (c.getPic() == null || c.getPic().equals("") ? 0 : 1) : 2);
         p.writeInt(YamlConfig.config.server.COLLECTIVE_CHARSLOT ? chars.size() + c.getAvailableCharacterSlots() : c.getCharacterSlots());
+
+        // The faces and hairs the creation page may offer come off this server's two tables, not off
+        // MakeCharInfo.img any more, so the list travels with the character list it is shown beside.
+        // Hair colours are not here: a colour is available because the art for it exists, and the
+        // client reads that out of its own files.
+        write_style_ids(p, StyleAvailability.faces(true));
+        write_style_ids(p, StyleAvailability.faces(false));
+        write_style_ids(p, StyleAvailability.hairs(true));
+        write_style_ids(p, StyleAvailability.hairs(false));
+
         return p;
+    }
+
+    private static void write_style_ids(OutPacket p, List<Integer> ids) {
+        p.writeInt(ids.size());
+
+        for (int id : ids) {
+            p.writeInt(id);
+        }
     }
 
     public static Packet enableTV() {

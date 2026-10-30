@@ -31,6 +31,7 @@ import client.Client;
 import client.Family;
 import client.SkillFactory;
 import client.command.CommandsExecutor;
+import client.creator.StyleAvailability;
 import client.inventory.Item;
 import client.inventory.ItemFactory;
 import client.inventory.manipulator.CashIdGenerator;
@@ -906,6 +907,7 @@ public class Server {
             setAllMerchantsInactive(db);
             cleanNxcodeCoupons(db);
             loadCouponRates(db);
+            StyleAvailability.load(db);
             updateActiveCoupons(db);
             NewYearCardRecord.startPendingNewYearCardRequests(db);
             CashIdGenerator.loadExistentCashIdsFromDb(db);

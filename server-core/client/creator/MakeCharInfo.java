@@ -22,9 +22,6 @@ public class MakeCharInfo {
     private static final String SHOE_ID = "6";
     private static final String WEAPON_ID = "7";
 
-    private final Set<Integer> charFaces = new HashSet<>();
-    private final Set<Integer> charHairs = new HashSet<>();
-    private final Set<Integer> charHairColors = new HashSet<>();
     private final Set<Integer> charSkins = new HashSet<>();
     private final Set<Integer> charTops = new HashSet<>();
     private final Set<Integer> charBottoms = new HashSet<>();
@@ -34,20 +31,10 @@ public class MakeCharInfo {
     public MakeCharInfo(Data charInfoData) {
         for (Data data : charInfoData.getChildren()) {
             switch (data.getName()) {
-                case FACE_ID -> {
-                    for (Data faceData : data) {
-                        charFaces.add(DataTool.getInt(faceData));
-                    }
-                }
-                case HAIR_ID -> {
-                    for (Data hairData : data) {
-                        charHairs.add(DataTool.getInt(hairData));
-                    }
-                }
-                case HAIR_COLOR_ID -> {
-                    for (Data hairColorData : data) {
-                        charHairColors.add(DataTool.getInt(hairColorData));
-                    }
+                // The three style lists are still in the file but no longer read: what may be
+                // created is decided by the two availability tables, so these nodes are skipped
+                // rather than dropped, to keep the log above quiet.
+                case FACE_ID, HAIR_ID, HAIR_COLOR_ID -> {
                 }
                 case SKIN_ID -> {
                     for (Data skinData : data) {
@@ -79,21 +66,6 @@ public class MakeCharInfo {
         }
     }
 
-    public boolean verifyFaceId(int id) {
-        return this.charFaces.contains(id);
-    }
-
-    public boolean verifyHairId(int id) {
-        if (id % 10 != 0) {
-            return this.charHairs.contains(id - (id % 10));
-        }
-        return this.charHairs.contains(id);
-    }
-
-    public boolean verifyHairColorId(int id) {
-        return this.charHairColors.contains(id % 10);
-    }
-
     public boolean verifySkinId(int id) {
         return this.charSkins.contains(id);
     }
@@ -119,9 +91,6 @@ public class MakeCharInfo {
      * that the Adventurer page alone can pick any of them.
      */
     public MakeCharInfo acceptAll(MakeCharInfo other) {
-        charFaces.addAll(other.charFaces);
-        charHairs.addAll(other.charHairs);
-        charHairColors.addAll(other.charHairColors);
         charSkins.addAll(other.charSkins);
         charTops.addAll(other.charTops);
         charBottoms.addAll(other.charBottoms);
@@ -132,9 +101,6 @@ public class MakeCharInfo {
     }
 
     public boolean verifyCharacter(Character character) {
-        if (!verifyFaceId(character.getFace())) return false;
-        if (!verifyHairId(character.getHair())) return false;
-        if (!verifyHairColorId(character.getHair())) return false;
         if (!verifySkinId(character.getSkinColor().getId())) return false;
 
         // Here we only verify the equipment if the character that's being created is of type 'Beginner'
