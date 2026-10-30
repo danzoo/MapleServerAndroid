@@ -3521,8 +3521,9 @@ public class PacketCreator {
     public static Packet getKeymap(Map<Integer, KeyBinding> keybindings) {
         final OutPacket p = OutPacket.create(SendOpcode.KEYMAP);
         p.writeByte(0);
-        // 128, not the original 90: ids 100-119 carry the client's quick-slot cells past F12.
-        for (int x = 0; x < 128; x++) {
+        // 160, not the original 90: ids 100-131 carry the client's 32 virtual quick-slot cells, and
+        // the packet is positional, so this has to reach as far as the client's read loop.
+        for (int x = 0; x < 160; x++) {
             KeyBinding binding = keybindings.get(x);
             if (binding != null) {
                 p.writeByte(binding.getType());
