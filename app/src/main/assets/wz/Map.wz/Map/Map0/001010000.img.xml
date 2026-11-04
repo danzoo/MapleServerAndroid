@@ -2598,7 +2598,7 @@
       <int name="pt" value="2"/>
       <int name="x" value="683"/>
       <int name="y" value="211"/>
-      <int name="tm" value="1020000"/>
+      <int name="tm" value="2000000"/>
       <string name="tn" value="west00"/>
       <int name="horizontalImpact" value="0"/>
     </imgdir>
