@@ -159,6 +159,12 @@ public class MapFactory {
 
         String mapName = getMapName(mapid);
         Data mapData = mapSource.getData(mapName);    // source.getData issue with giving nulls in rare ocasions found thanks to MedicOP
+        if (mapData == null) {
+            // A portal may point at a map the shipped resource baseline does not carry. Callers read
+            // a null map as "not part of this build" and say so to the client.
+            log.warn("Map {} not present in the wz resources", mapName);
+            return null;
+        }
         Data infoData = mapData.getChildByPath("info");
 
         String link = DataTool.getString(infoData.getChildByPath("link"), "");

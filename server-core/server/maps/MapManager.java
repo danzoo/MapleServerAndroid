@@ -80,7 +80,10 @@ public class MapManager {
         SQLiteDatabase con = DatabaseConnection.getConnection();
         map = MapFactory.loadMapFromWz(mapid, world, channel, event, con);
 
-        if (cache) {
+        // A map the resources don't have loads as null. Keeping it out of the cache matters: the
+        // periodic map update and the channel teardown walk every cached map, and would take an
+        // exception from a map that simply isn't there.
+        if (cache && map != null) {
             mapsWLock.lock();
             try {
                 maps.put(mapid, map);

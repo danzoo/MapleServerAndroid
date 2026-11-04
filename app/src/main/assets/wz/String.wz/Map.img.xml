@@ -14677,8 +14677,8 @@
       <string name="streetName" value="彩虹岛"/>
     </imgdir>
     <imgdir name="2000001">
-      <string name="mapName" value="사우스페리 방어구상점"/>
-      <string name="streetName" value="메이플로드"/>
+      <string name="mapName" value="南港杂货店"/>
+      <string name="streetName" value="彩虹岛"/>
     </imgdir>
     <imgdir name="70000">
       <string name="streetName" value="浅水航道"/>

@@ -1212,7 +1212,7 @@ public class PacketCreator {
      * <p>
      * Possible values for <code>type</code>:<br> 0: [Notice]<br> 1: Popup<br>
      * 2: Megaphone<br> 3: Super Megaphone<br> 4: Scrolling message at top<br>
-     * 5: Pink Text<br> 6: Lightblue Text
+     * 5: Pink Text<br> 6: Lightblue Text<br> 8: Red line in the client's message window
      *
      * @param type    The type of the notice.
      * @param message The message to convey.

@@ -152,6 +152,7 @@ public class GenericPortal implements Portal {
                     // legitimately lead nowhere. Leaving "changed" false below hands control
                     // back to the client instead of throwing inside the packet handler.
                     log.warn("Portal {} leads to map {} which is not part of this build", name, targetmap);
+                    c.sendPacket(PacketCreator.serverNotice(8, "此路暂时不通。"));
                 } else {
                     Portal pto = to.getPortal(getTarget());
                     if (pto == null) {// fallback for missing portals - no real life case anymore - interesting for not implemented areas
