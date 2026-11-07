@@ -2,12 +2,12 @@ var status = 0;
 var imaps = [104000000, 102000000, 101000000, 100000000, 103000000, 120000000, 105040300];
 var maps = [102000000, 100000000, 101000000, 103000000, 120000000];
 var cost = [1000, 1000, 800, 1000, 800];
-var townText = [["The town you are at is Lith Harbor! Alright I'll explain to you more about #bLith Harbor#k. It's the place you landed on Victoria Island by riding The Victoria. That's Lith Harbor. A lot of beginners who just got here from Maple Island start their journey here.", "It's a quiet town with the wide body of water on the back of it, thanks to the fact that the harbor is located at the west end of the island. Most of the people here are, or used to be fisherman, so they may look intimidating, but if you strike up a conversation with them, they'll be friendly to you.", "Around town lies a beautiful prairie. Most of the monsters there are small and gentle, perfect for beginners. If you haven't chosen your job yet, this is a good place to boost up your level."], ["Alright I'll explain to you more about #bPerion#k. It's a warrior-town located at the northern-most part of Victoria Island, surrounded by rocky mountains. With an unfriendly atmosphere, only the strong survives there.", "Around the highland you'll find a really skinny tree, a wild hog running around the place, and monkeys that live all over the island. There's also a deep valley, and when you go deep into it, you'll find a humongous dragon with the power to match his size. Better go in there very carefully, or don't go at all.", "If you want to be a #bWarrior#k then find #rDances with Balrog#k, the chief of Perion. If you're level 10 or higher, along with a good STR level, he may make you a warrior after all. If not, better keep training yourself until you reach that level."], ["Alright I'll explain to you more about #bEllinia#k. It's a magician-town located at the far east of Victoria Island, and covered in tall, mystic trees. You'll find some fairies there, too. They don't like humans in general so it'll be best for you to be on their good side and stay quiet.", "Near the forest you'll find green slimes, walking mushrooms, monkeys and zombie monkeys all residing there. Walk deeper into the forest and you'll find witches with the flying broomstick navigating the skies. A word of warning: Unless you are really strong, I recommend you don't go near them.", "If you want to be a #bMagician#k, search for #rGrendel the Really Old#k, the head wizard of Ellinia. He may make you a wizard if you're at or above level 8 with a decent amount of INT. If that's not the case, you may have to hunt more and train yourself to get there."], ["Alright I'll explain to you more about #bHenesys#k. It's a bowman-town located at the southernmost part of the island, made on a flatland in the midst of a deep forest and prairies. The weather's just right, and everything is plentiful around that town, perfect for living. Go check it out.", "Around the prairie you'll find weak monsters such as snails, mushrooms, and pigs. According to what I hear, though, in the deepest part of the Pig Park, which is connected to the town somewhere, you'll find a humongous, powerful mushroom called Mushmom every now and then.", "If you want to be a #bBowman#k, you need to go see #rAthena Pierce#k at Henesys. With a level at or above 10 and a decent amount of DEX, she may make you be one afterall. If not, go train yourself, make yourself stronger, then try again."], ["Alright I'll explain to you more about #bKerning City#k. It's a thief-town located at the northwest part of Victoria Island, and there are buildings up there that have just this strange feeling around them. It's mostly covered in black clouds, but if you can go up to a really high place, you'll be able to see a very beautiful sunset there.", "From Kerning City, you can go into several dungeons. You can go to a swamp where alligators and snakes are abound, or hit the subway full of ghosts and bats. At the deepest part of the underground, you'll find Lace, who is just as big and dangerous as a dragon.", "If you want to be a #bThief#k, seek #rDark Lord#k, the heart of darkness of Kerning City. He may well make you a thief if you're at or above level 10 with a good amount of DEX. If not, go hunt and train yourself to reach there."], ["Here's a little information on #b#m120000000##k. It's a submarine that's currently parked in between Ellinia and Henesys in Victoria Island. That submarine serves as home to numerous pirates. You can have just as beautiful a view of the ocean there as you do here in Lith Harbor.", "#m120000000# is parked in between Henesys and Ellinia, so if you step out just a bit, you'll be able to enjoy the view of both towns. All the pirates you'll meet in town are very gregarious and friendly as well.", "If you are serious about becoming a #bPirate#k, then you better meet the captain of #m120000000#, #r#p1090000##k. If you are over Level 10 with 20 DEX, then she may let you become one. If you aren't up to that level, then you'll need to train harder to get there!"], ["Alright I'll explain to you more about #bSleepywood#k. It's a forest town located at the southeast side of Victoria Island. It's pretty much in between Henesys and the ant-tunnel dungeon. There's a hotel there, so you can rest up after a long day at the dungeon ... it's a quiet town in general.", "In front of the hotel there's an old buddhist monk by the name of #rChrishrama#k. Nobody knows a thing about that monk. Apparently he collects materials from the travelers and create something, but I am not too sure about the details. If you have any business going around that area, please check that out for me.", "From Sleepywood, head east and you'll find the ant tunnel connected to the deepest part of the Victoria Island. Lots of nasty, powerful monsters abound so if you walk in thinking it's a walk in the park, you'll be coming out as a corpse. You need to fully prepare yourself for a rough ride before going in.", "And this is what I hear ... apparently, at Sleepywood there's a secret entrance leading you to an unknown place. Apparently, once you move in deep, you'll find a stack of black rocks that actually move around. I want to see that for myself in the near future ..."]];
+var townText = [["你所在的城镇就是明珠港！好，我来给你讲讲#b明珠港#k。这里是坐着诺特勒斯号抵达金银岛时落脚的港口，很多刚从彩虹岛来的新手就在这里出发。", "港口在岛的西端，背后是一大片海，所以这里很安静。镇上的人大多做过渔民，看着不太好接近，其实搭句话他们就很客气。", "镇子外围是一片漂亮的草原。里面的怪又小又温和，最适合新手。还没转职的话，在这里练级最合适。"], ["好，我来给你讲讲#b勇士部落#k。它在金银岛的最北边，是被岩石山围住的战士城镇。气氛不太友善，只有强者才活得下去。", "高原上你能看到瘦得可怜的树、乱跑的野猪，还有满岛的猴子。还有一道很深的山谷，越往里走越能碰到一头体型和力量都大得吓人的龙。进去要非常小心，或者干脆别进去。", "想当#b战士#k就去找#r武术教练#k，他是勇士部落的首领。等级 10 以上、力量够看，他或许就收你。还没到的话，继续练到那个等级。"], ["好，我来给你讲讲#b魔法密林#k。它在金银岛的最东边，被高耸神秘的树覆盖，那里还有妖精。妖精一般不喜欢人类，所以最好跟她们处好关系，安静一点。", "森林附近住着绿蜗牛、花蘑菇、猴子和僵尸猴子。再往里走，会看到踩着扫帚飞在天空的女巫。提醒一句：除非你真的很强，否则别靠近她们。", "想当#b魔法师#k就去找#r汉斯#k，她是魔法密林所有魔法师的首领。等级 8 以上、智力够看，她或许就收你。还没到的话，多打怪多练。"], ["好，我来给你讲讲#b射手村#k。它在岛的最南边，建在深林与草原之间的一片平地上。气候刚好，物产丰富，最适合住人，去看看吧。", "草原上是蜗牛、蘑菇、猪这类弱小的怪。不过听说和村子某处相连的猪圈最深处，偶尔会出现一头又大又强的蘑菇王。", "想当#b弓箭手#k就去找射手村的#r赫丽娜#k。等级 10 以上、敏捷够看，她或许就收你。还没到的话，去练强一点再来。"], ["好，我来给你讲讲#b废弃都市#k。它在金银岛的西北边，镇上的楼总带着一种说不出的味道。这里大半天都是乌云，不过只要爬到很高的地方，就能看到特别漂亮的日落。", "从废弃都市可以进好几条地下城。有满是鳄鱼和毒蛇的沼泽，也有满是幽灵和蝙蝠的地铁站。地下的最深处住着蕾丝，她和龙一样大、一样危险。", "想当#b飞侠#k就去找#r达克鲁#k，他是废弃都市黑暗的核心。等级 10 以上、敏捷够看，他或许就收你。还没到的话，去打怪练到那里。"], ["这里给你讲讲#b#m120000000##k。它是一艘停在金银岛魔法密林和射手村之间的潜水艇，现在成了许多海盗的家。在那儿看海一样漂亮，不输明珠港。", "#m120000000#停在射手村和魔法密林之间，只要走出去一点，两个城镇的景色都能看到。镇上的海盗都很外向、很好客。", "真想当#b海盗#k的话，就去见#m120000000#的船长#r#p1090000##k。等级 10 以上、敏捷 20，她或许就收你。还没到的话，再多练练！"], ["好，我来给你讲讲#b林中之城#k。它在金银岛的东南边，是一片森林里的城镇，正好在射手村和蚂蚁洞地下城之间。那里有旅馆，跑完地下城可以去歇脚……总之是个安静的小镇。", "旅馆前坐着一个谁也不了解的老和尚。听说他向过路人收集材料，在做什么东西，具体不清楚。你要是在那一带有事，顺便帮我打听一下。", "从林中之城往东走，就是连着金银岛最深处的蚂蚁洞。里面又凶又强的怪很多，要是当成散步走进去，就只能躺着出来了。去之前把准备做足。", "还有，这是我听说的……林中之城有一道密道通向一个未知的地方。据说往里走会看到一堆会自己动的黑色石头。我打算近期自己去看一看……"]];
 var selectedMap = -1;
 var town = false;
 
 function start() {
-    cm.sendNext("Do you wanna head over to some other town? With a little money involved, I can make it happen. It's a tad expensive, but I run a special 90% discount for beginners.");
+    cm.sendNext("想去别的城镇吗？只要出一点钱，我就能送你过去。价格是贵了些，不过新手可以享受九折优惠。");
 }
 
 function action(mode, type, selection) {
@@ -15,7 +15,7 @@ function action(mode, type, selection) {
     if (mode != 1) {
         if ((mode == 0 && !town) || mode == -1) {
             if (type == 1 && mode != -1) {
-                cm.sendNext("There's a lot to see in this town, too. Let me know if you want to go somewhere else.");
+                cm.sendNext("这个镇上也有的逛。想去别的地方就告诉我。");
             }
             cm.dispose();
             return;
@@ -30,19 +30,19 @@ function action(mode, type, selection) {
 
     }
     if (status == 1) {
-        cm.sendSimple("It's understandable that you may be confused about this place if this is your first time around. If you got any questions about this place, fire away.\r\n#L0##bWhat kind of towns are here in Victoria Island?#l\r\n#L1#Please take me somewhere else.#k#l");
+        cm.sendSimple("第一次来这片地方，觉得摸不着头脑很正常。关于金银岛有什么想问的，尽管问。\r\n#L0##b金银岛都有哪些城镇？#l\r\n#L1#送我去别的地方。#k#l");
     } else if (status == 2) {
         if (selection == 0) {
             town = true;
-            var text = "There are 7 big towns here in Victoria Island. Which of those do you want to know more of?#b";
+            var text = "金银岛一共有 7 个大一点的城镇。你想了解哪一个？#b";
             for (var i = 0; i < imaps.length; i++) {
                 text += "\r\n#L" + i + "##m" + imaps[i] + "##l";
             }
             cm.sendSimple(text);
         } else if (selection == 1) {
-            var selStr = cm.getJobId() == 0 ? "There's a special 90% discount for all beginners. Alright, where would you want to go?#b" : "Oh you aren't a beginner, huh? Then I'm afraid I may have to charge you full price. Where would you like to go?#b";
+            var selStr = cm.getJobId() == 0 ? "新手一律九折。那么，你想去哪里？#b" : "哦，你不是新手啊？那只好收全价了。你想去哪里？#b";
             for (var i = 0; i < maps.length; i++) {
-                selStr += "\r\n#L" + i + "##m" + maps[i] + "# (" + (cost[i] / (cm.getJobId() == 0 ? 10 : 1)) + " mesos)#l";
+                selStr += "\r\n#L" + i + "##m" + maps[i] + "#（" + (cost[i] / (cm.getJobId() == 0 ? 10 : 1)) + "金币）#l";
             }
             cm.sendSimple(selStr);
         }
@@ -57,10 +57,10 @@ function action(mode, type, selection) {
         }
     } else if (status == 3) {
         selectedMap = selection;
-        cm.sendYesNo("I guess you don't need to be here. Do you really want to move to #b#m" + maps[selection] + "##k? Well it'll cost you #b" + (cost[selection] / (cm.getJobId() == 0 ? 10 : 1)) + " mesos#k. What do you think?");
+        cm.sendYesNo("看来你在这里没什么事。你真的想去#b#m" + maps[selection] + "##k吗？这需要花#b" + (cost[selection] / (cm.getJobId() == 0 ? 10 : 1)) + "金币#k。怎么样？");
     } else if (status == 4) {
         if (cm.getMeso() < (cost[selectedMap] / (cm.getJobId() == 0 ? 10 : 1))) {
-            cm.sendNext("You don't have enough mesos. With your abilities, you should have more than that!");
+            cm.sendNext("金币不够啊。以你的本事，应该不止这么点！");
         } else {
             cm.gainMeso(-(cost[selectedMap] / (cm.getJobId() == 0 ? 10 : 1)));
             cm.warp(maps[selectedMap]);

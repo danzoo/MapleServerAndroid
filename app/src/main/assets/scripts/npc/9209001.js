@@ -24,11 +24,11 @@ status = -1;
 var sel, sel2;
 
 function start() {
-    cm.sendOk("Hello, the Maple 7th Day Market is currently unavailable.");
+    cm.sendOk("你好，冒险岛周末集市目前还没开放。");
     cm.dispose();
     return;
 
-    cm.sendSimple("Hello, the Maple 7th Day Market opens today.#b\r\n#L0#Move to Maple 7th Day Market map\r\n#L1#Listen for an explanation about the Maple 7th Day Market");
+    cm.sendSimple("你好，今天是冒险岛周末集市开放的日子。#b\r\n#L0#送我去周末集市地图\r\n#L1#听听周末集市是怎么回事");
 }
 
 function action(mode, type, selection) {
@@ -50,9 +50,9 @@ function action(mode, type, selection) {
             sel = selection;
         }
         if (selection == 0) {
-            cm.sendNext("Okay, we will send you to the Maple 7th Day Market map.");
+            cm.sendNext("好，这就送你去周末集市地图。");
         } else {
-            cm.sendSimple("What would you like to know about the Maple 7th Day Market?#b\r\n#L0#Where does the Maple 7th Day Market take place?\r\n#L1#What can you do at the Maple 7th Day Market?\r\n#L2#I do not have any questions.");
+            cm.sendSimple("关于周末集市你想了解什么？#b\r\n#L0#周末集市在哪里办？\r\n#L1#周末集市能做什么？\r\n#L2#我没有别的问题了。");
         }
     } else if (status == 1) {
         if (sel == 0) {
@@ -60,12 +60,12 @@ function action(mode, type, selection) {
             cm.warp(680100000 + parseInt(Math.random() * 3));
             cm.dispose();
         } else if (selection == 0) {
-            cm.sendNext("The Maple 7th Day Market opens only on Sundays. You can enter if you find me in any town, Henesys, New Leaf City, Leafre, Kerning City, Ludibrium, I'm just about everywhere!");
+            cm.sendNext("冒险岛周末集市只在星期日开放。在射手村、新叶城、神木村、废弃都市、玩具城任何一个城镇找到我就能进场！我几乎无处不在！");
             status -= 2;
         } else if (selection == 1) {
-            cm.sendSimple("You can find rare goods that are hard to find elsewhere at the Maple 7th Day Market.#b\r\n#L0#Purchase Special Items\r\n#L1#Help the Poultry Farm Owner");
+            cm.sendSimple("在周末集市能买到别处少见的稀罕货。#b\r\n#L0#买特价商品\r\n#L1#帮养鸡场场主一把");
         } else {
-            cm.sendNext("I guess you don't have any question. Please keep us in your thoughts, and ask if you are curious about anything.");
+            cm.sendNext("看来你没有别的问题了。记得我们，好奇什么随时来问。");
             cm.dispose();
         }
     } else if (status == 2) {
@@ -73,27 +73,27 @@ function action(mode, type, selection) {
             sel2 = selection;
         }
         if (sel2 == 0) {
-            cm.sendNext("You can find many items at the Maple 7th Day Market. The prices are subject to change, so you'd better get them when they're cheap!");
+            cm.sendNext("周末集市上有很多道具。价格会变，所以便宜的时候最好下手！");
         } else {
-            cm.sendNext("Aside from the merchants, you can also find the lazy daughter of the poultry farm owner at the Maple 7th Day Market. Help Mimi and hatch her egg until it grows to be a chicken!");
+            cm.sendNext("除了商贩，周末集市里还有养鸡场场主那个懒洋洋的女儿。帮帮#b#p9209001##k，把她孵的蛋一路孵成小鸡！");
         }
     } else if (status == 3) {
         if (sel2 == 0) {
-            cm.sendNextPrev("The purchases made here can be sold back to the merchant intermediary, Abdula. He won't accept anything more than a week old, so make sure you re-sell by Saturday!");
+            cm.sendNextPrev("在这里买的东西可以卖给中介商阿布杜拉。超过一个星期的他不要，所以务必在星期六之前转卖出去！");
         } else {
-            cm.sendNextPrev("Since she can't just trust anyone with the egg, she'll ask for deposit money. Pay her the deposit and take good care of the egg.");
+            cm.sendNextPrev("她不能把蛋随便交给谁，所以要先收押金。交押金给她，然后把蛋照顾好。");
         }
     } else if (status == 4) {
         if (sel2 == 0) {
-            cm.sendNextPrev("Abdula adjusts his reselling rates as well, so it would be wise to sell when you can make the most profit. The prices tend to fluctuate hourly, so remember to check often.");
+            cm.sendNextPrev("阿布杜拉的回收价也会调，所以在最赚钱的时候卖才划算。价格差不多每小时都在变，记得常来看。");
         } else {
-            cm.sendNextPrev("If you manage to successfully grow the egg into a chicken and take it back to Mimi, Mimi will reward you. She may be lazy but she's not ungrateful.");
+            cm.sendNextPrev("真的把蛋孵成小鸡再带回给#p9209001#，她会好好谢你的。她是懒，可不是不懂感恩。");
         }
     } else if (status == 5) {
         if (sel2 == 0) {
-            cm.sendNextPrev("Test your business wit by buying good at low prices in the Maple 7th Day Market and selling it to the merchant intermediary when its value goes up!");
+            cm.sendNextPrev("在周末集市低价买进，等价高了再卖给中介商，试试你的生意头脑吧！");
         } else {
-            cm.sendNextPrev("You can click on the egg to check on its growth. You have to be diligent with the egg since the EXP you gain and the egg will grow together.");
+            cm.sendNextPrev("点一下蛋就能看到它的成长。蛋要勤照看，你赚的经验值和蛋是一起长的。");
         }
     }
 }

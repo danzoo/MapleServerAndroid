@@ -47,13 +47,13 @@ function action(mode, type, selection) {
         }
 
         if (status == 0) {
-            cm.sendNext("Hey, traveler! I am #p9000021#, and my job is to recruit travelers like you, who eagers for new challenges daily. Right now, my team is holding contests that thoroughly tests the mental and physical capabilities of adventurers like you.");
+            cm.sendNext("你好，旅行者！我是#p9000021#，我的工作是招募像你这样天天渴望新挑战的旅行者。现在我的团队正在举办比赛，把冒险者的意志和实力测个彻底。");
         } else if (status == 1) {
-            cm.sendNext("These contests involve #bsequential boss fights#k, with some resting spots between some sections. These will require some strategy time and enough supplies at hand, as they are not common fights.");
+            cm.sendNext("这些比赛是#b连续挑战首领#k，中间会留几个休息点。这不是普通的打架，得花时间算计，补给也要带足。");
         } else if (status == 2) {
-            cm.sendAcceptDecline("If you feel you are powerful enough, you can join others like you at where we are hosting the contests of power. ... So, what is your decision? Will you come to where the contests are being held right now?");
+            cm.sendAcceptDecline("觉得自己够强，就去比赛的场地，跟同样自信的人一起上。……那么，你怎么决定？现在就送你去比赛场地？");
         } else if (status == 3) {
-            cm.sendOk("Very well. Remember, there you can assemble a team or take on the fightings on your own, it's up to you. Good luck!");
+            cm.sendOk("也好。记住，到了那里可以组队，也可以一个人上，随你。祝你好运！");
         } else if (status == 4) {
             cm.getPlayer().saveLocation("BOSSPQ");
             cm.warp(970030000, "out00");

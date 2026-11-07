@@ -40,7 +40,7 @@ function start(mode, type, selection) {
         }
 
         if (status == 0) {
-            qm.sendNext("Sample Text.");
+            qm.sendNext("示例文本。");
         } else if (status == 1) {
             qm.forceStartQuest();
             qm.dispose();
@@ -64,7 +64,7 @@ function end(mode, type, selection) {
         }
 
         if (status == 0) {
-            qm.sendNext("Sample Text.");
+            qm.sendNext("示例文本。");
         } else if (status == 1) {
             qm.forceCompleteQuest();
             qm.dispose();

@@ -44,7 +44,7 @@ function action(mode, type, selection) {
         }
 
         if (status == 0) {
-            cm.sendOk("Sample text.");
+            cm.sendOk("示例文本。");
             cm.dispose();
         }
     }

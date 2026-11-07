@@ -27,7 +27,7 @@
 var status = -1;
 
 function start() {
-    cm.sendNext("This is the town called #bAmherst#k, located at the northeast part of the Maple Island. You know that Maple Island is for beginners, right? I'm glad there are only weak monsters around this place.");
+    cm.sendNext("这里是从彩虹岛往东北去的#b彩虹村#k。彩虹岛是新手待的地方，你知道吧？这里只有弱小的怪物，我就放心了。");
 }
 
 function action(mode, type, selection) {
@@ -43,9 +43,9 @@ function action(mode, type, selection) {
         }
     } else {
         if (status == 1) {
-            cm.sendNextPrev("If you want to get stronger, then go to #bSouthperry#k where there's a harbor. Ride on the gigantic ship and head to the place called #bVictoria Island#k. It's incomparable in size compared to this tiny island.");
+            cm.sendNextPrev("想变强的话就去有港口的#b南港#k。坐上那艘大船，去一个叫#b金银岛#k的地方。跟这座小岛比，那边大得没法比。");
         } else if (status == 2) {
-            cm.sendPrev("At the Victoria Island, you can choose your job. Is it called #bPerion#k...? I heard there's a bare, desolate town where warriors live. A highland...what kind of a place would that be?");
+            cm.sendPrev("到了金银岛就可以转职。好像有个叫#b勇士部落#k……？听说那是战士住的、光秃秃的荒凉地方。高原……那会是个什么样的地方呢？");
         } else if (status == 3) {
             cm.dispose();
         }

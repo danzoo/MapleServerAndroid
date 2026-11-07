@@ -24,7 +24,7 @@
         * @author Ronan Lana
 */
 
-var options = ["EQUIP", "USE", "SET-UP", "ETC"];
+var options = ["装备", "消耗", "布置", "其他"];
 var name;
 var status;
 var selectedType = 0;
@@ -44,27 +44,27 @@ function action(mode, type, selection) {
     if (status == 0) {
         importPackage(Packages.config);
         if (!YamlConfig.config.server.USE_ENABLE_CUSTOM_NPC_SCRIPT) {
-            cm.sendOk("The medal ranking system is currently unavailable...");
+            cm.sendOk("勋章排行系统目前还没开放……");
             cm.dispose();
             return;
         }
 
-        var selStr = "Hello, I am the #bBazaar NPC#k! Sell to me any item on your inventory you don't need. #rWARNING#b: Make sure you have your items ready to sell at the slots #rAFTER#b the item you have selected to sell.#k Any items #bunder#k the item selected will be sold thoroughly.";
+        var selStr = "你好，我是#b回收商人#k！道具栏里不用的都可以卖给我。#r注意#b：请把要卖的道具摆在所选道具的#r后面#b的格子里。#k选中道具#b下面#k的道具会被一并卖掉。";
         for (var i = 0; i < options.length; i++) {
             selStr += "\r\n#L" + i + "# " + options[i] + "#l";
         }
         cm.sendSimple(selStr);
     } else if (status == 1) {
         selectedType = selection;
-        cm.sendGetText("From what item on your #r" + options[selectedType] + "#k inventory do you want to start the transaction?");
+        cm.sendGetText("从你#r" + options[selectedType] + "#k栏的第几个道具开始交易？");
     } else if (status == 2) {
         name = cm.getText();
         var res = cm.getPlayer().sellAllItemsFromName(selectedType + 1, name);
 
         if (res > -1) {
-            cm.sendOk("Transaction complete! You received #r" + cm.numberWithCommas(res) + " mesos#k from this action.");
+            cm.sendOk("交易完成！这次你收到#r" + cm.numberWithCommas(res) + "金币#k。");
         } else {
-            cm.sendOk("There is no #b'" + name + "'#k in your #b" + options[selectedType] + "#k inventory!");
+            cm.sendOk("你的道具栏里没有名叫‘" + name + "’的#b" + options[selectedType] + "#k！");
         }
 
         cm.dispose();

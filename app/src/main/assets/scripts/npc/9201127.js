@@ -28,9 +28,9 @@
 
 var status;
 var map = 120000101;
-var job = "Pirate";
+var job = "海盗";
 var jobType = 5;
-var no = "Come back to me if you decided to be a #b" + job + "#k.";
+var no = "想清楚要当#b" + job + "#k了再来找我。";
 
 function start() {
     status = -1;
@@ -56,13 +56,13 @@ function action(mode, type, selection) {
         if (status == 0) {
             if (cm.getJob() == "BEGINNER") {
                 if (cm.getLevel() >= 10 && cm.canGetFirstJob(jobType)) {
-                    cm.sendYesNo("Hey #h #, I can send you to #b#m" + map + "##k if you want to be a #b" + job + "#k. Do you want to go now?");
+                    cm.sendYesNo("你好 #h #，我可以送你去#b#m" + map + "##k。想当#b" + job + "#k吗？现在就走吗？");
                 } else {
-                    cm.sendOk("If you want to be a #b" + job + "#k, train yourself further until you reach #blevel 10, " + cm.getFirstJobStatRequirement(jobType) + "#k.");
+                    cm.sendOk("想当#b" + job + "#k，就继续练到#b10 级，并且" + cm.getFirstJobStatRequirement(jobType) + "#k了再来找我。");
                     cm.dispose();
                 }
             } else {
-                cm.sendOk("You're much stronger now. Keep training!");
+                cm.sendOk("你现在强多了。继续练吧！");
                 cm.dispose();
             }
         } else if (status == 1) {

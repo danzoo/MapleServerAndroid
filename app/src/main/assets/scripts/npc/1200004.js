@@ -8,7 +8,7 @@
  ----------------------------------------------------------------------------------
  **/
 
-var menu = new Array("Rien");
+var menu = new Array("里恩");
 var method;
 
 function start() {
@@ -25,7 +25,7 @@ function action(mode, type, selection) {
             cm.dispose();
             return;
         } else if (mode == 0) {
-            cm.sendNext("OK. If you ever change your mind, please let me know.");
+            cm.sendNext("好吧。改了主意再告诉我。");
             cm.dispose();
             return;
         }
@@ -33,13 +33,13 @@ function action(mode, type, selection) {
         if (status == 0) {
             var display = "";
             for (var i = 0; i < menu.length; i++) {
-                display += "\r\n#L" + i + "##b Rien (800 mesos)#k";
+                display += "\r\n#L" + i + "##b 里恩（800 金币）#k";
             }
-            cm.sendSimple("Are you thinking about leaving Victoria Island and heading to our town? If you board this ship, I can take you from #bLith Harbor#k to #bRien#k and back. But you must pay a #bfee of 800#k Mesos. Would you like to go to Rien? It'll take about a minute to get there.\r\n" + display);
+            cm.sendSimple("你是想离开金银岛去我们那边看看吗？坐上这条船，我可以带你从#b明珠港#k到#b里恩#k再回来。不过要收#b800 金币#k的船票。要去里恩吗？一会儿就到了。\r\n" + display);
 
         } else if (status == 1) {
             if (cm.getMeso() < 800) {
-                cm.sendNext("Hmm... Are you sure you have #b800#k Mesos? Check your Inventory and make sure you have enough. You must pay the fee or I can't let you get on...");
+                cm.sendNext("嗯……你确定带了#b800#k金币吗？打开道具栏确认够数。不付船票我可不能让你上船……");
                 cm.dispose();
             } else {
                 cm.gainMeso(-800);
