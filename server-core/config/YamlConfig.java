@@ -17,7 +17,15 @@ public class YamlConfig {
         try {
             File configFile = new File(context.getFilesDir(), "config.yaml");
             FileInputStream inputStream = new FileInputStream(configFile);
-            YamlReader reader = new YamlReader(new InputStreamReader(inputStream))/*, CharsetConstants.CHARSET))*/;
+
+            // An on-device config.yaml survives app updates (it is seeded once on first run), so it
+            // may contain keys this build does not know about - or lack keys this build added.
+            // Ignoring unknown keys keeps an older config loadable instead of aborting at startup;
+            // missing keys simply stay null and Server#getInetSocket falls back to the IPv4 values.
+            com.esotericsoftware.yamlbeans.YamlConfig yamlBeans =
+                    new com.esotericsoftware.yamlbeans.YamlConfig();
+            yamlBeans.readConfig.setIgnoreUnknownProperties(true);
+            YamlReader reader = new YamlReader(new InputStreamReader(inputStream), yamlBeans);
             YamlConfig config = reader.read(YamlConfig.class);
             reader.close();
             return config;

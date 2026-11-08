@@ -43,10 +43,18 @@ public class ServerConfig {
     public int MAX_ACCOUNT_LOGIN_ATTEMPT;
     public int LOGIN_ATTEMPT_DURATION;
 
-    //Ip Configuration
+    //Ip Configuration - the addresses advertised to the client on channel redirect; see
+    //net.server.HostPort and Server#getInetSocket.
+    //HOST/LANHOST/LOCALHOST are used for IPv4 clients (and as the fallback for IPv6 clients when the
+    //matching *6 key is empty). Keep them IPv4 literals to preserve the original four-byte packet.
+    //The *6 keys are used only when the client connected over IPv6. Leave them empty to keep the
+    //historical IPv4-only behaviour. A port must NOT be appended to any of these values.
     public String HOST;
     public String LANHOST;
     public String LOCALHOST;
+    public String HOST6;
+    public String LANHOST6;
+    public String LOCALHOST6;
     public boolean GMSERVER;
 
     //Other configuration

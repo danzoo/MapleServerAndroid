@@ -20,6 +20,7 @@ import net.net.logging.MonitoredChrLogger;
 import net.packet.ByteBufInPacket;
 import net.packet.InPacket;
 import net.packet.Packet;
+import net.server.HostPort;
 import net.server.Server;
 import net.server.channel.Channel;
 import scripting.AbstractPlayerInteraction;
@@ -978,9 +979,9 @@ public final class GmCommandsLv3 {
                     String ip = tc.getRemoteAddress();
                     try {
                         SQLiteDatabase con = DatabaseConnection.getConnection();
-                        if (ip != null && ip.matches("/[0-9]{1,3}\\..*")) {
+                        if (ip != null && HostPort.isIpLiteral(ip)) {
                             ContentValues values = new ContentValues();
-                            values.put("ip", ip);
+                            values.put("ip", HostPort.normalizeHost(ip));
                             values.put("aid", String.valueOf(tc.getAccID()));
                             con.insert("ipbans", null, values);
                         }

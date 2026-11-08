@@ -68,9 +68,12 @@ application {
     // rhino-android bundles the pre-JPMS com.sun.script.javascript.RhinoScriptEngine, which reaches
     // into java.base internals that JDK 21 encapsulates. Export the one package it touches so the
     // old engine can initialise on a modern JVM.
+    //
+    // Do NOT set -Djava.net.preferIPv4Stack=true here: it makes the JVM use an IPv4-only socket
+    // stack, so Netty's wildcard bind would refuse IPv6 clients. With the default dual-stack JVM a
+    // bind(port) on NioServerSocketChannel listens on both families.
     applicationDefaultJvmArgs = [
             '-Xmx2048m',
-            '-Djava.net.preferIPv4Stack=true',
             '--add-exports=java.base/sun.security.action=ALL-UNNAMED'
     ]
 }

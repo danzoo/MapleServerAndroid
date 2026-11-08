@@ -81,29 +81,73 @@ fun ServerConfigScreen(context: Context, navController: NavHostController, serve
 fun ServerConfigProperties(modifiedServerConfig: ServerConfig) {
     var host by remember { mutableStateOf(modifiedServerConfig.server.HOST) }
     var lanHost by remember { mutableStateOf(modifiedServerConfig.server.LANHOST) }
+    var localHost by remember { mutableStateOf(modifiedServerConfig.server.LOCALHOST) }
+    var host6 by remember { mutableStateOf(modifiedServerConfig.server.HOST6 ?: "") }
+    var lanHost6 by remember { mutableStateOf(modifiedServerConfig.server.LANHOST6 ?: "") }
+    var localHost6 by remember { mutableStateOf(modifiedServerConfig.server.LOCALHOST6 ?: "") }
 
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .padding(bottom = 16.dp)
     ) {
+        // A numeric keyboard cannot produce ':' or hex letters, so it made IPv6 literals
+        // (2001:db8::1) impossible to type. Text accepts IPv4, IPv6 and hostnames alike.
         ConfigurationTextField(
             value = host,
-            label = "WAN_IP",
+            label = "WAN_IP / HOST",
             onValueChange = { newHost ->
                 host = newHost
                 modifiedServerConfig.server.HOST = newHost
             },
-            keyboardType = KeyboardType.Number
+            keyboardType = KeyboardType.Text
         )
         ConfigurationTextField(
             value = lanHost,
-            label = "LAN_IP",
+            label = "LAN_IP / LANHOST",
             onValueChange = { newLanHost ->
                 lanHost = newLanHost
                 modifiedServerConfig.server.LANHOST = newLanHost
             },
-            keyboardType = KeyboardType.Number
+            keyboardType = KeyboardType.Text
+        )
+        ConfigurationTextField(
+            value = localHost,
+            label = "Loopback / LOCALHOST",
+            onValueChange = { newLocalHost ->
+                localHost = newLocalHost
+                modifiedServerConfig.server.LOCALHOST = newLocalHost
+            },
+            keyboardType = KeyboardType.Text
+        )
+        // The *6 values are only advertised to clients that connected over IPv6. Leaving one empty
+        // makes that branch fall back to the IPv4 address above, which keeps older configs working.
+        ConfigurationTextField(
+            value = host6,
+            label = "WAN_IP / HOST6 - IPv6 clients",
+            onValueChange = { newHost6 ->
+                host6 = newHost6
+                modifiedServerConfig.server.HOST6 = newHost6
+            },
+            keyboardType = KeyboardType.Text
+        )
+        ConfigurationTextField(
+            value = lanHost6,
+            label = "LAN_IP / LANHOST6 - IPv6 clients",
+            onValueChange = { newLanHost6 ->
+                lanHost6 = newLanHost6
+                modifiedServerConfig.server.LANHOST6 = newLanHost6
+            },
+            keyboardType = KeyboardType.Text
+        )
+        ConfigurationTextField(
+            value = localHost6,
+            label = "Loopback / LOCALHOST6 - IPv6 clients",
+            onValueChange = { newLocalHost6 ->
+                localHost6 = newLocalHost6
+                modifiedServerConfig.server.LOCALHOST6 = newLocalHost6
+            },
+            keyboardType = KeyboardType.Text
         )
         WorldsConfiguration(modifiedServerConfig.worlds)
     }

@@ -48,6 +48,7 @@ import constants.id.MobId;
 import constants.inventory.ItemConstants;
 import constants.skills.*;
 import net.packet.Packet;
+import net.server.HostPort;
 import net.server.PlayerBuffValueHolder;
 import net.server.PlayerCoolDownValueHolder;
 import net.server.Server;
@@ -666,9 +667,11 @@ public class Character extends AbstractCharacterObject {
     public static boolean ban(String id, String reason, boolean accountId) {
         SQLiteDatabase con = DatabaseConnection.getConnection();
         try {
-            if (id.matches("/[0-9]{1,3}\\..*")) {
+            // Only numeric literals count as an address here; "id" is normally a player name. The
+            // old "/[0-9]{1,3}\..*" pattern could never match and silently dropped every IP ban.
+            if (HostPort.isIpLiteral(id)) {
                 ContentValues values = new ContentValues();
-                values.put("ip", id);
+                values.put("ip", HostPort.normalizeHost(id));
                 long rowId = con.insert("ipbans", null, values);
                 if (rowId != -1) {
                     return true;

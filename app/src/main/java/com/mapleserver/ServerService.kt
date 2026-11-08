@@ -72,7 +72,9 @@ class ServerService : Service() {
                 val notification = builder.build()
                 startForeground(startId, notification)
 
-                val args = arrayOf("-Xmx2048m", "-Dwz-path=wz", "-Djava.net.preferIPv4Stack=true")
+                // Server.main() ignores these args. No preferIPv4Stack here: Netty's wildcard bind
+                // must stay dual-stack so IPv6 clients can reach the login/channel servers.
+                val args = arrayOf<String>()
                 Server.getInstance(applicationContext)
                 Server.main(args)
 

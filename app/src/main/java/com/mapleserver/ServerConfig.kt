@@ -97,13 +97,21 @@ data class ServerConfiguration(
     @JsonProperty("LOGIN_ATTEMPT_DURATION")
     var LOGIN_ATTEMPT_DURATION: Int,
 
-    // Ip Configuration
+    // Ip Configuration. HOST/LANHOST/LOCALHOST are advertised to IPv4 clients (and used as the
+    // fallback for IPv6 clients). The *6 keys are advertised to IPv6 clients only. Nullable with a
+    // null default so configs written before these keys existed still deserialize.
     @JsonProperty("HOST")
     var HOST: String,
     @JsonProperty("LANHOST")
     var LANHOST: String,
     @JsonProperty("LOCALHOST")
     var LOCALHOST: String,
+    @JsonProperty("HOST6")
+    var HOST6: String? = null,
+    @JsonProperty("LANHOST6")
+    var LANHOST6: String? = null,
+    @JsonProperty("LOCALHOST6")
+    var LOCALHOST6: String? = null,
     @JsonProperty("GMSERVER")
     var GMSERVER: Boolean,
 

@@ -50,6 +50,7 @@ import net.packet.ByteBufOutPacket;
 import net.packet.InPacket;
 import net.packet.OutPacket;
 import net.packet.Packet;
+import net.server.HostPort;
 import net.server.PlayerCoolDownValueHolder;
 import net.server.Server;
 import net.server.channel.Channel;
@@ -802,9 +803,30 @@ public class PacketCreator {
     }
 
     /**
-     * Gets a packet telling the client the IP of the channel server.
+     * Writes the four address bytes of a channel redirect, or the IPv6 extension when the endpoint
+     * is an IPv6 address.
      *
-     * @param inetAddr The InetAddress of the requested channel server.
+     * <p>v83 reserves exactly four bytes for a raw IPv4 address. An {@link Inet6Address} cannot fit,
+     * and writing its sixteen bytes would shift the port and character id into the wrong offsets.
+     * Instead the four bytes are sent as {@code 0.0.0.0} (an address that is never a usable
+     * redirect target) followed by a length-prefixed host string. The bundled client treats all-zero
+     * bytes as that marker and reads the string; a stock v83 client only ever sees real IPv4 bytes,
+     * because the marker is reserved for IPv6 endpoints. An all-zero IPv4 config goes through the
+     * same path so the marker is never emitted without the string that must follow it.
+     */
+    private static void writeRedirectHost(OutPacket p, InetAddress inetAddr) {
+        if (HostPort.needsIpv6Redirect(inetAddr)) {
+            p.writeBytes(HostPort.IPV6_MARKER);
+            p.writeString(HostPort.wireHost(inetAddr));
+        } else {
+            p.writeBytes(inetAddr.getAddress());
+        }
+    }
+
+    /**
+     * Gets a packet telling the client the address of the channel server.
+     *
+     * @param inetAddr The InetAddress of the requested channel server (IPv4 or IPv6).
      * @param port     The port the channel is on.
      * @param clientId The ID of the client.
      * @return The server IP packet.
@@ -812,8 +834,7 @@ public class PacketCreator {
     public static Packet getServerIP(InetAddress inetAddr, int port, int clientId) {
         final OutPacket p = OutPacket.create(SendOpcode.SERVER_IP);
         p.writeShort(0);
-        byte[] addr = inetAddr.getAddress();
-        p.writeBytes(addr);
+        writeRedirectHost(p, inetAddr);
         p.writeShort(port);
         p.writeInt(clientId);
         p.writeBytes(new byte[]{0, 0, 0, 0, 0});
@@ -821,17 +842,16 @@ public class PacketCreator {
     }
 
     /**
-     * Gets a packet telling the client the IP of the new channel.
+     * Gets a packet telling the client the address of the new channel.
      *
-     * @param inetAddr The InetAddress of the requested channel server.
+     * @param inetAddr The InetAddress of the requested channel server (IPv4 or IPv6).
      * @param port     The port the channel is on.
      * @return The server IP packet.
      */
     public static Packet getChannelChange(InetAddress inetAddr, int port) {
         final OutPacket p = OutPacket.create(SendOpcode.CHANGE_CHANNEL);
         p.writeByte(1);
-        byte[] addr = inetAddr.getAddress();
-        p.writeBytes(addr);
+        writeRedirectHost(p, inetAddr);
         p.writeShort(port);
         return p;
     }

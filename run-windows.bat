@@ -36,7 +36,8 @@ set "MAPLE_SERVER_DESKTOP_OPTS=-Dmaple.assets=%MAPLE_ASSETS% -Dmaple.data=%MAPLE
 
 if not exist "%MAPLE_DATA%\files\config.yaml" (
     echo [WARN] %MAPLE_DATA%\files\config.yaml missing; it will be seeded from assets.
-    echo [WARN] After first launch, set HOST/LANHOST to this PC's LAN IP so phones can connect.
+    echo [WARN] After first launch, edit config.yaml: set HOST/LANHOST to this PC's LAN IPv4 address.
+    echo [WARN] For IPv6 phones, also set HOST6/LANHOST6/LOCALHOST6 to this PC's routable IPv6 address.
 )
 
 echo [INFO] JAVA_HOME = %JAVA_HOME%

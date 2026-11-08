@@ -28,7 +28,11 @@ Windows 桌面服务端（`MapleServerDesktop`）内置了一个 **stdin 管理�
 
    产出：`MapleServerDesktop\build\install\MapleServerDesktop\`。
 
-2. `data\files\config.yaml` 里的 `HOST` / `LANHOST` 已改成本机局域网 IP（手机要从局域网连入时必须；`LOCALHOST` 保持 `127.0.0.1`）。
+2. `data\files\config.yaml` 里的 `HOST` / `LANHOST` 已改成本机局域网 IPv4 地址（手机从局域网连入时必须；`LOCALHOST` 保持 `127.0.0.1`），不要附加端口。服务端默认双栈监听（IPv4 + IPv6），不要用 `-Djava.net.preferIPv4Stack=true` 启动。
+
+   频道跳转时服务端按**客户端当前连接的地址族**选地址：IPv4 客户端拿到 `HOST` / `LANHOST` / `LOCALHOST`（原始 4 字节报文，原版 v83 客户端也能用），IPv6 客户端拿到 `HOST6` / `LANHOST6` / `LOCALHOST6`（IPv6 扩展报文）。因此 `HOST` 等保持 IPv4，`HOST6` 等填本机可路由 IPv6 字面量（如 `240e:390:f2d:b8e0::1`）或带 AAAA 记录的域名，两类客户端即可同时接入。`*6` 留空等于只对 IPv4 客户端优化，IPv6 客户端会回退到 IPv4 地址。每组内部再按来源分：本机 → `LOCALHOST*`，局域网 → `LANHOST*`，其他 → `HOST*`。
+
+   Windows 防火墙的入站放行规则必须同时覆盖 IPv4 和 IPv6 源地址，否则 IPv6 手机连不上 8484（详见第 10 节常见问题）。
 
 ---
 
@@ -432,4 +436,4 @@ private void cmdMyCmd(String[] args) {
 - **不知道某条命令怎么给参数**：`help <关键字>` 会打印带尖括号和 `[可省=默认值]` 的用法串，照它给。注意 `showrates` / `rates` 要 `<角色名>`，`reloadportals` / `saveall` / `dcall` / `reloadevents` 是无参的。
 - **离线验证时 `reloadportals` 抛 `IllegalAccessError`**：不是命令的 bug，是打包进来的 pre-JPMS Rhino 撞了 JDK 21 的模块封装。补 `--add-exports=java.base/sun.security.action=ALL-UNNAMED`（分发包启动脚本已经带了）。
 - **`spawn` 后游戏里看不到怪**：确认 mapid 是玩家当前所在地图（先 `online` 查），且作用频道与玩家频道一致（看回显的 `[world/ch]`）。
-- **手机连不进服务器**：与本控制台无关，检查 Windows 防火墙放行规则与 `config.yaml` 的 `LANHOST`（详见部署说明）。
+- **手机连不进服务器**：与本控制台无关，检查 Windows 防火墙放行规则（IPv4 / IPv6 源地址都要放行，`RemoteAddress` 只写 `192.168.100.0/24` 会挡掉全部 IPv6 手机）、`config.yaml` 的 `LANHOST` 与 `LANHOST6`，以及启动日志里 `Login server bound to ...`（双栈时应显示 `[::]:8484` 之类的 IPv6 通配地址；若显示 `0.0.0.0/0.0.0.0:8484`，说明启动时仍带了 `-Djava.net.preferIPv4Stack=true`）。IPv6 能连登录服但进频道掉线，通常是 `HOST6` / `LANHOST6` 没填，服务端把 IPv6 客户端又指回了 IPv4 地址。详见部署说明。

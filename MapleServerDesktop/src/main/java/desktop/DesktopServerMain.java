@@ -45,7 +45,10 @@ public class DesktopServerMain {
 
         Server.getInstance(context);
 
-        Server.main(new String[]{"-Xmx2048m", "-Dwz-path=wz", "-Djava.net.preferIPv4Stack=true"});
+        // Server.main() ignores its arguments; JVM flags belong in build.gradle's
+        // applicationDefaultJvmArgs. Keeping an IPv4-only flag here was misleading: the server
+        // binds dual-stack so both IPv4 and IPv6 clients can connect.
+        Server.main(new String[]{});
 
         // Server.main() returns once the core reports "online", so start the stdin admin console
         // afterwards: every command then runs against a fully-initialised server. The console is a

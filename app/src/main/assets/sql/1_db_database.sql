@@ -12906,9 +12906,10 @@ CREATE TABLE IF NOT EXISTS `inventorymerchant` (
 ,  `characterid` integer DEFAULT NULL
 ,  `bundles` integer NOT NULL DEFAULT '0'
 );
+-- 45 chars fits a full IPv6 literal, including one with an embedded IPv4 tail.
 CREATE TABLE IF NOT EXISTS `ipbans` (
   `ipbanid` integer  NOT NULL PRIMARY KEY AUTOINCREMENT
-,  `ip` varchar(40) NOT NULL DEFAULT ''
+,  `ip` varchar(45) NOT NULL DEFAULT ''
 ,  `aid` varchar(40) DEFAULT NULL
 );
 CREATE TABLE IF NOT EXISTS `keymap` (

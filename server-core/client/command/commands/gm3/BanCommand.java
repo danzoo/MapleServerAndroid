@@ -29,6 +29,7 @@ import android.database.sqlite.SQLiteException;
 import client.Character;
 import client.Client;
 import client.command.Command;
+import net.server.HostPort;
 import net.server.Server;
 import server.TimerManager;
 import tools.DatabaseConnection;
@@ -55,9 +56,9 @@ public class BanCommand extends Command {
             //Ban ip
             SQLiteDatabase con = DatabaseConnection.getConnection();
             try {
-                if (ip.matches("/[0-9]{1,3}\\..*")) {
+                if (ip != null && HostPort.isIpLiteral(ip)) {
                     ContentValues values = new ContentValues();
-                    values.put("ip", ip);
+                    values.put("ip", HostPort.normalizeHost(ip));
                     values.put("aid", String.valueOf(target.getClient().getAccID()));
                     con.insert("ipbans", null, values);
                 }

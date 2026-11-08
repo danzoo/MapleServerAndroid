@@ -40,6 +40,7 @@ import net.packet.InPacket;
 import net.packet.Packet;
 import net.net.logging.LoggingUtil;
 import net.net.logging.MonitoredChrLogger;
+import net.server.HostPort;
 import net.server.Server;
 import net.server.channel.Channel;
 import net.server.coordinator.login.LoginBypassCoordinator;
@@ -185,7 +186,11 @@ public class Client extends ChannelInboundHandlerAdapter {
     private static String getRemoteAddress(io.netty.channel.Channel channel) {
         String remoteAddress = "null";
         try {
-            remoteAddress = ((InetSocketAddress) channel.remoteAddress()).getAddress().getHostAddress();
+            // getHostAddress() returns the textual form for either family (an Inet6Address may carry
+            // a "%scope" suffix). One canonical spelling here keeps ban lookups, LAN detection and
+            // the multiclient coordinator's map keys consistent.
+            remoteAddress = HostPort.normalizeHost(
+                    ((InetSocketAddress) channel.remoteAddress()).getAddress().getHostAddress());
         } catch (NullPointerException npe) {
             log.warn("Unable to get remote address for client", npe);
         }
@@ -366,9 +371,11 @@ public class Client extends ChannelInboundHandlerAdapter {
     public boolean hasBannedIP() {
         boolean ret = false;
         SQLiteDatabase con = DatabaseConnection.getConnection();
+        // Prefix matching works for both families: "10.0.1." and "2001:db8:1:" are equally valid
+        // stored prefixes. SQLite LIKE is ASCII case-insensitive, so mixed-case IPv6 hex matches too.
         String query = "SELECT COUNT(*) FROM ipbans WHERE ? LIKE ip || '%'";
 
-        try (Cursor cursor = con.rawQuery(query, new String[]{remoteAddress})) {
+        try (Cursor cursor = con.rawQuery(query, new String[]{HostPort.normalizeHost(remoteAddress)})) {
             if (cursor.moveToFirst()) {
                 int count = cursor.getInt(0);
                 if (count > 0) {

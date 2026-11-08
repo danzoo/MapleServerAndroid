@@ -324,21 +324,93 @@ public class Server {
         }
     }
 
+    /**
+     * Choose the channel endpoint to advertise to a client.
+     *
+     * <p>The listener is dual-stack, but a v83 redirect carries exactly one address. The address
+     * family of the client's <em>current</em> connection decides which configured set is used:
+     * IPv4 clients receive {@code HOST/LANHOST/LOCALHOST} and the original four-byte packet (so a
+     * stock v83 client still works), while IPv6 clients receive {@code HOST6/LANHOST6/LOCALHOST6}
+     * and the length-prefixed IPv6 extension. Within a set the client's source address still chooses
+     * between loopback, LAN and public. Leaving the {@code *6} keys empty restores the historical
+     * IPv4-only behaviour, so old configs keep working unchanged.
+     *
+     * <p>Because a redirect always reconnects, the family of the newly established channel
+     * connection is what drives the next redirect (channel change / world warp) as well.
+     */
     public String[] getInetSocket(Client client, int world, int channel) {
         String remoteIp = client.getRemoteAddress();
+        String endpoint = getIP(world, channel);
 
-        String[] hostAddress = getIP(world, channel).split(":");
+        // Channel#getIP holds "[2001:db8::1]:7575" for an IPv6 endpoint. A plain split(":") would
+        // turn that into five pieces and make Integer.parseInt("db8") fail. HostPort.parse strips
+        // the brackets and returns a bare, unbracketed host for InetAddress.getByName().
+        String[] hostAddress = HostPort.parse(endpoint);
+        if (hostAddress[1].isEmpty()) {
+            // Channel#getIP is always "host:port", but an empty HOST produces ":7575", which
+            // HostPort.parse cannot split into a host and a port. The port does not depend on the
+            // configured host, so recover it from the trailing number instead of rejecting the
+            // redirect (the family-specific host chosen below replaces the empty one anyway).
+            int colon = endpoint.lastIndexOf(':');
+            if (colon >= 0) {
+                String port = endpoint.substring(colon + 1).trim();
+                boolean digits = !port.isEmpty();
+                for (int i = 0; i < port.length() && digits; i++) {
+                    digits = port.charAt(i) >= '0' && port.charAt(i) <= '9';
+                }
+                if (digits) {
+                    hostAddress[1] = port;
+                }
+            }
+        }
+        boolean ipv6Client = HostPort.isIpv6Family(remoteIp);
+
+        String host;
         if (IpAddresses.isLocalAddress(remoteIp)) {
-            hostAddress[0] = YamlConfig.config.server.LOCALHOST;
+            host = redirectHost("LOCALHOST6", YamlConfig.config.server.LOCALHOST6,
+                    YamlConfig.config.server.LOCALHOST, hostAddress[0], ipv6Client, remoteIp);
         } else if (IpAddresses.isLanAddress(remoteIp)) {
-            hostAddress[0] = YamlConfig.config.server.LANHOST;
+            host = redirectHost("LANHOST6", YamlConfig.config.server.LANHOST6,
+                    YamlConfig.config.server.LANHOST, hostAddress[0], ipv6Client, remoteIp);
+        } else {
+            host = redirectHost("HOST6", YamlConfig.config.server.HOST6,
+                    YamlConfig.config.server.HOST, hostAddress[0], ipv6Client, remoteIp);
+        }
+        hostAddress[0] = HostPort.normalizeHost(host);
+
+        if (!ipv6Client && HostPort.isIpv6Literal(hostAddress[0])) {
+            log.warn("IPv4 client {} is being redirected to IPv6 address '{}'. Put IPv6 addresses in HOST6/LANHOST6/LOCALHOST6 and keep HOST/LANHOST/LOCALHOST IPv4, or stock v83 clients will fail to enter a channel.",
+                    remoteIp, hostAddress[0]);
         }
 
-        try {
-            return hostAddress;
-        } catch (Exception e) {
+        if (hostAddress[0].isEmpty() || hostAddress[1].isEmpty()) {
+            log.warn("Invalid channel endpoint for world {} channel {}: '{}'",
+                    world, channel, endpoint);
             return null;
         }
+        return hostAddress;
+    }
+
+    /** Prefer the IPv6-side config for an IPv6 client; otherwise return the IPv4-side config. */
+    private static String redirectHost(String ipv6Key, String ipv6Host, String ipv4Host,
+                                        String fallback, boolean ipv6Client, String remoteIp) {
+        if (ipv6Client) {
+            // A hostname in a *6 key must be resolved to AAAA here. Callers use
+            // InetAddress.getByName(), which prefers IPv4 on a dual-stack JVM and would otherwise
+            // send an IPv6 client straight back to the IPv4 address.
+            String resolved = HostPort.resolveIpv6Host(ipv6Host);
+            if (resolved != null && !resolved.isEmpty()) {
+                return resolved;
+            }
+            if (ipv6Host != null && !ipv6Host.trim().isEmpty()) {
+                log.warn("{} = '{}' has no usable IPv6 address; IPv6 client {} falls back to the IPv4 address",
+                        ipv6Key, ipv6Host, remoteIp);
+            } else {
+                log.debug("No {} configured; IPv6 client {} uses the IPv4 redirect address",
+                        ipv6Key, remoteIp);
+            }
+        }
+        return ipv4Host != null && !ipv4Host.trim().isEmpty() ? ipv4Host : fallback;
     }
 
 

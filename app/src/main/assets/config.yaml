@@ -195,10 +195,26 @@ server:
     MAX_ACCOUNT_LOGIN_ATTEMPT: 15       #After N tries on an account, login on that account gets disabled for a short period.
     LOGIN_ATTEMPT_DURATION: 120         #Period in seconds the login attempt remains registered on the system.
 
-    #Ip Configuration
-    HOST: 127.0.0.1                 #WAN IPv4 address
-    LANHOST: 127.0.0.1              #LAN IPv4 address
-    LOCALHOST: 127.0.0.1            #Loopback IPv4 address
+    #Ip Configuration - addresses advertised to a client when it enters a channel or changes
+    #channel. Do NOT append a port: channel ports are computed from world/channel number
+    #(7575 + channel - 1 + world * 100). IPv4 literals, IPv6 literals and hostnames all work.
+    #
+    #The server listens on both IPv4 and IPv6, but each redirect carries ONE address, chosen by
+    #the address family of the client's current connection:
+    #  - IPv4 client  -> HOST / LANHOST / LOCALHOST. Keep these IPv4 so the original 4-byte v83
+    #    packet is used and stock v83 clients keep working.
+    #  - IPv6 client   -> HOST6 / LANHOST6 / LOCALHOST6 when set, otherwise the IPv4 set above.
+    #    This is what makes one deployment serve IPv4 and IPv6 clients at the same time.
+    #Within each set the client's source address decides which key is used: loopback -> LOCALHOST*,
+    #LAN (10/8, 172.16/12, 192.168/16, fc00::/7, fe80::/10) -> LANHOST*, otherwise -> HOST*.
+    #Leave the *6 keys empty for IPv4-only deployments. An IPv6-only client needs a real IPv6
+    #literal here; a dual-stack hostname is resolved to its AAAA record for IPv6 clients.
+    HOST: 127.0.0.1                 #WAN address for IPv4 clients
+    LANHOST: 127.0.0.1              #LAN address for IPv4 clients
+    LOCALHOST: 127.0.0.1            #Loopback address for IPv4 clients
+    HOST6:                           #WAN address for IPv6 clients, e.g. 2001:db8::1
+    LANHOST6:                        #LAN address for IPv6 clients, e.g. fd00::1:2:3:4
+    LOCALHOST6: ::1                  #Loopback address for IPv6 clients
     GMSERVER: false
 
     #Other configuration

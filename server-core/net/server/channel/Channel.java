@@ -28,6 +28,7 @@ import config.YamlConfig;
 import constants.id.MapId;
 import net.netty.ChannelServer;
 import net.packet.Packet;
+import net.server.HostPort;
 import net.server.PlayerStorage;
 import net.server.Server;
 import net.server.services.BaseService;
@@ -115,7 +116,12 @@ public final class Channel {
         this.ongoingStartTime = startTime + 10000;  // rude approach to a world's last channel boot time, placeholder for the 1st wedding reservation ever
         this.mapManager = new MapManager(null, world, channel);
         this.port = BASE_PORT + (this.channel - 1) + (world * 100);
-        this.ip = YamlConfig.config.server.HOST + ":" + port;
+        // Bracket IPv6 literals so the trailing ":port" stays unambiguous when getInetSocket splits
+        // the endpoint again. Hostnames and IPv4 literals keep their original form. This is the
+        // IPv4-side default/fallback; Server#getInetSocket may replace the host with HOST6/LANHOST6/
+        // LOCALHOST6 (or the matching IPv4 key) once it knows the client's address family, but the
+        // port always comes from here.
+        this.ip = HostPort.format(YamlConfig.config.server.HOST, port);
 
         ReentrantReadWriteLock rwLock = new ReentrantReadWriteLock(true);
         this.merchRlock = rwLock.readLock();
