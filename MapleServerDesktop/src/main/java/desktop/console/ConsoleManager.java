@@ -46,6 +46,11 @@ public class ConsoleManager {
 
     private final Map<String, Command> commands = new LinkedHashMap<>();
 
+    // The GM commands migrated from the in-game chat entry point (server-core/client/command).
+    // Built-in console commands above are consulted first, so they win a name clash.
+    private final desktop.console.gm.GmRegistry gm = new desktop.console.gm.GmRegistry();
+    private final desktop.console.gm.GmContext gmctx = new desktop.console.gm.GmContext();
+
     // True only when a real terminal is attached. Closing that terminal (or Ctrl+Z / Ctrl+D on it)
     // ends stdin, which is the signal to take the whole server down with it; a launch without any
     // console (background/service) also sees stdin end immediately and must keep serving instead.
@@ -71,6 +76,8 @@ public class ConsoleManager {
         commands.put("clear", commands.get("clearmob"));
         commands.put("whereis", commands.get("where"));
         commands.put("getmap", commands.get("where"));
+
+        desktop.console.gm.GmCommands.registerAll(gm);
     }
 
     private void register(String name, String usage, String description, Handler handler) {
@@ -108,31 +115,96 @@ public class ConsoleManager {
                 System.arraycopy(tokens, 1, args, 0, args.length);
 
                 Command cmd = commands.get(name);
-                if (cmd == null) {
-                    System.out.println("Unknown command: " + name + " (try 'help')");
+                if (cmd != null) {
+                    run(name, () -> cmd.handler.run(args));
                     continue;
                 }
-                try {
-                    cmd.handler.run(args);
-                } catch (Exception e) {
-                    System.out.println("Command '" + name + "' failed: " + e);
-                    e.printStackTrace(System.out);
+                desktop.console.gm.GmCmd g = gm.get(name);
+                if (g != null) {
+                    run(name, () -> g.run(gmctx, args));
+                    continue;
                 }
+                System.out.println("未知命令: " + name + "（help 看内置命令，help gm 看从游戏内迁移过来的 "
+                        + gm.listed().size() + " 条 GM 命令）");
             }
         } catch (Exception e) {
             System.out.println("Console stopped: " + e);
         }
     }
 
+    private interface Action {
+        void run() throws Exception;
+    }
+
+    // One command per line, and a crashed command must never take the console down with it.
+    private void run(String name, Action action) {
+        try {
+            action.run();
+        } catch (Exception e) {
+            System.out.println("命令 '" + name + "' 执行失败: " + e);
+            e.printStackTrace(System.out);
+        }
+    }
+
     // ------------------------------------------------------------------ commands
 
+    // help            -> the console's own commands
+    // help gm         -> every GM command migrated from the in-game chat entry point
+    // help <keyword>  -> anything (built-in or migrated) whose name contains the keyword
     private void cmdHelp(String[] args) {
-        System.out.println("Available commands:");
-        for (Map.Entry<String, Command> e : commands.entrySet()) {
-            String key = e.getKey();
-            Command c = e.getValue();
-            String head = c.usage.isEmpty() ? key : key + " " + c.usage;
-            System.out.printf("  %-28s %s%n", head, c.description);
+        String filter = args.length > 0 ? args[0].toLowerCase() : null;
+        boolean gmOnly = "gm".equals(filter);
+
+        if (filter == null || !gmOnly) {
+            System.out.println("控制台内置命令:");
+            for (Map.Entry<String, Command> e : commands.entrySet()) {
+                String key = e.getKey();
+                Command c = e.getValue();
+                if (filter != null && !key.contains(filter)) {
+                    continue;
+                }
+                String head = c.usage.isEmpty() ? key : key + " " + c.usage;
+                System.out.printf("  %-28s %s%n", head, c.description);
+            }
+        }
+
+        if (filter == null) {
+            System.out.println();
+            System.out.println("另有从游戏内 @/! 迁移过来的 " + gm.listed().size()
+                    + " 条 GM 命令：help gm 看全部，help <关键字> 只看相关的几条。");
+            System.out.println("注：help/online/spawn/banner 这四个名字游戏内也有同名命令，"
+                    + "输入时一律走上面的内置实现（内置版本按 mapid/全世界来指定主体，功能覆盖游戏内那条）。");
+            return;
+        }
+        if (!gmOnly && !filter.isEmpty()) {
+            listGm(gmcmdsMatching(filter));
+        } else {
+            listGm(gm.listed());
+        }
+    }
+
+    private java.util.List<desktop.console.gm.GmCmd> gmcmdsMatching(String keyword) {
+        java.util.List<desktop.console.gm.GmCmd> out = new java.util.ArrayList<>();
+        for (desktop.console.gm.GmCmd c : gm.listed()) {
+            if (c.names().toLowerCase().contains(keyword)) {
+                out.add(c);
+            }
+        }
+        return out;
+    }
+
+    private void listGm(java.util.List<desktop.console.gm.GmCmd> list) {
+        if (list.isEmpty()) {
+            System.out.println("没有匹配的命令。");
+            return;
+        }
+        System.out.println("GM 命令（迁移自游戏内 @/!，参数里的角色名要在线，地图id 直接给数字）:");
+        for (desktop.console.gm.GmCmd c : list) {
+            String head = c.name() + (c.usage().isEmpty() ? "" : " " + c.usage());
+            System.out.printf("  %-34s %s%n", head, c.description());
+            if (c.aliases().length > 0) {
+                System.out.println("        别名: " + String.join(", ", c.aliases()));
+            }
         }
     }
 
