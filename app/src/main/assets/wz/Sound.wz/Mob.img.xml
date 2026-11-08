@@ -80,4 +80,680 @@
     <sound name="Die"/>
     <sound name="Skill1"/>
   </imgdir>
+  <imgdir name="0000055">
+    <sound name="Die"/>
+    <sound name="Damage"/>
+  </imgdir>
+  <imgdir name="0000056">
+    <sound name="Die"/>
+    <sound name="Damage"/>
+  </imgdir>
+  <imgdir name="0000057">
+    <sound name="Damage"/>
+    <sound name="Die"/>
+  </imgdir>
+  <imgdir name="0000058">
+    <sound name="Damage"/>
+    <sound name="Die"/>
+  </imgdir>
+  <imgdir name="0000059">
+    <sound name="Die"/>
+    <sound name="Damage"/>
+  </imgdir>
+  <imgdir name="0000060">
+    <sound name="Damage"/>
+    <sound name="Die"/>
+  </imgdir>
+  <imgdir name="0000061">
+    <sound name="Attack1"/>
+    <sound name="Die"/>
+    <sound name="Damage"/>
+  </imgdir>
+  <imgdir name="0000062">
+    <sound name="Damage"/>
+    <uol name="Die" value="../0000002/Die"/>
+  </imgdir>
+  <imgdir name="0000063">
+    <sound name="Attack1"/>
+    <sound name="Die"/>
+    <sound name="Damage"/>
+  </imgdir>
+  <imgdir name="0100120">
+    <sound name="Damage"/>
+    <sound name="Die"/>
+  </imgdir>
+  <imgdir name="0100121">
+    <sound name="Damage"/>
+    <sound name="Die"/>
+  </imgdir>
+  <imgdir name="0100122">
+    <sound name="Damage"/>
+    <sound name="Die"/>
+  </imgdir>
+  <imgdir name="0100123">
+    <sound name="Damage"/>
+    <sound name="Die"/>
+  </imgdir>
+  <imgdir name="0100124">
+    <sound name="Damage"/>
+    <sound name="Die"/>
+  </imgdir>
+  <imgdir name="0100130">
+    <sound name="Damage"/>
+    <sound name="Die"/>
+  </imgdir>
+  <imgdir name="0100131">
+    <sound name="Damage"/>
+    <sound name="Die"/>
+  </imgdir>
+  <imgdir name="0100132">
+    <sound name="Damage"/>
+    <sound name="Die"/>
+  </imgdir>
+  <imgdir name="0100133">
+    <sound name="Damage"/>
+    <sound name="Die"/>
+  </imgdir>
+  <imgdir name="0100134">
+    <sound name="Damage"/>
+    <sound name="Die"/>
+  </imgdir>
+  <imgdir name="0130100">
+    <sound name="Damage"/>
+    <sound name="Die"/>
+  </imgdir>
+  <imgdir name="0700003">
+    <sound name="Attack1"/>
+    <sound name="Attack2"/>
+    <sound name="Die"/>
+    <sound name="Damage"/>
+  </imgdir>
+  <imgdir name="1110101">
+    <sound name="Damage"/>
+    <uol name="Die" value="../0130100/Die"/>
+  </imgdir>
+  <imgdir name="1110130">
+    <uol name="Damage" value="../2110200/Damage"/>
+    <uol name="Die" value="../2110200/Die"/>
+  </imgdir>
+  <imgdir name="1130100">
+    <uol name="Damage" value="../0130100/Damage"/>
+    <uol name="Die" value="../0130100/Die"/>
+  </imgdir>
+  <imgdir name="1140100">
+    <sound name="Damage"/>
+    <sound name="Die"/>
+  </imgdir>
+  <imgdir name="1140130">
+    <uol name="Damage" value="../1140100/Damage"/>
+    <uol name="Die" value="../1140100/Die"/>
+  </imgdir>
+  <imgdir name="1210103">
+    <sound name="Damage"/>
+    <sound name="Die"/>
+  </imgdir>
+  <imgdir name="2130100">
+    <uol name="Damage" value="../0130100/Damage"/>
+    <uol name="Die" value="../0130100/Die"/>
+  </imgdir>
+  <imgdir name="2130103">
+    <uol name="Damage" value="../0100100/Damage"/>
+    <sound name="Die"/>
+  </imgdir>
+  <imgdir name="2230100">
+    <uol name="Damage" value="../0100100/Damage"/>
+    <sound name="Die"/>
+  </imgdir>
+  <imgdir name="2230101">
+    <uol name="Damage" value="../0100100/Damage"/>
+    <uol name="Die" value="../1210102/Die"/>
+  </imgdir>
+  <imgdir name="2230102">
+    <uol name="Damage" value="../0100100/Damage"/>
+    <sound name="Die"/>
+  </imgdir>
+  <imgdir name="2230110">
+    <sound name="Damage"/>
+    <sound name="Die"/>
+  </imgdir>
+  <imgdir name="2230111">
+    <sound name="Damage"/>
+    <sound name="Die"/>
+  </imgdir>
+  <imgdir name="2230131">
+    <uol name="Damage" value="../0100100/Damage"/>
+    <uol name="Die" value="../1210102/Die"/>
+  </imgdir>
+  <imgdir name="2300100">
+    <sound name="Damage"/>
+    <sound name="Die"/>
+  </imgdir>
+  <imgdir name="3000001">
+    <uol name="Attack1" value="Skill1"/>
+    <sound name="Damage"/>
+    <sound name="Die"/>
+    <uol name="Skill1" value="9001003/Skill1"/>
+  </imgdir>
+  <imgdir name="3000002">
+    <uol name="Attack1" value="Skill1"/>
+    <uol name="Damage" value="../3000001/Damage"/>
+    <sound name="Die"/>
+    <uol name="Skill1" value="9001003/Skill2"/>
+  </imgdir>
+  <imgdir name="3000003">
+    <uol name="Attack1" value="Skill1"/>
+    <uol name="Damage" value="../3000001/Damage"/>
+    <uol name="Die" value="../3000001/Die"/>
+    <uol name="Skill1" value="../3000002/Skill1"/>
+  </imgdir>
+  <imgdir name="3000004">
+    <uol name="Attack1" value="Skill1"/>
+    <uol name="Damage" value="../3000001/Damage"/>
+    <uol name="Die" value="../3000002/Die"/>
+    <uol name="Skill1" value="../3000002/Skill1"/>
+  </imgdir>
+  <imgdir name="3000005">
+    <sound name="Damage"/>
+    <sound name="Die"/>
+  </imgdir>
+  <imgdir name="3110100">
+    <uol name="Damage" value="../0100100/Damage"/>
+    <sound name="Die"/>
+  </imgdir>
+  <imgdir name="3110101">
+    <sound name="Damage"/>
+    <sound name="Die"/>
+  </imgdir>
+  <imgdir name="3210100">
+    <uol name="Damage" value="../0100100/Damage"/>
+    <sound name="Die"/>
+  </imgdir>
+  <imgdir name="3210800">
+    <sound name="Attack1"/>
+    <sound name="CharDam1"/>
+    <uol name="Damage" value="../2230100/Damage"/>
+    <sound name="Die"/>
+  </imgdir>
+  <imgdir name="3230100">
+    <uol name="Damage" value="../0100100/Damage"/>
+    <sound name="Die"/>
+  </imgdir>
+  <imgdir name="3230101">
+    <sound name="Damage"/>
+    <sound name="Die"/>
+  </imgdir>
+  <imgdir name="3230102">
+    <sound name="Damage"/>
+    <sound name="Die"/>
+  </imgdir>
+  <imgdir name="3230300">
+    <sound name="Damage"/>
+    <sound name="Die"/>
+  </imgdir>
+  <imgdir name="3230301">
+    <uol name="Damage" value="../3230300/Damage"/>
+    <uol name="Die" value="../3230300/Die"/>
+  </imgdir>
+  <imgdir name="3230400">
+    <sound name="Damage"/>
+    <sound name="Die"/>
+  </imgdir>
+  <imgdir name="3300000">
+    <uol name="Damage" value="../0100100/Damage"/>
+    <sound name="Die"/>
+  </imgdir>
+  <imgdir name="3300001">
+    <uol name="Damage" value="../0100100/Damage"/>
+    <sound name="Die"/>
+  </imgdir>
+  <imgdir name="3300002">
+    <uol name="Damage" value="../0100100/Damage"/>
+    <sound name="Die"/>
+  </imgdir>
+  <imgdir name="3300003">
+    <sound name="Damage"/>
+    <sound name="Die"/>
+  </imgdir>
+  <imgdir name="3300004">
+    <uol name="Damage" value="../3300003/Damage"/>
+    <uol name="Die" value="../3300003/Die"/>
+  </imgdir>
+  <imgdir name="3400000">
+    <sound name="Attack1"/>
+    <sound name="CharDam1"/>
+    <sound name="Damage"/>
+    <sound name="Die"/>
+  </imgdir>
+  <imgdir name="3400001">
+    <uol name="Attack1" value="../3400000/Attack1"/>
+    <uol name="CharDam1" value="../3400000/CharDam1"/>
+    <uol name="Damage" value="../3400000/Damage"/>
+    <uol name="Die" value="../3400000/Die"/>
+  </imgdir>
+  <imgdir name="3400002">
+    <uol name="Attack1" value="../3400000/Attack1"/>
+    <uol name="CharDam1" value="../3400000/CharDam1"/>
+    <uol name="Damage" value="../3400000/Damage"/>
+    <uol name="Die" value="../3400000/Die"/>
+  </imgdir>
+  <imgdir name="3400003">
+    <sound name="Attack1"/>
+    <uol name="Attack2" value="Attack1"/>
+    <sound name="CharDam1"/>
+    <uol name="CharDam2" value="CharDam1"/>
+    <sound name="Damage"/>
+    <sound name="Die"/>
+  </imgdir>
+  <imgdir name="3400005">
+    <uol name="Attack1" value="../3400003/Attack1"/>
+    <uol name="Attack2" value="../3400003/Attack1"/>
+    <uol name="CharDam1" value="../3400003/CharDam1"/>
+    <uol name="CharDam2" value="../3400003/CharDam1"/>
+    <uol name="Damage" value="../3400003/Damage"/>
+    <uol name="Die" value="../3400003/Die"/>
+  </imgdir>
+  <imgdir name="3400007">
+    <uol name="Damage" value="../3400003/Damage"/>
+    <uol name="Die" value="../3400003/Die"/>
+  </imgdir>
+  <imgdir name="4130100">
+    <uol name="Damage" value="../0100100/Damage"/>
+    <sound name="Die"/>
+  </imgdir>
+  <imgdir name="4130101">
+    <sound name="Attack1"/>
+    <sound name="CharDam1"/>
+    <sound name="Damage"/>
+    <sound name="Die"/>
+  </imgdir>
+  <imgdir name="4230100">
+    <uol name="Damage" value="../0100100/Damage"/>
+    <sound name="Die"/>
+  </imgdir>
+  <imgdir name="4230101">
+    <sound name="Attack1"/>
+    <sound name="CharDam1"/>
+    <uol name="Damage" value="../0100100/Damage"/>
+    <sound name="Die"/>
+  </imgdir>
+  <imgdir name="4230102">
+    <sound name="Damage"/>
+    <sound name="Die"/>
+  </imgdir>
+  <imgdir name="4230103">
+    <sound name="Damage"/>
+    <sound name="Die"/>
+  </imgdir>
+  <imgdir name="4230104">
+    <sound name="Damage"/>
+    <sound name="Die"/>
+  </imgdir>
+  <imgdir name="4230125">
+    <sound name="Damage"/>
+    <sound name="Die"/>
+  </imgdir>
+  <imgdir name="4230126">
+    <sound name="Damage"/>
+    <sound name="Die"/>
+  </imgdir>
+  <imgdir name="4230400">
+    <uol name="Damage" value="../4230103/Damage"/>
+    <uol name="Die" value="../4230103/Die"/>
+  </imgdir>
+  <imgdir name="4300000">
+    <uol name="Die" value="../4300001/Die"/>
+  </imgdir>
+  <imgdir name="4300002">
+    <uol name="Die" value="../4300001/Die"/>
+  </imgdir>
+  <imgdir name="4300004">
+    <uol name="Die" value="../4300001/Die"/>
+  </imgdir>
+  <imgdir name="4300006">
+    <sound name="Damage"/>
+    <sound name="Die"/>
+  </imgdir>
+  <imgdir name="4300007">
+    <sound name="Attack1"/>
+    <sound name="CharDam1"/>
+    <sound name="Damage"/>
+    <sound name="Die"/>
+  </imgdir>
+  <imgdir name="4300008">
+    <sound name="Attack1"/>
+    <sound name="CharDam1"/>
+    <sound name="Damage"/>
+    <sound name="Die"/>
+  </imgdir>
+  <imgdir name="4300009">
+    <uol name="Damage" value="../4300010/Damage"/>
+    <uol name="Die" value="../4300010/Die"/>
+  </imgdir>
+  <imgdir name="4300010">
+    <sound name="Attack1"/>
+    <sound name="CharDam1"/>
+    <sound name="Damage"/>
+    <sound name="Die"/>
+  </imgdir>
+  <imgdir name="4300011">
+    <sound name="Attack1"/>
+    <sound name="CharDam1"/>
+    <sound name="Damage"/>
+    <sound name="Die"/>
+  </imgdir>
+  <imgdir name="4300012">
+    <sound name="Attack1"/>
+    <sound name="CharDam1"/>
+    <sound name="Damage"/>
+    <sound name="Die"/>
+  </imgdir>
+  <imgdir name="4300013">
+    <sound name="Attack1"/>
+    <sound name="Attack2"/>
+    <sound name="Attack3"/>
+    <sound name="Attack4"/>
+    <sound name="CharDam1"/>
+    <sound name="CharDam2"/>
+    <sound name="CharDam3"/>
+    <sound name="Damage"/>
+    <sound name="Die"/>
+    <sound name="Skill1"/>
+    <sound name="Skill2"/>
+    <sound name="Skill3"/>
+  </imgdir>
+  <imgdir name="4300014">
+    <uol name="Attack1" value="../4300010/Attack1"/>
+    <uol name="CharDam1" value="../4300010/CharDam1"/>
+    <uol name="Damage" value="../4300010/Damage"/>
+    <uol name="Die" value="../4300010/Die"/>
+  </imgdir>
+  <imgdir name="4300015">
+    <uol name="Attack1" value="../4300011/Attack1"/>
+    <uol name="CharDam1" value="../4300011/CharDam1"/>
+    <uol name="Damage" value="../4300011/Damage"/>
+    <uol name="Die" value="../4300011/Die"/>
+  </imgdir>
+  <imgdir name="4300016">
+    <uol name="Attack1" value="../4300012/Attack1"/>
+    <uol name="CharDam1" value="../4300012/CharDam1"/>
+    <uol name="Damage" value="../4300012/Damage"/>
+    <uol name="Die" value="../4300012/Die"/>
+  </imgdir>
+  <imgdir name="5090000">
+    <sound name="Damage"/>
+    <sound name="Die"/>
+    <sound name="Skill1"/>
+  </imgdir>
+  <imgdir name="5100000">
+    <sound name="Damage"/>
+    <sound name="Die"/>
+  </imgdir>
+  <imgdir name="5130100">
+    <uol name="Damage" value="../0100100/Damage"/>
+    <sound name="Die"/>
+  </imgdir>
+  <imgdir name="5130101">
+    <uol name="Damage" value="../0100100/Damage"/>
+    <sound name="Die"/>
+  </imgdir>
+  <imgdir name="5130102">
+    <uol name="Damage" value="../0100100/Damage"/>
+    <sound name="Die"/>
+  </imgdir>
+  <imgdir name="5130103">
+    <uol name="Damage" value="../0100100/Damage"/>
+    <sound name="Die"/>
+  </imgdir>
+  <imgdir name="5140000">
+    <uol name="Attack1" value="../5130104/Attack1"/>
+    <uol name="CharDam1" value="../5130104/CharDam1"/>
+    <uol name="Damage" value="../5130104/Damage"/>
+    <sound name="Die"/>
+  </imgdir>
+  <imgdir name="5150000">
+    <uol name="Damage" value="../0100100/Damage"/>
+    <uol name="Die" value="../5130102/Die"/>
+  </imgdir>
+  <imgdir name="5150001">
+    <sound name="Attack1"/>
+    <sound name="CharDam1"/>
+    <sound name="Damage"/>
+    <sound name="Die"/>
+  </imgdir>
+  <imgdir name="5300100">
+    <uol name="Damage" value="../3230102/Damage"/>
+    <uol name="Die" value="../3230101/Die"/>
+  </imgdir>
+  <imgdir name="6130100">
+    <sound name="Attack1"/>
+    <sound name="CharDam1"/>
+    <uol name="Damage" value="../0100100/Damage"/>
+    <sound name="Die"/>
+  </imgdir>
+  <imgdir name="6130101">
+    <sound name="Attack1"/>
+    <sound name="CharDam1"/>
+    <uol name="Damage" value="../0100100/Damage"/>
+    <sound name="Die"/>
+  </imgdir>
+  <imgdir name="6230100">
+    <uol name="Damage" value="../0100100/Damage"/>
+    <sound name="Die"/>
+  </imgdir>
+  <imgdir name="6230600">
+    <sound name="Attack1"/>
+    <sound name="CharDam1"/>
+    <sound name="Damage"/>
+    <sound name="Die"/>
+  </imgdir>
+  <imgdir name="6230601">
+    <sound name="Attack1"/>
+    <sound name="CharDam1"/>
+    <sound name="Damage"/>
+    <sound name="Die"/>
+  </imgdir>
+  <imgdir name="6230602">
+    <sound name="Attack1"/>
+    <sound name="CharDam1"/>
+    <sound name="Damage"/>
+    <sound name="Die"/>
+  </imgdir>
+  <imgdir name="6300005">
+    <uol name="Attack1" value="../6300004/Attack1"/>
+    <uol name="CharDam1" value="../6300004/CharDam1"/>
+    <uol name="Damage" value="../6300004/Damage"/>
+    <uol name="Die" value="../6300004/Die"/>
+  </imgdir>
+  <imgdir name="7130100">
+    <sound name="Attack1"/>
+    <uol name="Damage" value="../0100100/Damage"/>
+    <sound name="Die"/>
+  </imgdir>
+  <imgdir name="7130101">
+    <sound name="Attack1"/>
+    <sound name="Attack2"/>
+    <sound name="CharDam1"/>
+    <sound name="CharDam2"/>
+    <sound name="Damage"/>
+    <sound name="Die"/>
+  </imgdir>
+  <imgdir name="7130102">
+    <uol name="Attack1" value="../6300000/Attack1"/>
+    <uol name="CharDam1" value="../6300000/CharDam1"/>
+    <uol name="Damage" value="../6300000/Damage"/>
+    <sound name="Die"/>
+  </imgdir>
+  <imgdir name="7130103">
+    <sound name="Damage"/>
+    <sound name="Die"/>
+    <sound name="Skill1"/>
+  </imgdir>
+  <imgdir name="8130100">
+    <sound name="Attack1"/>
+    <sound name="Attack2"/>
+    <sound name="Attack3"/>
+    <sound name="CharDam1"/>
+    <sound name="CharDam2"/>
+    <sound name="CharDam3"/>
+    <uol name="Damage" value="../0100100/Damage"/>
+    <sound name="Die"/>
+  </imgdir>
+  <imgdir name="9000001">
+    <uol name="Damage" value="../0100100/Damage"/>
+    <uol name="Die" value="../3230100/Die"/>
+  </imgdir>
+  <imgdir name="9000002">
+    <uol name="Damage" value="../0100100/Damage"/>
+    <uol name="Die" value="../2110200/Die"/>
+  </imgdir>
+  <imgdir name="9000100">
+    <uol name="Damage" value="../0100100/Damage"/>
+    <uol name="Die" value="../3210100/Die"/>
+  </imgdir>
+  <imgdir name="9000101">
+    <uol name="Attack1" value="../3210800/Attack1"/>
+    <uol name="CharDam1" value="../3210800/CharDam1"/>
+    <uol name="Damage" value="../2230100/Damage"/>
+    <uol name="Die" value="../3210800/Die"/>
+  </imgdir>
+  <imgdir name="9000200">
+    <uol name="Damage" value="../2230100/Damage"/>
+    <uol name="Die" value="../2230100/Die"/>
+  </imgdir>
+  <imgdir name="9000201">
+    <uol name="Damage" value="../1210102/Damage"/>
+    <uol name="Die" value="../1210102/Die"/>
+  </imgdir>
+  <imgdir name="9000300">
+    <uol name="Damage" value="../2230100/Damage"/>
+    <uol name="Die" value="../4230100/Die"/>
+  </imgdir>
+  <imgdir name="9000301">
+    <uol name="Damage" value="../1210102/Damage"/>
+    <uol name="Die" value="../1210102/Die"/>
+  </imgdir>
+  <imgdir name="9001000">
+    <sound name="Attack1"/>
+    <uol name="Attack2" value="Attack1"/>
+    <uol name="CharDam1" value="../9001002/CharDam1"/>
+    <uol name="CharDam2" value="../9001002/CharDam2"/>
+    <uol name="Damage" value="../9001002/Damage"/>
+    <uol name="Die" value="../9001002/Die"/>
+    <uol name="Skill1" value="../9001002/Skill1"/>
+    <uol name="Skill2" value="../9001002/Skill2"/>
+  </imgdir>
+  <imgdir name="9001001">
+    <sound name="Attack1"/>
+    <sound name="Attack2"/>
+    <sound name="Attack3"/>
+    <uol name="CharDam1" value="../9001003/CharDam1"/>
+    <uol name="CharDam2" value="../9001003/CharDam2"/>
+    <uol name="CharDam3" value="../9001003/CharDam1"/>
+    <uol name="Damage" value="../9001003/Damage"/>
+    <uol name="Die" value="../9001002/Die"/>
+    <uol name="Skill1" value="../9001003/Skill2"/>
+    <uol name="Skill2" value="Skill1"/>
+  </imgdir>
+  <imgdir name="9001002">
+    <sound name="Attack1"/>
+    <sound name="Attack2"/>
+    <uol name="CharDam1" value="../9001003/CharDam1"/>
+    <uol name="CharDam2" value="../9001003/CharDam2"/>
+    <uol name="Damage" value="../9001003/Damage"/>
+    <uol name="Die" value="../9001003/Die"/>
+    <uol name="Skill1" value="../9001003/Skill1"/>
+    <uol name="Skill2" value="../9001003/Skill2"/>
+  </imgdir>
+  <imgdir name="9001003">
+    <sound name="Attack1"/>
+    <sound name="Attack2"/>
+    <sound name="CharDam1"/>
+    <sound name="CharDam2"/>
+    <sound name="Damage"/>
+    <sound name="Die"/>
+    <sound name="Skill1"/>
+    <sound name="Skill2"/>
+  </imgdir>
+  <imgdir name="9001011">
+    <uol name="Damage" value="../0100124/Damage"/>
+    <uol name="Die" value="../0100124/Die"/>
+  </imgdir>
+  <imgdir name="9001012">
+    <sound name="Attack1"/>
+    <sound name="Damage"/>
+    <sound name="Die"/>
+  </imgdir>
+  <imgdir name="9001013">
+    <sound name="Attack1"/>
+    <sound name="Damage"/>
+    <sound name="Die"/>
+    <sound name="Skill1"/>
+  </imgdir>
+  <imgdir name="9100000">
+    <uol name="Damage" value="../0210100/Damage"/>
+    <uol name="Die" value="../0210100/Die"/>
+  </imgdir>
+  <imgdir name="9100001">
+    <uol name="Damage" value="../0100100/Damage"/>
+    <uol name="Die" value="../2130103/Die"/>
+  </imgdir>
+  <imgdir name="9100002">
+    <uol name="Damage" value="../2300100/Damage"/>
+    <uol name="Die" value="../2300100/Die"/>
+  </imgdir>
+  <imgdir name="9100003">
+    <uol name="Damage" value="../0100100/Damage"/>
+    <uol name="Die" value="../2130103/Die"/>
+  </imgdir>
+  <imgdir name="9100004">
+    <uol name="Damage" value="../0100100/Damage"/>
+    <uol name="Die" value="../2130103/Die"/>
+  </imgdir>
+  <imgdir name="9300000">
+    <uol name="Damage" value="../0100100/Damage"/>
+    <uol name="Die" value="../2130103/Die"/>
+  </imgdir>
+  <imgdir name="9300001">
+    <uol name="Damage" value="../0100100/Damage"/>
+    <uol name="Die" value="../3110100/Die"/>
+  </imgdir>
+  <imgdir name="9300002">
+    <uol name="Damage" value="../0100100/Damage"/>
+    <uol name="Die" value="../3230100/Die"/>
+  </imgdir>
+  <imgdir name="9300003">
+    <sound name="Attack1"/>
+    <sound name="CharDam1"/>
+    <sound name="Damage"/>
+    <uol name="Die" value="../0210100/Die"/>
+    <sound name="Skill1"/>
+  </imgdir>
+  <imgdir name="9300383">
+    <uol name="Damage" value="../0100130/Damage"/>
+    <uol name="Die" value="../0100130/Die"/>
+  </imgdir>
+  <imgdir name="9400551">
+    <sound name="Damage"/>
+    <sound name="Die"/>
+  </imgdir>
+  <imgdir name="9400618">
+    <uol name="Damage" value="../0130100/Damage"/>
+    <uol name="Die" value="../0130100/Die"/>
+  </imgdir>
+  <imgdir name="9400619">
+    <uol name="Damage" value="../0100100/Damage"/>
+    <uol name="Die" value="../1210102/Die"/>
+  </imgdir>
+  <imgdir name="9400620">
+    <uol name="Damage" value="../1110101/Damage"/>
+    <uol name="Die" value="../0130100/Die"/>
+  </imgdir>
+  <imgdir name="9400621">
+    <uol name="Damage" value="../0100100/Damage"/>
+    <uol name="Die" value="../2110200/Die"/>
+  </imgdir>
+  <imgdir name="9400622">
+    <uol name="Damage" value="../0100100/Damage"/>
+    <uol name="Die" value="../1210102/Die"/>
+  </imgdir>
 </imgdir>

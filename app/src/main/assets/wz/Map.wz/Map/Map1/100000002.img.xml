@@ -3446,8 +3446,8 @@
       <int name="pt" value="2"/>
       <int name="x" value="-871"/>
       <int name="y" value="-296"/>
-      <int name="tm" value="999999999"/>
       <string name="tn" value="out00"/>
+      <int name="tm" value="100000003"/>
     </imgdir>
     <imgdir name="6">
       <string name="pn" value="out00"/>

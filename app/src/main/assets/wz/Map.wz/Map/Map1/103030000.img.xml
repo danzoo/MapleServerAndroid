@@ -7418,16 +7418,16 @@
       <int name="pt" value="2"/>
       <int name="x" value="-207"/>
       <int name="y" value="186"/>
-      <int name="tm" value="999999999"/>
       <string name="tn" value="east00"/>
+      <int name="tm" value="103020200"/>
     </imgdir>
     <imgdir name="14">
       <string name="pn" value="in00"/>
       <int name="pt" value="2"/>
       <int name="x" value="1087"/>
       <int name="y" value="-1076"/>
-      <int name="tm" value="999999999"/>
       <string name="tn" value="out00"/>
+      <int name="tm" value="103030100"/>
     </imgdir>
   </imgdir>
 </imgdir>

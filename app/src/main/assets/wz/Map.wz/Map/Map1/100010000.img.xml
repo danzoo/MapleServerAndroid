@@ -7010,16 +7010,16 @@
       <int name="pt" value="2"/>
       <int name="x" value="1855"/>
       <int name="y" value="456"/>
-      <int name="tm" value="999999999"/>
       <string name="tn" value="west00"/>
+      <int name="tm" value="100020000"/>
     </imgdir>
     <imgdir name="17">
       <string name="pn" value="in00"/>
       <int name="pt" value="2"/>
       <int name="x" value="1673"/>
       <int name="y" value="-360"/>
-      <int name="tm" value="999999999"/>
       <string name="tn" value="out00"/>
+      <int name="tm" value="100010100"/>
     </imgdir>
   </imgdir>
 </imgdir>

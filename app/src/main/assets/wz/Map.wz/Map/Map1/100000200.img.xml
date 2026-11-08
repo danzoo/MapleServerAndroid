@@ -7798,8 +7798,8 @@
       <int name="pt" value="1"/>
       <int name="x" value="1728"/>
       <int name="y" value="302"/>
-      <int name="tm" value="999999999"/>
       <string name="tn" value="out00"/>
+      <int name="tm" value="100000202"/>
     </imgdir>
     <imgdir name="14">
       <string name="pn" value="event00"/>
@@ -7854,8 +7854,8 @@
       <int name="pt" value="2"/>
       <int name="x" value="4473"/>
       <int name="y" value="692"/>
-      <int name="tm" value="999999999"/>
       <string name="tn" value="out00"/>
+      <int name="tm" value="100000203"/>
     </imgdir>
   </imgdir>
 </imgdir>

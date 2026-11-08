@@ -11621,8 +11621,8 @@
       <int name="pt" value="2"/>
       <int name="x" value="2828"/>
       <int name="y" value="277"/>
-      <int name="tm" value="999999999"/>
       <string name="tn" value="west00"/>
+      <int name="tm" value="106010100"/>
     </imgdir>
   </imgdir>
 </imgdir>
