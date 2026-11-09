@@ -1,0 +1,49 @@
+# Line-ending policy for MapleServerAndroid.
+#
+# Git stores every text file with LF. `eol=lf` also forces LF in the working
+# tree, so a Windows checkout no longer turns sources back into CRLF.
+# (`core.autocrlf` is disabled in this repo; see .git/config.)
+* text=auto eol=lf
+
+# Binary assets: never normalise, never diff as text.
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.webp binary
+*.jar binary
+*.class binary
+*.db binary
+*.apk binary
+*.zip binary
+*.7z binary
+*.gz binary
+*.so binary
+*.dll binary
+*.exe binary
+*.mp3 binary
+*.mp4 binary
+*.ogg binary
+*.wav binary
+*.ttf binary
+*.otf binary
+*.dex binary
+*.keystore binary
+*.jks binary
+*.nx binary
+*.img binary
+*.bgra binary
+*.flat binary
+*.sai2 binary
+*.wz binary
+*.aar binary
+
+# Extensionless SQLite databases.
+app/src/main/assets/sql/cosmic binary
+MapleServerDesktop/data/databases/cosmic binary
+
+# The WZ asset tree is ~683 MB / 9146 XML files. Keep it as CRLF in the
+# working tree to avoid a full rewrite; git still normalises it to LF on
+# checkin, so the index stays unchanged.
+app/src/main/assets/wz/** text eol=crlf
