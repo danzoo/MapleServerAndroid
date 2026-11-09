@@ -39,6 +39,10 @@ public class MapItem extends AbstractMapObject {
     protected byte type;
     protected boolean pickedUp = false, playerDrop, partyDrop;
     protected long dropTime;
+    // When the toss the clients were told to animate is over. Until then the item is still in the air
+    // on their screens and there is nothing lying at its position to pick up. Zero for a drop that was
+    // never given one, which is a drop that appeared already at rest.
+    private long landedTime;
     private final Lock itemLock = new ReentrantLock();
 
     public MapItem(Item item, Point position, MapObject dropper, Character owner, Client ownerClient, byte type, boolean playerDrop) {
@@ -182,6 +186,35 @@ public class MapItem extends AbstractMapObject {
 
     public void setDropTime(long time) {
         this.dropTime = time;
+    }
+
+    // The arc is the client's own: DROP_TOSS_RISE / DROP_FLIGHT_SECONDS / DROP_MAX_FALL_SPEED in
+    // MapleClientAndroid's Constants.h, walked by Gameplay/MapleMap/Drop.cpp. The client waits out its
+    // own DROP_DELAY and the packet's trip on top of the delay passed here, so it lands no earlier
+    // than this and an honest pickup is never the one refused.
+    public void setLandedTime(short delay, Point from, Point to) {
+        final double tossRise = 56.0;
+        final double flightSeconds = 0.608;
+        final double maxFallSpeed = 375.0;
+        final double accel = 2.0 * tossRise / Math.pow(flightSeconds / 2.0, 2);
+        final double capSeconds = maxFallSpeed / accel;
+        final double capDistance = maxFallSpeed * maxFallSpeed / (2.0 * accel);
+
+        // The client draws both ends four pixels above the position it was given, which cancels out
+        // of every distance below, so the positions are used as they stand.
+        final double apex = Math.min(from.y, to.y) - tossRise;
+        final double climb = Math.sqrt(2.0 * (from.y - apex) / accel);
+        final double fall = to.y - apex;
+        final double descent = fall <= capDistance
+                ? Math.sqrt(2.0 * fall / accel)
+                : capSeconds + (fall - capDistance) / maxFallSpeed;
+
+        landedTime = System.currentTimeMillis() + delay
+                     + (long) Math.ceil((climb + descent) * 1000.0);
+    }
+
+    public boolean hasLanded() {
+        return System.currentTimeMillis() >= landedTime;
     }
 
     public byte getDropType() {

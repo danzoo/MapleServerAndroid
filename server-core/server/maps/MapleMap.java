@@ -1140,6 +1140,7 @@ public class MapleMap {
                            final byte droptype, final short questid, short delay) {
         final MapItem mdrop = new MapItem(idrop, dropPos, dropper, chr, chr.getClient(), droptype, false, questid);
         mdrop.setDropTime(Server.getInstance().getCurrentTime());
+        mdrop.setLandedTime(delay, dropper.getPosition(), dropPos);
         spawnAndAddRangedMapObject(mdrop, c -> {
             Character chr1 = c.getPlayer();
 
@@ -1163,6 +1164,7 @@ public class MapleMap {
         final Point droppos = calcDropPos(position, position);
         final MapItem mdrop = new MapItem(meso, droppos, dropper, owner, owner.getClient(), droptype, playerDrop);
         mdrop.setDropTime(Server.getInstance().getCurrentTime());
+        mdrop.setLandedTime(delay, dropper.getPosition(), droppos);
 
         spawnAndAddRangedMapObject(mdrop, c -> {
             mdrop.lockItem();
@@ -2219,6 +2221,7 @@ public class MapleMap {
         final Point droppos = calcDropPos(pos, pos);
         final MapItem mdrop = new MapItem(item, droppos, dropper, owner, owner.getClient(), dropType, playerDrop);
         mdrop.setDropTime(Server.getInstance().getCurrentTime());
+        mdrop.setLandedTime((short) 0, dropper.getPosition(), droppos);
 
         spawnAndAddRangedMapObject(mdrop, c -> {
             mdrop.lockItem();
