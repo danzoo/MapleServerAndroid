@@ -133,7 +133,7 @@ public final class TakeDamageHandler extends AbstractPacketHandler {
                             map.removeMapObject(attacker);
                         }
                     }
-                } else if (damagefrom != 0 || !map.removeSelfDestructive(oid)) {    // thanks inhyuk for noticing self-destruct damage not being handled properly
+                } else if (damagefrom != -2 && (damagefrom != 0 || !map.removeSelfDestructive(oid))) {    // thanks inhyuk for noticing self-destruct damage not being handled properly; -2 is a terrain trap (thorns/spikes) with no attacker, so let it through to the damage pipeline below
                     return;
                 }
             } catch (ClassCastException e) {
