@@ -517,23 +517,17 @@ public class MapleMap {
     }
 
     /**
-     * Keeps a drop on the stretch of platform the dropper was standing on, but only as far as that
-     * stretch reaches. The fan-out measures sideways from the dropper and the ground under the spot
-     * it reaches is whichever platform happens to cover that x - the search runs through every
-     * layer - so a drop whose x still lies on the dropper's own platform can be settled into the
-     * space beneath it, where nothing can be walked to; the resting point is read back off the
-     * dropper's platform to stop that. A drop thrown past either end is left where the ground below
-     * put it, because falling off the edge of a platform to the one under it is how loot always
-     * behaved. Reading the resting point back here also settles the argument over where the item
-     * lies: every client is shown and every pickup is checked against this one position.
+     * Projects the original fan-out x onto the dropper's connected platform. Returns null when
+     * that x is past either end, so the normal downward search can land it on a lower platform.
+     * This must run before a generic search can clamp x or replace it with the fallback point.
      */
-    private Point keepOnPlatform(final Point dropper, final Point dropPos) {
+    private Point pointOnPlatform(final Point dropper, final Point dropPos) {
         // A standing point is a whole pixel while a slope puts the surface a fraction off it, so
         // the platform someone stands on is searched for from just above their feet.
         Foothold start = footholds == null ? null : footholds.findBelow(new Point(dropper.x, dropper.y - 2));
 
-        if (start == null) {
-            return dropPos;
+        if (start == null || start.isWall()) {
+            return null;
         }
 
         List<Foothold> platform = new LinkedList<>();
@@ -544,24 +538,18 @@ public class MapleMap {
         // Follow the links on both sides as long as each reaches further out than the last, which
         // ends the walk at the last platform of the stretch - and at a wall, whose two horizontal
         // components are the same place.
-        for (Foothold fh = footholdById(start.getPrev()); fh != null && fh.getX1() < left; fh = footholdById(fh.getPrev())) {
+        for (Foothold fh = footholdById(start.getPrev()); fh != null && !fh.isWall() && fh.getX1() < left; fh = footholdById(fh.getPrev())) {
             left = fh.getX1();
-
-            if (!fh.isWall()) {
-                platform.add(fh);
-            }
+            platform.add(fh);
         }
 
-        for (Foothold fh = footholdById(start.getNext()); fh != null && fh.getX2() > right; fh = footholdById(fh.getNext())) {
+        for (Foothold fh = footholdById(start.getNext()); fh != null && !fh.isWall() && fh.getX2() > right; fh = footholdById(fh.getNext())) {
             right = fh.getX2();
-
-            if (!fh.isWall()) {
-                platform.add(fh);
-            }
+            platform.add(fh);
         }
 
         if (dropPos.x < left || dropPos.x > right) {
-            return dropPos;
+            return null;
         }
 
         for (Foothold fh : platform) {
@@ -570,7 +558,7 @@ public class MapleMap {
             }
         }
 
-        return dropPos;
+        return null;
     }
 
     public void generateMapDropRangeCache() {
@@ -589,7 +577,11 @@ public class MapleMap {
                 lp = bsearchDropPos(lp, fallback);  // approximated leftmost fh node position
                 rp = bsearchDropPos(rp, fallback);  // approximated rightmost fh node position
 
-                xLimits = new Pair<>(lp.x + 14, rp.x - 14);
+                int left = Math.min(lp.x, rp.x);
+                int right = Math.max(lp.x, rp.x);
+                // A short platform must not turn the two margins into an inverted clamp range.
+                int margin = right - left > 28 ? 14 : 0;
+                xLimits = new Pair<>(left + margin, right - margin);
                 dropBoundsCache.put(mapid, xLimits);
             }
         } finally {
@@ -641,11 +633,16 @@ public class MapleMap {
     }
 
     /**
-     * As calcDropPos, but with the resting point kept on the stretch of platform the dropper stood
-     * on - which is where the player who killed it is standing to pick the item up.
+     * Preserve the original fan-out on the dropper's platform before the generic downward search.
+     * On steep slopes that search can miss the platform above initial.y - 85 and lose the x offset.
      */
     public Point calcDropPos(final Point initial, final Point fallback, final Point dropper) {
-        return keepOnPlatform(dropper, calcDropPos(initial, fallback));
+        Point platformPos = pointOnPlatform(dropper, initial);
+        if (platformPos != null && mapArea.contains(platformPos.x, platformPos.y)) {
+            return platformPos;
+        }
+
+        return calcDropPos(new Point(initial), fallback);
     }
 
     public boolean canDeployDoor(Point pos) {
@@ -1161,7 +1158,10 @@ public class MapleMap {
 
     public final void spawnMesoDrop(final int meso, final Point position, final MapObject dropper,
                                     final Character owner, final boolean playerDrop, final byte droptype, short delay) {
-        final Point droppos = calcDropPos(position, position);
+        // Monster death loot already has an authoritative platform-projected landing point.
+        // Reprojecting it can clamp away its x offset or move it onto another platform.
+        final Point droppos = dropper instanceof Monster && !playerDrop
+                ? new Point(position) : calcDropPos(position, position);
         final MapItem mdrop = new MapItem(meso, droppos, dropper, owner, owner.getClient(), droptype, playerDrop);
         mdrop.setDropTime(Server.getInstance().getCurrentTime());
         mdrop.setLandedTime(delay, dropper.getPosition(), droppos);
@@ -3118,11 +3118,12 @@ public class MapleMap {
     }
 
     public void setMapPointBoundings(int px, int py, int h, int w) {
-        mapArea.set(px, py, w, h);
+        // Rect takes edges, not an origin followed by width and height.
+        mapArea.set(px, py, px + w, py + h);
     }
 
     public void setMapLineBoundings(int vrTop, int vrBottom, int vrLeft, int vrRight) {
-        mapArea.set(vrLeft, vrTop, vrRight - vrLeft, vrBottom - vrTop);
+        mapArea.set(vrLeft, vrTop, vrRight, vrBottom);
     }
 
     public MonsterAggroCoordinator getAggroCoordinator() {
