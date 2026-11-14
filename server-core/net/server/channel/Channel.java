@@ -182,6 +182,7 @@ public final class Channel {
 
             closeAllMerchants();
             disconnectAwayPlayers();
+            players.saveAll();
             players.disconnectAll();
 
             eventSM.dispose();

@@ -2020,6 +2020,19 @@ public class Server {
 
     private void disconnectIdlesOnLoginTask(Context context) {
         TimerManager.getInstance().register(() -> disconnectIdlesOnLoginState(context), 300000);
+
+        // A hard stop - a console closed under the JVM, a kill - must not cost an hour of play: the
+        // autosave clock is an hour, so persist every online character on a short clock as well.
+        TimerManager.getInstance().register(() -> {
+            if (getWorlds() == null) {
+                return;
+            }
+            for (World w : getWorlds()) {
+                for (Channel ch : w.getChannels()) {
+                    ch.getPlayerStorage().saveAll();
+                }
+            }
+        }, 120000);
     }
 
     public final Runnable shutdown(final boolean restart) {//no player should be online when trying to shutdown!
@@ -2031,6 +2044,17 @@ public class Server {
         if (getWorlds() == null) {
             return;//already shutdown
         }
+
+        // Persist first, before anything else can race the stop: a console closed under the JVM only
+        // gives the shutdown hook a few seconds, and the characters must not be what gets lost to
+        // the rest of the teardown.
+        log.info("Saving all online characters before shutdown");
+        for (World w : getWorlds()) {
+            for (Channel ch : w.getChannels()) {
+                ch.getPlayerStorage().saveAll();
+            }
+        }
+
         for (World w : getWorlds()) {
             w.shutdown();
         }

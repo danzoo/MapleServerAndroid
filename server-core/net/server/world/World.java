@@ -2183,6 +2183,7 @@ public class World {
             hpDecSchedule = null;
         }
 
+        players.saveAll();
         players.disconnectAll();
         players = null;
 

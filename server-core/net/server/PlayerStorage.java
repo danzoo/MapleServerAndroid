@@ -29,7 +29,11 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class PlayerStorage {
+    private static final Logger log = LoggerFactory.getLogger(PlayerStorage.class);
     private final Map<Integer, Character> storage = new LinkedHashMap<>();
     private final Map<String, Character> nameStorage = new LinkedHashMap<>();
     private final Lock rlock;
@@ -89,6 +93,27 @@ public class PlayerStorage {
             return new ArrayList<>(storage.values());
         } finally {
             rlock.unlock();
+        }
+    }
+
+    /**
+     * Persist every character this channel still holds, once, before the shutdown takes them away.
+     * The disconnect path saves too, but a stop that races it (a console closed under the JVM) must
+     * not be the reason a level or an item is lost.
+     */
+    public final void saveAll() {
+        List<Character> chrList;
+        rlock.lock();
+        try {
+            chrList = new ArrayList<>(storage.values());
+        } finally {
+            rlock.unlock();
+        }
+
+        log.debug("Saving {} characters", chrList.size());
+
+        for (Character mc : chrList) {
+            mc.saveCharToDB(true);
         }
     }
 

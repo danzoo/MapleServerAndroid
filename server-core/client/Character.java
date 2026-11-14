@@ -1336,6 +1336,10 @@ public class Character extends AbstractCharacterObject {
         changeMapInternal(to, pto.getPosition(), PacketCreator.getWarpToMap(to, pto.getId(), this));
         canWarpMap = false;
 
+        // The map a character stands in is part of what a stop must not lose: persist it at the warp
+        // itself, not only on the hourly autosave or on the way out.
+        saveCharToDB(true);
+
         canWarpCounter--;
         if (canWarpCounter == 0) {
             canWarpMap = true;
@@ -1386,6 +1390,10 @@ public class Character extends AbstractCharacterObject {
         }
         changeMapInternal(to, pto.getPosition(), PacketCreator.getWarpToMap(to, pto.getId(), this));
         canWarpMap = false;
+
+        // The map a character stands in is part of what a stop must not lose: persist it at the warp
+        // itself, not only on the hourly autosave or on the way out.
+        saveCharToDB(true);
 
         canWarpCounter--;
         if (canWarpCounter == 0) {
