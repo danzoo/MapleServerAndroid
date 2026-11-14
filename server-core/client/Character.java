@@ -1069,22 +1069,7 @@ public class Character extends AbstractCharacterObject {
             this.job = newJob;
         }
 
-        int spGain = 1;
-        if (GameConstants.hasSPTable(newJob)) {
-            spGain += 2;
-        } else {
-            if (newJob.getId() % 10 == 2) {
-                spGain += 2;
-            }
-
-            if (YamlConfig.config.server.USE_ENFORCE_JOB_SP_RANGE) {
-                spGain = getChangedJobSp(newJob);
-            }
-        }
-
-        if (spGain > 0) {
-            gainSp(spGain, GameConstants.getSkillBook(newJob.getId()), true);
-        }
+        reconcileSp();
 
         // thanks xinyifly for finding out missing AP awards (AP Reset can be used as a compass)
         if (newJob.getId() % 100 >= 1) {
@@ -6110,81 +6095,65 @@ public class Character extends AbstractCharacterObject {
         }
     }
 
-    private int getChangedJobSp(Job newJob) {
-        int curSp = getUsedSp(newJob) + getJobRemainingSp(newJob);
-        int spGain = 0;
-        int expectedSp = getJobLevelSp(level - 10, newJob, GameConstants.getJobBranch(newJob));
-        if (curSp < expectedSp) {
-            spGain += (expectedSp - curSp);
+    // The job stage a level belongs to: beginner up to 10, then one stage per advancement at 10, 30,
+    // 70 and 120. A level-up only pays SP once the character has advanced into the stage it lies in,
+    // so the points of the levels skipped before a late advancement stay owed until it happens.
+    private static int stageOfLevel(int level) {
+        if (level <= 10) {
+            return 0;
+        }
+        if (level <= 30) {
+            return 1;
+        }
+        if (level <= 70) {
+            return 2;
+        }
+        if (level <= 120) {
+            return 3;
         }
 
-        return getSpGain(spGain, curSp, newJob);
+        return 4;
     }
 
-    private int getUsedSp(Job job) {
-        int jobId = job.getId();
-        int spUsed = 0;
+    // What the character should have earned by now: one point per beginner level-up, nine at most,
+    // then three per level-up that lies in a stage they have actually reached, plus one point per
+    // advancement.
+    private int expectedSp() {
+        int stage = GameConstants.getJobBranch(job);
+        int earned = Math.min(Math.min(level, 10) - 1, 9);
 
-        for (Entry<Skill, SkillEntry> s : this.getSkills().entrySet()) {
-            Skill skill = s.getKey();
-            if (GameConstants.isInJobTree(skill.getId(), jobId) && !skill.isBeginnerSkill()) {
-                spUsed += s.getValue().skillevel;
+        for (int l = 11; l <= level; l++) {
+            if (stageOfLevel(l) <= stage) {
+                earned += 3;
             }
         }
 
-        return spUsed;
+        return earned + stage;
     }
 
-    private int getJobLevelSp(int level, Job job, int jobBranch) {
-        if (getJobStyleInternal(job.getId(), (byte) 0x40) == Job.MAGICIAN) {
-            level += 2;  // starts earlier, level 8
+    private int spentSp() {
+        int book = GameConstants.getSkillBook(job.getId());
+        int spent = 0;
+
+        for (Entry<Skill, SkillEntry> s : this.getSkills().entrySet()) {
+            if (GameConstants.getSkillBook(s.getKey().getId()) == book) {
+                spent += s.getValue().skillevel;
+            }
         }
 
-        return 3 * level + GameConstants.getChangeJobSpUpgrade(jobBranch);
+        return spent;
     }
 
-    private int getJobMaxSp(Job job) {
-        int jobBranch = GameConstants.getJobBranch(job);
-        int jobRange = GameConstants.getJobUpgradeLevelRange(jobBranch);
-        return getJobLevelSp(jobRange, job, jobBranch);
-    }
+    // Hand out whatever the character has earned but does not hold yet. Levels skipped before an
+    // advancement are not part of expectedSp() until it happens, so a late advancement pays them all
+    // at once together with the advancement's own point - advancing at 31 pays the level-31 point
+    // and the advancement point in one go.
+    private void reconcileSp() {
+        int book = GameConstants.getSkillBook(job.getId());
+        int due = expectedSp() - spentSp() - remainingSp[book];
 
-    private int getJobRemainingSp(Job job) {
-        int skillBook = GameConstants.getSkillBook(job.getId());
-
-        int ret = 0;
-        for (int i = 0; i <= skillBook; i++) {
-            ret += this.getRemainingSp(i);
-        }
-
-        return ret;
-    }
-
-    private int getSpGain(int spGain, Job job) {
-        int curSp = getUsedSp(job) + getJobRemainingSp(job);
-        return getSpGain(spGain, curSp, job);
-    }
-
-    private int getSpGain(int spGain, int curSp, Job job) {
-        int maxSp = getJobMaxSp(job);
-
-        spGain = Math.min(spGain, maxSp - curSp);
-        int jobBranch = GameConstants.getJobBranch(job);
-        return spGain;
-    }
-
-    private void levelUpGainSp() {
-        if (GameConstants.getJobBranch(job) == 0) {
-            return;
-        }
-
-        int spGain = 3;
-        if (YamlConfig.config.server.USE_ENFORCE_JOB_SP_RANGE && !GameConstants.hasSPTable(job)) {
-            spGain = getSpGain(spGain, job);
-        }
-
-        if (spGain > 0) {
-            gainSp(spGain, GameConstants.getSkillBook(job.getId()), true);
+        if (due > 0) {
+            gainSp(due, book, true);
         }
     }
 
@@ -6313,7 +6282,7 @@ public class Character extends AbstractCharacterObject {
             level = maxClassLevel; //To prevent levels past the maximum
         }
 
-        levelUpGainSp();
+        reconcileSp();
 
         effLock.lock();
         statWlock.lock();
