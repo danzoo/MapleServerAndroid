@@ -6131,11 +6131,24 @@ public class Character extends AbstractCharacterObject {
         return earned + stage;
     }
 
+    // The fairy blessing is a passive the account's other characters pay for, not a skill the SP
+    // pool buys: its levels neither consume the points a level earned nor may be bought with them.
+    public static boolean isFairyBlessing(int skillid) {
+        return skillid == 12
+                || skillid == Noblesse.BLESSING_OF_THE_FAIRY
+                || skillid == Legend.BLESSING_OF_THE_FAIRY
+                || skillid == Evan.BLESSING_OF_THE_FAIRY;
+    }
+
     private int spentSp() {
         int book = GameConstants.getSkillBook(job.getId());
         int spent = 0;
 
         for (Entry<Skill, SkillEntry> s : this.getSkills().entrySet()) {
+            if (isFairyBlessing(s.getKey().getId())) {
+                continue;
+            }
+
             if (GameConstants.getSkillBook(s.getKey().getId()) == book) {
                 spent += s.getValue().skillevel;
             }
@@ -7604,6 +7617,10 @@ public class Character extends AbstractCharacterObject {
                     }
                 }
             }
+
+            // The pool is reconciled against what the levels earned, so an accounting correction
+            // reaches a character who already stands at his level, not only on the next one.
+            ret.reconcileSp();
 
             return ret;
         } catch (RuntimeException e) {

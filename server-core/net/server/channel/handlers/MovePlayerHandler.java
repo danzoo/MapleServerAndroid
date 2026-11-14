@@ -37,6 +37,16 @@ public final class MovePlayerHandler extends AbstractMovementPacketHandler {
             p.seek(movementDataStart);
 
             c.getPlayer().getMap().movePlayer(c.getPlayer(), c.getPlayer().getPosition());
+
+            // A body below the map's visible bottom has left the world - usually straight through
+            // the terrain - and nothing under there can hold or stop it. Entering the map again is
+            // the way back, and it is what the client shows as the black-screen load.
+            if (c.getPlayer().getMap().getMapArea().bottom > 0
+                    && c.getPlayer().getPosition().y > c.getPlayer().getMap().getMapArea().bottom) {
+                c.getPlayer().changeMap(c.getPlayer().getMapId(), 0);
+                return;
+            }
+
             if (c.getPlayer().isHidden()) {
                 c.getPlayer().getMap().broadcastGMMessage(c.getPlayer(), PacketCreator.movePlayer(c.getPlayer().getId(), p, movementDataLength), false);
             } else {
