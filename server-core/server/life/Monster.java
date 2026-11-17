@@ -361,6 +361,25 @@ public class Monster extends AbstractLoadedLife {
         hp.set(-1);
     }
 
+    // A dead mob stays pictured where it died: the damage handler lends and restores positions around
+    // a blow and late movement packets keep arriving, and none of that may shift the loot away from
+    // the death spot once the settlement runs off the event loop.
+    private volatile boolean positionFrozen = false;
+
+    public void freezePosition(Point pos) {
+        super.setPosition(pos);
+        positionFrozen = true;
+    }
+
+    @Override
+    public void setPosition(Point position) {
+        if (positionFrozen) {
+            return;
+        }
+
+        super.setPosition(position);
+    }
+
     public void broadcastMobHpBar(Character from) {
         if (hasBossHPBar()) {
             from.setPlayerAggro(this.hashCode());

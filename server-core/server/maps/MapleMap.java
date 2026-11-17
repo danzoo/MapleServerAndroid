@@ -67,6 +67,8 @@ import tools.Randomizer;
 import java.lang.ref.WeakReference;
 import java.util.*;
 import java.util.Map.Entry;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.Lock;
@@ -80,6 +82,10 @@ import static java.util.concurrent.TimeUnit.SECONDS;
 
 public class MapleMap {
     private static final Logger log = LoggerFactory.getLogger(MapleMap.class);
+    // Kill settlement (loot, exp, quests) runs off the channel event loop: it writes to the database
+    // and a slow write must not queue up the players' next packets behind it. A small pool so one
+    // slow settlement does not hold the next kill's loot and exp behind it either.
+    private static final ExecutorService KILL_WORK = Executors.newFixedThreadPool(4);
     private static final List<MapObjectType> rangedMapobjectTypes = Arrays.asList(MapObjectType.SHOP, MapObjectType.ITEM, MapObjectType.NPC, MapObjectType.MONSTER, MapObjectType.DOOR, MapObjectType.SUMMON, MapObjectType.REACTOR);
     private static final Map<Integer, Pair<Integer, Integer>> dropBoundsCache = new HashMap<>(100);
 
@@ -1433,8 +1439,8 @@ public class MapleMap {
 
         if (chr == null) {
             if (removeKilledMonsterObject(monster)) {
-                monster.dispatchMonsterKilled(false);
                 broadcastMessage(PacketCreator.killMonster(monster.getObjectId(), animation), monster.getPosition());
+                monster.dispatchMonsterKilled(false);
                 monster.aggroSwitchController(null, false);
             }
             return;
@@ -1444,7 +1450,23 @@ public class MapleMap {
             return;
         }
 
-        try {
+        // The picture goes out before the loot/exp/quest settlement below: that work writes to the
+        // database and can hold the connection for a second or more, and a death waiting behind it
+        // reads as lag on the client even though the mob is already gone server-side.
+        broadcastMonsterDeath(monster, animation, dropDelay);
+
+        // The settlement below writes to the database and can hold the connection for seconds. On
+        // the channel thread that stalls every later packet - the player's next swing sits
+        // unprocessed behind it and reads as multi-second lag. Run it off the event loop.
+        final Point deathPos = new Point(monster.getPosition());
+        monster.freezePosition(deathPos);
+
+        KILL_WORK.submit(() -> {
+            if (chr.getClient() == null) {
+                return;
+            }
+
+            try {
             if (monster.getStats().getLevel() >= chr.getLevel() + 30 && !chr.isGM()) {
                 AutobanFactory.GENERAL.alert(chr, " for killing a " + monster.getName() + " which is over 30 levels higher.");
             }
@@ -1520,26 +1542,18 @@ public class MapleMap {
             e.printStackTrace();
         } finally {     // thanks resinate for pointing out a memory leak possibly from an exception thrown
             monster.dispatchMonsterKilled(true);
-            broadcastMonsterDeath(monster, animation, dropDelay);
         }
+
+        });
     }
 
     private void broadcastMonsterDeath(final Monster monster, final int animation, short delay) {
         final int oid = monster.getObjectId();
 
-        if (delay <= 0) {
-            broadcastMessage(PacketCreator.killMonster(oid, animation), monster.getPosition());
-            return;
-        }
-
-        // The client tells us how long its attack animation takes to land, and holds its own damage
-        // numbers back for that long. Broadcasting the death the moment the packet arrives kills the
-        // mob in front of everyone on the map while the player is still mid-swing. The mob is already
-        // gone from the server side by now, so only the picture waits.
-        final Point mobpos = monster.getPosition();
-        final Point pos = new Point(mobpos.x, mobpos.y);
-
-        TimerManager.getInstance().schedule(() -> broadcastMessage(PacketCreator.killMonster(oid, animation), pos), delay);
+        // Broadcast at once. The attacker's client already holds its own damage, flinch and death
+        // back for the swing's landing time; delaying the broadcast by that same time on top makes
+        // the kill arrive a full swing late, which reads as lag even on a local network.
+        broadcastMessage(PacketCreator.killMonster(oid, animation), monster.getPosition());
     }
 
     public void killFriendlies(Monster mob) {

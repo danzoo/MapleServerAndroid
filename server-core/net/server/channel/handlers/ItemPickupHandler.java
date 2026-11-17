@@ -57,6 +57,9 @@ public final class ItemPickupHandler extends AbstractPacketHandler {
             return;
         }
 
+        // The client keeps a per-drop cooldown after a refusal and sends nothing during it, so the
+        // retry flood that used to starve the kill settlement of the character lock is gone at the
+        // source; pickup can stay on the event loop.
         chr.pickupItem(ob);
     }
 }

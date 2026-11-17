@@ -76,6 +76,7 @@ import java.util.Map.Entry;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
@@ -130,6 +131,9 @@ public class Server {
 
     private final Lock srvLock = new ReentrantLock();
     private final Lock disLock = new ReentrantLock();
+    // The periodic character save keeps its own thread so a long write never delays game timers.
+    private final ScheduledExecutorService saveClock =
+            Executors.newSingleThreadScheduledExecutor();
 
     private final Lock wldRLock;
     private final Lock wldWLock;
@@ -2023,7 +2027,9 @@ public class Server {
 
         // A hard stop - a console closed under the JVM, a kill - must not cost an hour of play: the
         // autosave clock is an hour, so persist every online character on a short clock as well.
-        TimerManager.getInstance().register(() -> {
+        // On its own thread: a save holds the database for a while, and sharing the game's timer
+        // thread would delay everything scheduled behind it - death broadcasts included.
+        saveClock.scheduleAtFixedRate(() -> {
             if (getWorlds() == null) {
                 return;
             }
@@ -2032,7 +2038,8 @@ public class Server {
                     ch.getPlayerStorage().saveAll();
                 }
             }
-        }, 120000);
+            DatabaseConnection.checkpointPassive();
+        }, 120, 120, java.util.concurrent.TimeUnit.SECONDS);
     }
 
     public final Runnable shutdown(final boolean restart) {//no player should be online when trying to shutdown!
@@ -2074,6 +2081,7 @@ public class Server {
         resetServerWorlds();
 
         ThreadManager.getInstance().stop();
+        saveClock.shutdownNow();
         TimerManager.getInstance().purge();
         TimerManager.getInstance().stop();
 
