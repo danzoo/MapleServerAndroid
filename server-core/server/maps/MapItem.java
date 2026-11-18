@@ -136,6 +136,10 @@ public class MapItem extends AbstractMapObject {
         return System.currentTimeMillis() - dropTime >= SECONDS.toMillis(15);
     }
 
+    public final long getOwnershipRemainingMs(long now) {
+        return Math.max(0L, dropTime + SECONDS.toMillis(15) - now);
+    }
+
     public final boolean canBePickedBy(Character chr) {
         if (character_ownerid <= 0 || isFFADrop()) {
             return true;
@@ -182,6 +186,10 @@ public class MapItem extends AbstractMapObject {
 
     public long getDropTime() {
         return dropTime;
+    }
+
+    public final long getPickupDelayRemainingMs(long now) {
+        return Math.max(0L, Math.max(landedTime - now, dropTime + 400L - now));
     }
 
     public void setDropTime(long time) {

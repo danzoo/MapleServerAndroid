@@ -27,7 +27,9 @@ import net.AbstractPacketHandler;
 import net.packet.InPacket;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import server.maps.MapItem;
 import server.maps.MapObject;
+import tools.PacketCreator;
 import android.graphics.Point;
 
 /**
@@ -40,12 +42,16 @@ public final class ItemPickupHandler extends AbstractPacketHandler {
     @Override
     public void handlePacket(final InPacket p, final Client c) {
         p.readInt(); //Timestamp
-        p.readByte();
-        p.readPos(); //cpos
+        boolean reportRejection = p.readByte() == 0x7f;
+        p.readPos(); // cpos is not authoritative
         int oid = p.readInt();
         Character chr = c.getPlayer();
         MapObject ob = chr.getMap().getMapObject(oid);
-        if (ob == null) {
+        if (ob == null || (reportRejection && !(ob instanceof MapItem))) {
+            if (reportRejection) {
+                c.sendPacket(PacketCreator.pickupRejected(chr.getMapId(), oid, 500));
+                c.sendPacket(PacketCreator.enableActions());
+            }
             return;
         }
 
@@ -54,12 +60,14 @@ public final class ItemPickupHandler extends AbstractPacketHandler {
         if (Math.abs(charPos.x - obPos.x) > 800 || Math.abs(charPos.y - obPos.y) > 600) {
             log.warn("Chr {} tried to pick up an item too far away. Mapid: {}, player pos: {}, object pos: {}",
                     c.getPlayer().getName(), chr.getMapId(), charPos, obPos);
+            if (reportRejection) {
+                c.sendPacket(PacketCreator.pickupRejected(chr.getMapId(), oid, 500));
+                c.sendPacket(PacketCreator.enableActions());
+            }
             return;
         }
 
-        // The client keeps a per-drop cooldown after a refusal and sends nothing during it, so the
-        // retry flood that used to starve the kill settlement of the character lock is gone at the
-        // source; pickup can stay on the event loop.
-        chr.pickupItem(ob);
+        // Retry feedback only guides client throttling; all authoritative pickup checks still run.
+        chr.pickupItem(ob, -1, reportRejection);
     }
 }

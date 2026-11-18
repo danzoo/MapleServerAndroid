@@ -24,7 +24,9 @@ public class DatabaseConnection {
         dbConnection.execSQL("PRAGMA synchronous=NORMAL;");
         // The automatic checkpoint runs inside a commit and blocks every writer for as long as it
         // takes - the occasional multi-second stall behind which kill settlement queues up. Check
-        // passively from the save clock instead, which never blocks a writer.
+        // passively from independent database maintenance and after manual saves instead.
+        // Maintenance never saves characters; PASSIVE can still leave busy frames in WAL and
+        // briefly contend for the desktop shim's connection lock.
         dbConnection.execSQL("PRAGMA wal_autocheckpoint=0;");
     }
 

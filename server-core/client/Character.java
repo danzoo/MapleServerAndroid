@@ -90,6 +90,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -103,6 +104,18 @@ import static java.util.concurrent.TimeUnit.*;
 
 public class Character extends AbstractCharacterObject {
     private static final Logger log = LoggerFactory.getLogger(Character.class);
+    private static final long SLOW_CHARACTER_OPERATION_NANOS = MILLISECONDS.toNanos(250);
+    private volatile String activeSavePhase = "idle";
+
+    private static final class SaveTiming {
+        private long databaseWaitNanos;
+        private long monsterBookNanos;
+        private long itemsNanos;
+        private long questsNanos;
+        private long commitNanos;
+        private boolean successful;
+    }
+
     private static final String LEVEL_200 = "[Congrats] %s has reached Level %d! Congratulate %s on such an amazing achievement!";
     private static final String[] BLOCKED_NAMES = {"admin", "owner", "moderator", "intern", "donor", "administrator", "FREDRICK", "help", "helper", "alert", "notice", "maplestory", "fuck", "wizet", "fucking", "negro", "fuk", "fuc", "penis", "pussy", "asshole", "gay",
             "nigger", "homo", "suck", "cum", "shit", "shitty", "condom", "security", "official", "rape", "nigga", "sex", "tit", "boner", "orgy", "clit", "asshole", "fatass", "bitch", "support", "gamemaster", "cock", "gaay", "gm",
@@ -1885,14 +1898,31 @@ public class Character extends AbstractCharacterObject {
         pickupItem(ob, -1);
     }
 
-    public final void pickupItem(MapObject ob, int petIndex) {     // yes, one picks the MapObject, not the MapItem
-        if (ob == null) {                                               // pet index refers to the one picking up the item
+    public final void pickupItem(MapObject ob, int petIndex) {
+        pickupItem(ob, petIndex, false);
+    }
+
+    private void reportPickupRejection(MapItem mapitem, long retryAfterMs, boolean reportRejection) {
+        if (reportRejection) {
+            int retry = (int) Math.max(100L, Math.min(5000L, retryAfterMs));
+            sendPacket(PacketCreator.pickupRejected(getMapId(), mapitem.getObjectId(), retry));
+        }
+    }
+
+    public final void pickupItem(MapObject ob, int petIndex, boolean reportRejection) { // pet index refers to the picker
+        if (ob == null) {
             return;
         }
 
         if (ob instanceof MapItem mapitem) {
-            if (!mapitem.hasLanded() || System.currentTimeMillis() - mapitem.getDropTime() < 400
-                    || !mapitem.canBePickedBy(this)) {
+            final long now = System.currentTimeMillis();
+            if (!mapitem.hasLanded() || now - mapitem.getDropTime() < 400) {
+                reportPickupRejection(mapitem, mapitem.getPickupDelayRemainingMs(now), reportRejection);
+                sendPacket(PacketCreator.enableActions());
+                return;
+            }
+            if (!mapitem.canBePickedBy(this)) {
+                reportPickupRejection(mapitem, mapitem.getOwnershipRemainingMs(now), reportRejection);
                 sendPacket(PacketCreator.enableActions());
                 return;
             }
@@ -1906,6 +1936,7 @@ public class Character extends AbstractCharacterObject {
             mapitem.lockItem();
             try {
                 if (mapitem.isPickedUp()) {
+                    reportPickupRejection(mapitem, 500, reportRejection);
                     sendPacket(PacketCreator.showItemUnavailable());
                     sendPacket(PacketCreator.enableActions());
                     return;
@@ -1948,10 +1979,12 @@ public class Character extends AbstractCharacterObject {
                             } else if (InventoryManipulator.addFromDrop(client, mItem, true)) {
                                 this.getMap().pickItemDrop(pickupPacket, mapitem);
                             } else {
+                                reportPickupRejection(mapitem, 5000, reportRejection);
                                 sendPacket(PacketCreator.enableActions());
                                 return;
                             }
                         } else {
+                            reportPickupRejection(mapitem, 5000, reportRejection);
                             sendPacket(PacketCreator.showItemUnavailable());
                             sendPacket(PacketCreator.enableActions());
                             return;
@@ -1961,6 +1994,7 @@ public class Character extends AbstractCharacterObject {
                     }
 
                     if (!this.needQuestItem(mapitem.getQuest(), mapitem.getItemId())) {
+                        reportPickupRejection(mapitem, 5000, reportRejection);
                         sendPacket(PacketCreator.showItemUnavailable());
                         sendPacket(PacketCreator.enableActions());
                         return;
@@ -1983,6 +2017,7 @@ public class Character extends AbstractCharacterObject {
                             itemScript = info;
                         } else {
                             if (!InventoryManipulator.addFromDrop(client, mItem, true)) {
+                                reportPickupRejection(mapitem, 5000, reportRejection);
                                 sendPacket(PacketCreator.enableActions());
                                 return;
                             }
@@ -2001,12 +2036,14 @@ public class Character extends AbstractCharacterObject {
                             updateAriantScore();
                         }
                     } else {
+                        reportPickupRejection(mapitem, 5000, reportRejection);
                         sendPacket(PacketCreator.enableActions());
                         return;
                     }
 
                     this.getMap().pickItemDrop(pickupPacket, mapitem);
                 } else if (!hasSpaceInventory) {
+                    reportPickupRejection(mapitem, 5000, reportRejection);
                     sendPacket(PacketCreator.getInventoryFull());
                     sendPacket(PacketCreator.getShowInventoryFull());
                 }
@@ -3054,7 +3091,38 @@ public class Character extends AbstractCharacterObject {
         sendPacket(PacketCreator.getShowExpGain((int) gain, equip, party, inChat, white));
     }
 
-    private synchronized void gainExpInternal(long gain, int equip, int party, boolean show, boolean inChat, boolean white) {   // need of method synchonization here detected thanks to MedicOP
+    private void logSlowCharacterOperation(String message, Object... values) {
+        // A synchronized caller (e.g. changeJob) may still own this monitor after our wrapper exits.
+        // Arguments are already immutable scalar/string snapshots, not live character state.
+        if (Thread.holdsLock(this)) {
+            ForkJoinPool.commonPool().execute(() -> log.warn(message, values));
+        } else {
+            log.warn(message, values);
+        }
+    }
+
+    private void gainExpInternal(long gain, int equip, int party, boolean show, boolean inChat, boolean white) {
+        final long requestedAt = System.nanoTime();
+        final String savePhaseAtRequest = activeSavePhase;
+        long acquiredAt = requestedAt;
+        try {
+            synchronized (this) {
+                acquiredAt = System.nanoTime();
+                gainExpLocked(gain, equip, party, show, inChat, white);
+            }
+        } finally {
+            final long finishedAt = System.nanoTime();
+            if (finishedAt - requestedAt >= SLOW_CHARACTER_OPERATION_NANOS) {
+                logSlowCharacterOperation("[EXP_SLOW] chr={} gain={} monitor_wait_ms={} work_ms={} total_ms={} save_phase_at_request={} thread={}",
+                        id, gain, NANOSECONDS.toMillis(acquiredAt - requestedAt),
+                        NANOSECONDS.toMillis(finishedAt - acquiredAt), NANOSECONDS.toMillis(finishedAt - requestedAt),
+                        savePhaseAtRequest, Thread.currentThread().getName());
+            }
+        }
+    }
+
+    // Called only with the character monitor held, including overflow recursion.
+    private void gainExpLocked(long gain, int equip, int party, boolean show, boolean inChat, boolean white) {
         long total = Math.max(gain + equip + party, -exp.get());
 
         if (level < getMaxLevel() && (allowExpGain || this.getEventInstance() != null)) {
@@ -3080,7 +3148,7 @@ public class Character extends AbstractCharacterObject {
             }
 
             if (leftover > 0) {
-                gainExpInternal(leftover, equip, party, false, inChat, white);
+                gainExpLocked(leftover, equip, party, false, inChat, white);
             } else {
                 lastExpGainTime = System.currentTimeMillis();
 
@@ -8524,19 +8592,63 @@ public class Character extends AbstractCharacterObject {
         }
     }
 
-    //ItemFactory saveItems and monsterbook.saveCards are the most time consuming here.
-    public synchronized void saveCharToDB(boolean notAutosave) {
+    // Keep the existing save/EXP monitor until a full, immutable save snapshot is implemented.
+    // Merely moving the database write out of this monitor would race level, quest and item state.
+    public void saveCharToDB(boolean notAutosave) {
+        saveCharToDBWithResult(notAutosave);
+    }
+
+    /** Synchronous save; false means the character was skipped or its transaction failed. */
+    public boolean saveCharToDBWithResult() {
+        return saveCharToDBWithResult(true);
+    }
+
+    private boolean saveCharToDBWithResult(boolean notAutosave) {
+        final long requestedAt = System.nanoTime();
+        final SaveTiming timing = new SaveTiming();
+        long acquiredAt = requestedAt;
+        try {
+            synchronized (this) {
+                acquiredAt = System.nanoTime();
+                activeSavePhase = "prepare";
+                try {
+                    saveCharToDBLocked(notAutosave, timing);
+                } finally {
+                    activeSavePhase = "idle";
+                }
+            }
+        } finally {
+            final long finishedAt = System.nanoTime();
+            if (finishedAt - requestedAt >= SLOW_CHARACTER_OPERATION_NANOS) {
+                logSlowCharacterOperation("[SAVE_SLOW] chr={} monitor_wait_ms={} database_wait_ms={} monsterbook_ms={} items_ms={} quests_ms={} commit_ms={} work_ms={} total_ms={} success={} thread={}",
+                        id, NANOSECONDS.toMillis(acquiredAt - requestedAt), NANOSECONDS.toMillis(timing.databaseWaitNanos),
+                        NANOSECONDS.toMillis(timing.monsterBookNanos), NANOSECONDS.toMillis(timing.itemsNanos),
+                        NANOSECONDS.toMillis(timing.questsNanos), NANOSECONDS.toMillis(timing.commitNanos),
+                        NANOSECONDS.toMillis(finishedAt - acquiredAt), NANOSECONDS.toMillis(finishedAt - requestedAt),
+                        timing.successful, Thread.currentThread().getName());
+            }
+        }
+        return timing.successful;
+    }
+
+    private void saveCharToDBLocked(boolean notAutosave, SaveTiming timing) {
         if (!loggedIn) {
             return;
         }
 
-        Calendar c = Calendar.getInstance();
         log.debug("Attempting to {} chr {}", notAutosave ? "save" : "autosave", name);
 
         Server.getInstance().updateCharacterEntry(this);
         SQLiteDatabase con = DatabaseConnection.getConnection();
         try {
-            con.beginTransaction();
+            activeSavePhase = "database_wait";
+            final long databaseRequestedAt = System.nanoTime();
+            try {
+                con.beginTransaction();
+            } finally {
+                timing.databaseWaitNanos = System.nanoTime() - databaseRequestedAt;
+            }
+            activeSavePhase = "character_row";
 
             try {
                 ContentValues values = new ContentValues();
@@ -8631,7 +8743,14 @@ public class Character extends AbstractCharacterObject {
                     values.put("useslots", getSlots(2));
                     values.put("setupslots", getSlots(3));
                     values.put("etcslots", getSlots(4));
-                    monsterbook.saveCards(con, id);
+                    activeSavePhase = "monsterbook";
+                    final long monsterBookStartedAt = System.nanoTime();
+                    try {
+                        monsterbook.saveCards(con, id);
+                    } finally {
+                        timing.monsterBookNanos = System.nanoTime() - monsterBookStartedAt;
+                    }
+                    activeSavePhase = "character_row";
 
                     values.put("monsterbookcover", bookCover);
                     values.put("vanquisherStage", vanquisherStage);
@@ -8660,6 +8779,7 @@ public class Character extends AbstractCharacterObject {
                         throw new RuntimeException("Character not in database (" + id + ")");
                     }
 
+                activeSavePhase = "related_data";
                 List<Pet> petList = new LinkedList<>();
                 petLock.lock();
                 try {
@@ -8742,7 +8862,14 @@ public class Character extends AbstractCharacterObject {
                 }
 
                 // Items
-                ItemFactory.INVENTORY.saveItems(itemsWithType, id, con);
+                activeSavePhase = "items";
+                final long itemsStartedAt = System.nanoTime();
+                try {
+                    ItemFactory.INVENTORY.saveItems(itemsWithType, id, con);
+                } finally {
+                    timing.itemsNanos = System.nanoTime() - itemsStartedAt;
+                }
+                activeSavePhase = "related_data";
 
                 // Skills
                 for (Map.Entry<Skill, SkillEntry> entry : skills.entrySet()) {
@@ -8832,38 +8959,45 @@ public class Character extends AbstractCharacterObject {
                     con.insert("eventstats", null, eventstatsValues);
                 }
 
-                deleteQuestProgressWhereCharacterId(con, id);
+                activeSavePhase = "quests";
+                final long questsStartedAt = System.nanoTime();
+                try {
+                    deleteQuestProgressWhereCharacterId(con, id);
 
-                // Quests and medals
-                for (QuestStatus qs : getQuests()) {
-                    ContentValues questStatusValues = new ContentValues();
-                    questStatusValues.put("characterid", id);
-                    questStatusValues.put("quest", qs.getQuest().getId());
-                    questStatusValues.put("status", qs.getStatus().getId());
-                    questStatusValues.put("time", (int) (qs.getCompletionTime() / 1000));
-                    questStatusValues.put("expires", qs.getExpirationTime());
-                    questStatusValues.put("forfeited", qs.getForfeited());
-                    questStatusValues.put("completed", qs.getCompleted());
+                    // Quests and medals
+                    for (QuestStatus qs : getQuests()) {
+                        ContentValues questStatusValues = new ContentValues();
+                        questStatusValues.put("characterid", id);
+                        questStatusValues.put("quest", qs.getQuest().getId());
+                        questStatusValues.put("status", qs.getStatus().getId());
+                        questStatusValues.put("time", (int) (qs.getCompletionTime() / 1000));
+                        questStatusValues.put("expires", qs.getExpirationTime());
+                        questStatusValues.put("forfeited", qs.getForfeited());
+                        questStatusValues.put("completed", qs.getCompleted());
 
-                    long statusRowId = con.insert("queststatus", null, questStatusValues);
+                        long statusRowId = con.insert("queststatus", null, questStatusValues);
 
-                    for (int mob : qs.getProgress().keySet()) {
-                        ContentValues questProgressValues = new ContentValues();
-                        questProgressValues.put("characterid", id);
-                        questProgressValues.put("queststatusid", statusRowId);
-                        questProgressValues.put("progressid", mob);
-                        questProgressValues.put("progress", qs.getProgress(mob));
-                        con.insert("questprogress", null, questProgressValues);
+                        for (int mob : qs.getProgress().keySet()) {
+                            ContentValues questProgressValues = new ContentValues();
+                            questProgressValues.put("characterid", id);
+                            questProgressValues.put("queststatusid", statusRowId);
+                            questProgressValues.put("progressid", mob);
+                            questProgressValues.put("progress", qs.getProgress(mob));
+                            con.insert("questprogress", null, questProgressValues);
+                        }
+
+                        for (int i = 0; i < qs.getMedalMaps().size(); i++) {
+                            ContentValues medalMapValues = new ContentValues();
+                            medalMapValues.put("characterid", id);
+                            medalMapValues.put("queststatusid", statusRowId);
+                            medalMapValues.put("mapid", qs.getMedalMaps().get(i));
+                            con.insert("medalmaps", null, medalMapValues);
+                        }
                     }
-
-                    for (int i = 0; i < qs.getMedalMaps().size(); i++) {
-                        ContentValues medalMapValues = new ContentValues();
-                        medalMapValues.put("characterid", id);
-                        medalMapValues.put("queststatusid", statusRowId);
-                        medalMapValues.put("mapid", qs.getMedalMaps().get(i));
-                        con.insert("medalmaps", null, medalMapValues);
-                    }
+                } finally {
+                    timing.questsNanos = System.nanoTime() - questsStartedAt;
                 }
+                activeSavePhase = "related_data";
 
                 FamilyEntry familyEntry = getFamilyEntry(); //save family rep
                 if (familyEntry != null) {
@@ -8898,8 +9032,15 @@ public class Character extends AbstractCharacterObject {
             } catch (Exception e) {
                 throw e;
             } finally {
-                con.endTransaction();
+                activeSavePhase = "commit";
+                final long commitStartedAt = System.nanoTime();
+                try {
+                    con.endTransaction();
+                } finally {
+                    timing.commitNanos = System.nanoTime() - commitStartedAt;
+                }
             }
+            timing.successful = true;
         } catch (Exception e) {
             log.error("Error saving chr {}, level: {}, job: {}", name, level, job.getId(), e);
         }

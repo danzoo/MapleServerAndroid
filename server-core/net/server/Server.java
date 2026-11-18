@@ -131,9 +131,13 @@ public class Server {
 
     private final Lock srvLock = new ReentrantLock();
     private final Lock disLock = new ReentrantLock();
-    // The periodic character save keeps its own thread so a long write never delays game timers.
-    private final ScheduledExecutorService saveClock =
-            Executors.newSingleThreadScheduledExecutor();
+    // Database housekeeping only: checkpoint already committed WAL pages, never save characters.
+    private final ScheduledExecutorService databaseMaintenance =
+            Executors.newSingleThreadScheduledExecutor(runnable -> {
+                Thread thread = new Thread(runnable, "WALCheckpoint");
+                thread.setDaemon(true);
+                return thread;
+            });
 
     private final Lock wldRLock;
     private final Lock wldWLock;
@@ -2024,21 +2028,13 @@ public class Server {
 
     private void disconnectIdlesOnLoginTask(Context context) {
         TimerManager.getInstance().register(() -> disconnectIdlesOnLoginState(context), 300000);
-
-        // A hard stop - a console closed under the JVM, a kill - must not cost an hour of play: the
-        // autosave clock is an hour, so persist every online character on a short clock as well.
-        // On its own thread: a save holds the database for a while, and sharing the game's timer
-        // thread would delay everything scheduled behind it - death broadcasts included.
-        saveClock.scheduleAtFixedRate(() -> {
-            if (getWorlds() == null) {
-                return;
+        databaseMaintenance.scheduleWithFixedDelay(() -> {
+            try {
+                DatabaseConnection.checkpointPassive();
+            } catch (Exception e) {
+                // A failed checkpoint must not cancel future maintenance attempts.
+                log.warn("Passive WAL checkpoint failed", e);
             }
-            for (World w : getWorlds()) {
-                for (Channel ch : w.getChannels()) {
-                    ch.getPlayerStorage().saveAll();
-                }
-            }
-            DatabaseConnection.checkpointPassive();
         }, 120, 120, java.util.concurrent.TimeUnit.SECONDS);
     }
 
@@ -2081,7 +2077,7 @@ public class Server {
         resetServerWorlds();
 
         ThreadManager.getInstance().stop();
-        saveClock.shutdownNow();
+        databaseMaintenance.shutdownNow();
         TimerManager.getInstance().purge();
         TimerManager.getInstance().stop();
 

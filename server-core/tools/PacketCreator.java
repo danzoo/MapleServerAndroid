@@ -3602,6 +3602,17 @@ public class PacketCreator {
         return p;
     }
 
+    // Only send for a pickup request that explicitly opted in with the 0x7f marker.
+    public static Packet pickupRejected(int mapId, int oid, int retryAfterMs) {
+        OutPacket p = OutPacket.create(SendOpcode.SHOW_STATUS_INFO);
+        p.writeByte(0);
+        p.writeByte(0xfd);
+        p.writeInt(mapId);
+        p.writeInt(oid);
+        p.writeInt(Math.max(100, Math.min(5000, retryAfterMs)));
+        return p;
+    }
+
     public static Packet getStorage(int npcId, byte slots, Collection<Item> items, int meso) {
         final OutPacket p = OutPacket.create(SendOpcode.STORAGE);
         p.writeByte(0x16);

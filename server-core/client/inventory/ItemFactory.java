@@ -258,11 +258,11 @@ public enum ItemFactory {
         Lock lock = locks[id % lockCount];
         lock.lock();
         try {
-            String query = "DELETE FROM inventoryitems " +
-                    "WHERE inventoryitemid IN (SELECT inventoryitemid " +
-                    "FROM inventoryequipment " +
-                    "WHERE type = ? AND " + (account ? "accountid" : "characterid") + " = ?);";
-            con.execSQL(query, new String[] { String.valueOf(value), String.valueOf(id) });
+            String selection = "type = ? AND " + (account ? "accountid" : "characterid") + " = ?";
+            String[] selectionArgs = { String.valueOf(value), String.valueOf(id) };
+            con.execSQL("DELETE FROM inventoryequipment WHERE inventoryitemid IN " +
+                    "(SELECT inventoryitemid FROM inventoryitems WHERE " + selection + ")", selectionArgs);
+            con.execSQL("DELETE FROM inventoryitems WHERE " + selection, selectionArgs);
 
             try {
                 if (!items.isEmpty()) {
@@ -284,14 +284,13 @@ public enum ItemFactory {
                         itemValues.put("giftFrom", item.getGiftFrom());
 
                         long newRowId = con.insert("inventoryitems", null, itemValues);
+                        if (newRowId == -1) {
+                            throw new RuntimeException("Inserting data into inventoryitems failed.");
+                        }
 
                         if (mit.equals(InventoryType.EQUIP) || mit.equals(InventoryType.EQUIPPED)) {
                             ContentValues equipValues = new ContentValues();
-                            if (newRowId != -1) {
-                                equipValues.put("inventoryitemid", newRowId);
-                            } else {
-                                throw new RuntimeException("Inserting item failed.");
-                            }
+                            equipValues.put("inventoryitemid", newRowId);
 
                             Equip equip = (Equip) item;
                             equipValues.put("upgradeslots", equip.getUpgradeSlots());
@@ -317,7 +316,9 @@ public enum ItemFactory {
                             equipValues.put("itemexp", equip.getItemExp());
                             equipValues.put("ringid", equip.getRingId());
 
-                            con.insert("inventoryequipment", null, equipValues);
+                            if (con.insert("inventoryequipment", null, equipValues) == -1) {
+                                throw new RuntimeException("Inserting data into inventoryequipment failed.");
+                            }
                         }
                     }
                 }

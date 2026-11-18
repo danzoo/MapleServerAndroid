@@ -5,11 +5,13 @@ import client.Character;
 import client.inventory.manipulator.InventoryManipulator;
 import net.server.Server;
 import net.server.channel.Channel;
+import net.server.world.World;
 import server.ItemInformationProvider;
 import server.life.LifeFactory;
 import server.life.Monster;
 import server.maps.MapManager;
 import server.maps.MapleMap;
+import tools.DatabaseConnection;
 import tools.PacketCreator;
 
 import java.io.BufferedReader;
@@ -71,6 +73,7 @@ public class ConsoleManager {
         register("kick", "<name>", "Disconnect an online character", this::cmdKick);
         register("give", "<name> <itemid> [qty]", "Give item(s) to an online character", this::cmdGive);
         register("giveexp", "<name> <amount>", "Give experience to an online character", this::cmdGiveExp);
+        register("saveall", "", "同步保存所有世界的在线角色完整存档（含商城），不会关闭服务器", this::cmdSaveAll);
         // aliases
         commands.put("killall", commands.get("clearmob"));
         commands.put("clear", commands.get("clearmob"));
@@ -172,8 +175,8 @@ public class ConsoleManager {
             System.out.println();
             System.out.println("另有从游戏内 @/! 迁移过来的 " + gm.listed().size()
                     + " 条 GM 命令：help gm 看全部，help <关键字> 只看相关的几条。");
-            System.out.println("注：help/online/spawn/banner 这四个名字游戏内也有同名命令，"
-                    + "输入时一律走上面的内置实现（内置版本按 mapid/全世界来指定主体，功能覆盖游戏内那条）。");
+            System.out.println("注：help/online/spawn/banner/saveall 游戏内也有同名命令，"
+                    + "输入时一律走上面的内置实现（saveall 按世界同步保存，含商城角色）。");
             return;
         }
         if (!gmOnly && !filter.isEmpty()) {
@@ -206,6 +209,59 @@ public class ConsoleManager {
                 System.out.println("        别名: " + String.join(", ", c.aliases()));
             }
         }
+    }
+
+    private void cmdSaveAll(String[] args) {
+        if (args.length != 0) {
+            System.out.println("Syntax: saveall");
+            return;
+        }
+
+        final long startedAt = System.nanoTime();
+        // World storage also holds cash-shop/MTS characters, which channel-only iteration misses.
+        // Snapshot the membership, not the character data: each save retains its existing monitor.
+        Map<Integer, Character> characters = new LinkedHashMap<>();
+        for (World world : Server.getInstance().getWorlds()) {
+            for (Character chr : world.getPlayerStorage().getAllCharacters()) {
+                characters.putIfAbsent(chr.getId(), chr);
+            }
+        }
+
+        System.out.println("开始全服角色存档：" + characters.size() + " 个角色。请等待结算完成并结束交易/摆摊后保存；此命令不是全服运行时快照。");
+        int saved = 0;
+        int failed = 0;
+        int skipped = 0;
+        for (Character chr : characters.values()) {
+            if (!chr.isLoggedin()) {
+                skipped++;
+                continue;
+            }
+            try {
+                if (chr.saveCharToDBWithResult()) {
+                    saved++;
+                } else {
+                    failed++;
+                    System.out.println("角色存档未完成：" + chr.getName() + " (id=" + chr.getId() + ")，请检查服务端日志；也可能已在保存前退出。");
+                }
+            } catch (Exception e) {
+                failed++;
+                System.out.println("角色存档失败：" + chr.getName() + " (id=" + chr.getId() + "): " + e);
+                e.printStackTrace(System.out);
+            }
+        }
+
+        boolean checkpointSucceeded = false;
+        try {
+            DatabaseConnection.checkpointPassive();
+            checkpointSucceeded = true;
+        } catch (Exception e) {
+            System.out.println("WAL checkpoint 失败：" + e);
+            e.printStackTrace(System.out);
+        }
+        long elapsedMillis = (System.nanoTime() - startedAt) / 1_000_000;
+        System.out.println("全服角色存档结束：角色事务提交 " + saved + "，失败/未完成 " + failed
+                + "，离线跳过 " + skipped + "，耗时 " + elapsedMillis + "ms，WAL checkpoint "
+                + (checkpointSucceeded ? "已执行（忙碌页面可能仍留在 WAL）" : "失败") + "。服务器继续运行。");
     }
 
     private void cmdOnline(String[] args) {

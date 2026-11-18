@@ -67,9 +67,9 @@ import tools.Randomizer;
 import java.lang.ref.WeakReference;
 import java.util.*;
 import java.util.Map.Entry;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
@@ -77,7 +77,9 @@ import java.util.concurrent.locks.ReentrantLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.function.Predicate;
 
+import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static java.util.concurrent.TimeUnit.MINUTES;
+import static java.util.concurrent.TimeUnit.NANOSECONDS;
 import static java.util.concurrent.TimeUnit.SECONDS;
 
 public class MapleMap {
@@ -85,7 +87,8 @@ public class MapleMap {
     // Kill settlement (loot, exp, quests) runs off the channel event loop: it writes to the database
     // and a slow write must not queue up the players' next packets behind it. A small pool so one
     // slow settlement does not hold the next kill's loot and exp behind it either.
-    private static final ExecutorService KILL_WORK = Executors.newFixedThreadPool(4);
+    private static final ThreadPoolExecutor KILL_WORK = (ThreadPoolExecutor) Executors.newFixedThreadPool(4);
+    private static final long SLOW_KILL_NANOS = MILLISECONDS.toNanos(250);
     private static final List<MapObjectType> rangedMapobjectTypes = Arrays.asList(MapObjectType.SHOP, MapObjectType.ITEM, MapObjectType.NPC, MapObjectType.MONSTER, MapObjectType.DOOR, MapObjectType.SUMMON, MapObjectType.REACTOR);
     private static final Map<Integer, Pair<Integer, Integer>> dropBoundsCache = new HashMap<>(100);
 
@@ -1461,89 +1464,125 @@ public class MapleMap {
         final Point deathPos = new Point(monster.getPosition());
         monster.freezePosition(deathPos);
 
+        final long submittedAt = System.nanoTime();
         KILL_WORK.submit(() -> {
             if (chr.getClient() == null) {
                 return;
             }
 
+            final long startedAt = System.nanoTime();
+            long preRewardNanos = 0;
+            long rewardNanos = 0;
+            long dropsNanos = 0;
+            String phase = "pre_reward";
+            boolean successful = false;
             try {
-            if (monster.getStats().getLevel() >= chr.getLevel() + 30 && !chr.isGM()) {
-                AutobanFactory.GENERAL.alert(chr, " for killing a " + monster.getName() + " which is over 30 levels higher.");
-            }
+                if (monster.getStats().getLevel() >= chr.getLevel() + 30 && !chr.isGM()) {
+                    AutobanFactory.GENERAL.alert(chr, " for killing a " + monster.getName() + " which is over 30 levels higher.");
+                }
 
-                    /*if (chr.getQuest(Quest.getInstance(29400)).getStatus().equals(QuestStatus.Status.STARTED)) {
-                     if (chr.getLevel() >= 120 && monster.getStats().getLevel() >= 120) {
-                     //FIX MEDAL SHET
-                     } else if (monster.getStats().getLevel() >= chr.getLevel()) {
-                     }
-                     }*/
+                if (monster.getCP() > 0 && chr.getMap().isCPQMap()) {
+                    chr.gainCP(monster.getCP());
+                }
 
-            if (monster.getCP() > 0 && chr.getMap().isCPQMap()) {
-                chr.gainCP(monster.getCP());
-            }
-
-            int buff = monster.getBuffToGive();
-            if (buff > -1) {
-                ItemInformationProvider mii = ItemInformationProvider.getInstance();
-                for (MapObject mmo : this.getPlayers()) {
-                    Character character = (Character) mmo;
-                    if (character.isAlive()) {
-                        StatEffect statEffect = mii.getItemEffect(buff);
-                        character.sendPacket(PacketCreator.showOwnBuffEffect(buff, 1));
-                        broadcastMessage(character, PacketCreator.showBuffEffect(character.getId(), buff, 1), false);
-                        statEffect.applyTo(character);
+                int buff = monster.getBuffToGive();
+                if (buff > -1) {
+                    ItemInformationProvider mii = ItemInformationProvider.getInstance();
+                    for (MapObject mmo : this.getPlayers()) {
+                        Character character = (Character) mmo;
+                        if (character.isAlive()) {
+                            StatEffect statEffect = mii.getItemEffect(buff);
+                            character.sendPacket(PacketCreator.showOwnBuffEffect(buff, 1));
+                            broadcastMessage(character, PacketCreator.showBuffEffect(character.getId(), buff, 1), false);
+                            statEffect.applyTo(character);
+                        }
                     }
                 }
-            }
 
-            if (MobId.isZakumArm(monster.getId())) {
-                boolean makeZakReal = true;
-                Collection<MapObject> objects = getMapObjects();
-                for (MapObject object : objects) {
-                    Monster mons = getMonsterByOid(object.getObjectId());
-                    if (mons != null) {
-                        if (MobId.isZakumArm(mons.getId())) {
+                if (MobId.isZakumArm(monster.getId())) {
+                    boolean makeZakReal = true;
+                    Collection<MapObject> objects = getMapObjects();
+                    for (MapObject object : objects) {
+                        Monster mons = getMonsterByOid(object.getObjectId());
+                        if (mons != null && MobId.isZakumArm(mons.getId())) {
                             makeZakReal = false;
                             break;
                         }
                     }
-                }
-                if (makeZakReal) {
-                    MapleMap map = chr.getMap();
-
-                    for (MapObject object : objects) {
-                        Monster mons = map.getMonsterByOid(object.getObjectId());
-                        if (mons != null) {
-                            if (mons.getId() == MobId.ZAKUM_1) {
+                    if (makeZakReal) {
+                        MapleMap map = chr.getMap();
+                        for (MapObject object : objects) {
+                            Monster mons = map.getMonsterByOid(object.getObjectId());
+                            if (mons != null && mons.getId() == MobId.ZAKUM_1) {
                                 makeMonsterReal(mons);
                                 break;
                             }
                         }
                     }
                 }
-            }
 
-            Character dropOwner = monster.killBy(chr);
-            if (withDrops && !monster.dropsDisabled()) {
-                if (dropOwner == null) {
-                    dropOwner = chr;
+                preRewardNanos = System.nanoTime() - startedAt;
+                phase = "reward";
+                final long rewardStartedAt = System.nanoTime();
+                Character dropOwner;
+                try {
+                    // Includes EXP, equipment EXP, quest updates and killBy callbacks, not EXP alone.
+                    dropOwner = monster.killBy(chr);
+                } finally {
+                    rewardNanos = System.nanoTime() - rewardStartedAt;
                 }
-                dropFromMonster(dropOwner, monster, false, dropDelay);
-            }
 
-            if (monster.hasBossHPBar()) {
-                for (Character mc : this.getAllPlayers()) {
-                    if (mc.getTargetHpBarHash() == monster.hashCode()) {
-                        mc.resetPlayerAggro();
+                phase = "drops";
+                final long dropsStartedAt = System.nanoTime();
+                try {
+                    if (withDrops && !monster.dropsDisabled()) {
+                        if (dropOwner == null) {
+                            dropOwner = chr;
+                        }
+                        dropFromMonster(dropOwner, monster, false, dropDelay);
+                    }
+                } finally {
+                    dropsNanos = System.nanoTime() - dropsStartedAt;
+                }
+
+                phase = "post_reward";
+                if (monster.hasBossHPBar()) {
+                    for (Character mc : this.getAllPlayers()) {
+                        if (mc.getTargetHpBarHash() == monster.hashCode()) {
+                            mc.resetPlayerAggro();
+                        }
+                    }
+                }
+                successful = true;
+                phase = "complete";
+            } catch (Exception e) {
+                log.error("Kill settlement failed: map={} mob={} oid={} chr={} phase={}",
+                        getId(), monster.getId(), monster.getObjectId(), chr.getId(), phase, e);
+            } finally {
+                final long cleanupStartedAt = System.nanoTime();
+                if ("pre_reward".equals(phase)) {
+                    preRewardNanos = cleanupStartedAt - startedAt;
+                }
+                try {
+                    monster.dispatchMonsterKilled(true);
+                } catch (Exception e) {
+                    successful = false;
+                    phase = "cleanup";
+                    log.error("Kill cleanup failed: map={} mob={} oid={} chr={}",
+                            getId(), monster.getId(), monster.getObjectId(), chr.getId(), e);
+                } finally {
+                    final long finishedAt = System.nanoTime();
+                    if (finishedAt - submittedAt >= SLOW_KILL_NANOS) {
+                        log.warn("[KILL_SLOW] map={} mob={} oid={} chr={} queue_ms={} pre_reward_ms={} reward_ms={} drops_ms={} cleanup_ms={} work_ms={} total_ms={} phase={} success={} queued_now={} active_now={} thread={}",
+                                getId(), monster.getId(), monster.getObjectId(), chr.getId(),
+                                NANOSECONDS.toMillis(startedAt - submittedAt), NANOSECONDS.toMillis(preRewardNanos),
+                                NANOSECONDS.toMillis(rewardNanos), NANOSECONDS.toMillis(dropsNanos),
+                                NANOSECONDS.toMillis(finishedAt - cleanupStartedAt), NANOSECONDS.toMillis(finishedAt - startedAt),
+                                NANOSECONDS.toMillis(finishedAt - submittedAt), phase, successful,
+                                KILL_WORK.getQueue().size(), KILL_WORK.getActiveCount(), Thread.currentThread().getName());
                     }
                 }
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {     // thanks resinate for pointing out a memory leak possibly from an exception thrown
-            monster.dispatchMonsterKilled(true);
-        }
-
         });
     }
 

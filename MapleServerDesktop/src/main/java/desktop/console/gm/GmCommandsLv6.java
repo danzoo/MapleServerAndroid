@@ -107,23 +107,7 @@ public final class GmCommandsLv6 {
             }
         });
 
-        // was: "!saveall" -> saved every character in every world, then GM-broadcast
-        r.add("saveall", "", "立刻把全服所有在线角色存档到数据库", (ctx, args) -> {
-            List<Character> online = ctx.allOnline();
-            int saved = 0;
-            int failed = 0;
-            for (Character chr : online) {
-                try {
-                    chr.saveCharToDB();
-                    saved++;
-                } catch (Exception e) {
-                    failed++;
-                    ctx.fail("存档失败 " + chr.getName() + ": " + e);
-                }
-            }
-            ctx.done("世界 [" + ctx.worldIds() + "]，在线 " + online.size()
-                    + " 人：已保存 " + saved + " 个角色" + (failed > 0 ? "，失败 " + failed + " 个" : ""));
-        });
+        // saveall is a synchronous built-in in ConsoleManager, including cash-shop characters.
 
         // was: "!dcall" -> disconnected every non-GM across all worlds.
         // Destructive: print the exact blast radius BEFORE acting; no interactive confirm.
