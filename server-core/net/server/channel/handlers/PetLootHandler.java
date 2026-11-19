@@ -21,6 +21,7 @@
 */
 package net.server.channel.handlers;
 
+import android.graphics.Point;
 import client.Character;
 import client.Client;
 import client.inventory.Pet;
@@ -37,53 +38,72 @@ import java.util.Set;
  * @author Ronan
  */
 public final class PetLootHandler extends AbstractPacketHandler {
+    private static void rejectPickup(Client c, Character chr, int oid, int retry, boolean reportRejection) {
+        if (reportRejection) {
+            c.sendPacket(PacketCreator.pickupRejected(chr.getMapId(), oid, retry));
+        }
+        c.sendPacket(PacketCreator.enableActions());
+    }
+
     @Override
     public final void handlePacket(InPacket p, Client c) {
-        Character chr = c.getPlayer();
+        int petId = p.readInt();
+        p.skip(4); // High half of the pet's wire ID; legacy skipped 13 bytes through position.
+        p.readInt(); // Timestamp
+        boolean reportRejection = p.readByte() == 0x7f;
+        p.readPos(); // Client pet position is not authoritative.
+        int oid = p.readInt();
 
-        int petIndex = chr.getPetIndex(p.readInt());
+        Character chr = c.getPlayer();
+        int petIndex = chr.getPetIndex(petId);
         Pet pet = chr.getPet(petIndex);
         if (pet == null || !pet.isSummoned()) {
-            c.sendPacket(PacketCreator.enableActions());
+            rejectPickup(c, chr, oid, 5000, reportRejection);
             return;
         }
 
-        p.skip(13);
-        int oid = p.readInt();
         MapObject ob = chr.getMap().getMapObject(oid);
-        try {
-            MapItem mapitem = (MapItem) ob;
-            if (mapitem.getMeso() > 0) {
-                if (!chr.isEquippedMesoMagnet()) {
-                    c.sendPacket(PacketCreator.enableActions());
-                    return;
-                }
-
-                if (chr.isEquippedPetItemIgnore()) {
-                    final Set<Integer> petIgnore = chr.getExcludedItems();
-                    if (!petIgnore.isEmpty() && petIgnore.contains(Integer.MAX_VALUE)) {
-                        c.sendPacket(PacketCreator.enableActions());
-                        return;
-                    }
-                }
-            } else {
-                if (!chr.isEquippedItemPouch()) {
-                    c.sendPacket(PacketCreator.enableActions());
-                    return;
-                }
-
-                if (chr.isEquippedPetItemIgnore()) {
-                    final Set<Integer> petIgnore = chr.getExcludedItems();
-                    if (!petIgnore.isEmpty() && petIgnore.contains(mapitem.getItem().getItemId())) {
-                        c.sendPacket(PacketCreator.enableActions());
-                        return;
-                    }
-                }
+        if (!(ob instanceof MapItem)) {
+            rejectPickup(c, chr, oid, 500, reportRejection);
+            return;
+        }
+        MapItem mapitem = (MapItem) ob;
+        if (mapitem.getMeso() > 0) {
+            if (!chr.isEquippedMesoMagnet()) {
+                rejectPickup(c, chr, oid, 5000, reportRejection);
+                return;
             }
 
-            chr.pickupItem(ob, petIndex);
-        } catch (NullPointerException | ClassCastException e) {
-            c.sendPacket(PacketCreator.enableActions());
+            if (chr.isEquippedPetItemIgnore()) {
+                final Set<Integer> petIgnore = chr.getExcludedItems();
+                if (petIgnore.contains(Integer.MAX_VALUE)) {
+                    rejectPickup(c, chr, oid, 5000, reportRejection);
+                    return;
+                }
+            }
+        } else {
+            if (!chr.isEquippedItemPouch()) {
+                rejectPickup(c, chr, oid, 5000, reportRejection);
+                return;
+            }
+
+            if (chr.isEquippedPetItemIgnore()) {
+                final Set<Integer> petIgnore = chr.getExcludedItems();
+                if (petIgnore.contains(mapitem.getItem().getItemId())) {
+                    rejectPickup(c, chr, oid, 5000, reportRejection);
+                    return;
+                }
+            }
         }
+
+        // Match the loose character pickup safety bound, not client icon-edge geometry.
+        Point petPos = pet.getPos();
+        Point obPos = ob.getPosition();
+        if (Math.abs((long) petPos.x - obPos.x) > 800 || Math.abs((long) petPos.y - obPos.y) > 600) {
+            rejectPickup(c, chr, oid, 500, reportRejection);
+            return;
+        }
+
+        chr.pickupItem(ob, petIndex, reportRejection);
     }
 }

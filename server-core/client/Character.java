@@ -4852,9 +4852,9 @@ public class Character extends AbstractCharacterObject {
             }
 
             Set<Integer> exclItems = pe.getValue();
+            // Also send an empty list so the client can clear a previously populated filter.
+            sendPacket(PacketCreator.loadExceptionList(this.getId(), pe.getKey(), petIndex, new ArrayList<>(exclItems)));
             if (!exclItems.isEmpty()) {
-                sendPacket(PacketCreator.loadExceptionList(this.getId(), pe.getKey(), petIndex, new ArrayList<>(exclItems)));
-
                 chrLock.lock();
                 try {
                     for (Integer itemid : exclItems) {
@@ -10022,8 +10022,9 @@ public class Character extends AbstractCharacterObject {
     }
 
     public void unequipAllPets() {
-        for (int i = 0; i < 3; i++) {
-            Pet pet = getPet(i);
+        // getPets() returns a snapshot; unequipPet resolves each UID after shifting slots.
+        Pet[] summonedPets = getPets();
+        for (Pet pet : summonedPets) {
             if (pet != null) {
                 unequipPet(pet, true);
             }
@@ -10047,9 +10048,10 @@ public class Character extends AbstractCharacterObject {
         getMap().broadcastMessage(this, PacketCreator.showPet(this, pet, true, hunger), true);
 
         removePet(pet, shift_left);
+        // Reconcile summoned slots before the slot/UID-checked exception lists.
+        sendPacket(PacketCreator.petStatUpdate(this));
         commitExcludedItems();
 
-        sendPacket(PacketCreator.petStatUpdate(this));
         sendPacket(PacketCreator.enableActions());
     }
 

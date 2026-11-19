@@ -23,6 +23,7 @@ package net.server.channel.handlers;
 
 import client.Character;
 import client.Client;
+import client.inventory.Pet;
 import net.packet.InPacket;
 import server.movement.LifeMovementFragment;
 import tools.PacketCreator;
@@ -48,7 +49,11 @@ public final class MovePetHandler extends AbstractMovementPacketHandler {
         if (slot == -1) {
             return;
         }
-        player.getPet(slot).updatePosition(res);
+        Pet pet = player.getPet(slot);
+        if (pet == null || !pet.isSummoned()) {
+            return;
+        }
+        pet.updatePosition(res);
         player.getMap().broadcastMessage(player, PacketCreator.movePet(player.getId(), petId, slot, res), false);
     }
 }

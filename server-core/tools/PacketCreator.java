@@ -4573,7 +4573,7 @@ public class PacketCreator {
     }
 
     public static Packet petStatUpdate(Character chr) {
-        // this actually does nothing... packet structure and stats needs to be uncovered
+        // Synchronize the three summoned pet IDs in slot order.
 
         final OutPacket p = OutPacket.create(SendOpcode.STAT_CHANGED);
         int mask = 0;
