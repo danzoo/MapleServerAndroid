@@ -245,8 +245,8 @@
     <string name="name" value="天使的脚步"/>
   </imgdir>
   <imgdir name="2002031">
-    <string name="desc" value="记录宝藏坐标的藏宝图\r\n打开后可能获得点券奖励"/>
-    <string name="name" value="藏宝图"/>
+    <string name="name" value="吸金药水"/>
+    <string name="desc" value="使用后10分钟内，击杀怪物掉落的金币会自动飞向你。"/>
   </imgdir>
   <imgdir name="2002032">
     <string name="desc" value="来自管理员发送的新人礼物,双击打开"/>

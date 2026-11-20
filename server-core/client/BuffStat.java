@@ -118,7 +118,8 @@ public enum BuffStat {
     DASH(0x10000000000000L, true), // correct (jump)
     MONSTER_RIDING(0x20000000000000L, true),
     SPEED_INFUSION(0x40000000000000L, true),
-    HOMING_BEACON(0x80000000000000L, true);
+    HOMING_BEACON(0x80000000000000L, true),
+    MESO_MAGNET(0x200000000000000L, true);
 
     private final long i;
     private final boolean isFirst;
