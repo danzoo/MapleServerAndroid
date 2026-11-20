@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<imgdir name="5250003.img">
+  <imgdir name="info">
+    <imgdir name="attack">
+      <imgdir name="0">
+        <int name="action" value="1"/>
+        <int name="attackRatio" value="100"/>
+        <int name="type" value="0"/>
+        <int name="conMP" value="1"/>
+      </imgdir>
+    </imgdir>
+    <string name="link" value="5250002"/>
+    <int name="level" value="115"/>
+    <int name="bodyAttack" value="1"/>
+    <int name="maxHP" value="200000"/>
+    <int name="maxMP" value="250"/>
+    <int name="speed" value="20"/>
+    <int name="PADamage" value="600"/>
+    <int name="PDDamage" value="810"/>
+    <int name="PDRate" value="20"/>
+    <int name="MADamage" value="680"/>
+    <int name="MDDamage" value="800"/>
+    <int name="MDRate" value="20"/>
+    <int name="acc" value="210"/>
+    <int name="eva" value="42"/>
+    <int name="pushed" value="5000"/>
+    <float name="fs" value="10.0"/>
+    <int name="exp" value="4700"/>
+    <int name="summonType" value="1"/>
+    <int name="category" value="1"/>
+    <string name="mobType" value="2N"/>
+    <int name="firstAttack" value="1"/>
+    <string name="elemAttr" value="F2H2I2L3"/>
+  </imgdir>
+</imgdir>

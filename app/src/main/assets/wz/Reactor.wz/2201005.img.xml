@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<imgdir name="2201005.img">
+  <string name="action" value="boss3"/>
+  <imgdir name="0">
+    <canvas name="0" width="113" height="36">
+      <vector name="origin" x="52" y="36"/>
+      <int name="z" value="0"/>
+    </canvas>
+    <imgdir name="event">
+      <imgdir name="0">
+        <int name="type" value="100"/>
+        <int name="state" value="1"/>
+        <string name="0" value="4000342"/>
+        <int name="1" value="1"/>
+        <int name="2" value="1"/>
+        <vector name="lt" x="-43" y="-74"/>
+        <vector name="rb" x="57" y="4"/>
+      </imgdir>
+      <imgdir name="1">
+        <int name="type" value="100"/>
+        <int name="state" value="1"/>
+        <string name="0" value="2022116"/>
+        <int name="1" value="1"/>
+        <vector name="lt" x="-43" y="-74"/>
+        <vector name="rb" x="57" y="4"/>
+      </imgdir>
+    </imgdir>
+    <imgdir name="hit">
+    </imgdir>
+  </imgdir>
+  <imgdir name="1">
+    <canvas name="0" width="113" height="36">
+      <vector name="origin" x="52" y="36"/>
+      <int name="z" value="0"/>
+    </canvas>
+  </imgdir>
+  <imgdir name="info">
+    <string name="info" value="当铠甲武士的头盔碎片消失时，天皇出现了。"/>
+  </imgdir>
+</imgdir>
