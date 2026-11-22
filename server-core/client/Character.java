@@ -10340,6 +10340,14 @@ public class Character extends AbstractCharacterObject {
             if (buffEffects.containsKey(getJobMapChair(job))) { // mustn't effLock, chrLock sendSpawnData
                 client.sendPacket(PacketCreator.giveForeignChairSkillEffect(id));
             }
+
+            // The spawn packet only carries a fixed set of visual buffs, so replay the coin effect
+            // separately for a player who has just walked into view of an already-magnetized char.
+            Integer magnet = getBuffedValue(BuffStat.MESO_MAGNET);
+            if (magnet != null) {
+                client.sendPacket(PacketCreator.giveForeignBuff(getId(),
+                        Collections.singletonList(new Pair<>(BuffStat.MESO_MAGNET, magnet))));
+            }
         }
 
         if (this.isHidden()) {

@@ -1317,6 +1317,11 @@ public class StatEffect {
             } else if (isAriantShield()) {
                 List<Pair<BuffStat, Integer>> stat = Collections.singletonList(new Pair<>(BuffStat.AURA, 1));
                 mbuff = PacketCreator.giveForeignBuff(applyto.getId(), stat);
+            } else if (statups.stream().anyMatch(p -> p.getLeft() == BuffStat.MESO_MAGNET)) {
+                // The meso-magnet potion has no visible buff effect packet of its own, so tell the
+                // rest of the map to show the spinning coin on this character as well.
+                List<Pair<BuffStat, Integer>> stat = Collections.singletonList(new Pair<>(BuffStat.MESO_MAGNET, 1));
+                mbuff = PacketCreator.giveForeignBuff(applyto.getId(), stat);
             }
 
             if (buff != null) {

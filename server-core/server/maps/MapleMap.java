@@ -2603,6 +2603,14 @@ public class MapleMap {
             broadcastSpawnPlayerMapObjectMessage(chr, chr, true);
         }
 
+        // Likewise, players already on the map need the magnet state of this arriving character;
+        // spawnPlayerMapObject's hardcoded buff mask does not include MESO_MAGNET.
+        Integer magnet = chr.getBuffedValue(BuffStat.MESO_MAGNET);
+        if (!chr.isHidden() && magnet != null) {
+            broadcastMessage(chr, PacketCreator.giveForeignBuff(chr.getId(),
+                    Collections.singletonList(new Pair<>(BuffStat.MESO_MAGNET, magnet))), false);
+        }
+
         sendObjectPlacement(chr.getClient());
 
         if (isStartingEventMap() && !eventStarted()) {
