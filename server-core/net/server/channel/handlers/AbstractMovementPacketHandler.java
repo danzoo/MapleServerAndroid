@@ -182,8 +182,11 @@ public abstract class AbstractMovementPacketHandler extends AbstractPacketHandle
                 case 19: // Springs on maps
                 case 20: // Aran Combat Step
                 case 22: {
-                    //Relative movement - server only cares about stance
-                    p.skip(4); //xpos = lea.readShort(); ypos = lea.readShort();
+                    //Relative movement: x/y are deltas from the previous server position.
+                    short xpos = p.readShort();
+                    short ypos = p.readShort();
+                    Point position = target.getPosition();
+                    target.setPosition(new Point(position.x + xpos, position.y + ypos));
                     byte newstate = p.readByte();
                     target.setStance(newstate);
                     p.readShort(); //duration
@@ -197,8 +200,12 @@ public abstract class AbstractMovementPacketHandler extends AbstractPacketHandle
                 case 11: //chair
                 {
 //                case 14: {
-                    //Teleport movement - same as above
-                    p.skip(8); //xpos = lea.readShort(); ypos = lea.readShort(); xwobble = lea.readShort(); ywobble = lea.readShort();
+                    //Teleport movement carries an absolute destination.
+                    short xpos = p.readShort();
+                    short ypos = p.readShort();
+                    p.readShort(); //xwobble
+                    p.readShort(); //ywobble
+                    target.setPosition(new Point(xpos, ypos + yOffset));
                     byte newstate = p.readByte();
                     target.setStance(newstate);
                     break;
@@ -222,8 +229,14 @@ public abstract class AbstractMovementPacketHandler extends AbstractPacketHandle
                     break;
                 }*/
                 case 15: {
-                    //Jump down movement - stance only
-                    p.skip(12); //short xpos = lea.readShort(); ypos = lea.readShort(); xwobble = lea.readShort(); ywobble = lea.readShort(); fh = lea.readShort(); ofh = lea.readShort();
+                    //Jump down movement also lands at an absolute destination.
+                    short xpos = p.readShort();
+                    short ypos = p.readShort();
+                    p.readShort(); //xwobble
+                    p.readShort(); //ywobble
+                    p.readShort(); //fh
+                    p.readShort(); //ofh
+                    target.setPosition(new Point(xpos, ypos + yOffset));
                     byte newstate = p.readByte();
                     target.setStance(newstate);
                     p.readShort(); // duration
