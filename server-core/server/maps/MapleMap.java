@@ -151,6 +151,7 @@ public class MapleMap {
     private ScheduledFuture<?> itemMonitor = null;
     private ScheduledFuture<?> expireItemsTask = null;
     private ScheduledFuture<?> characterStatUpdateTask = null;
+    private ScheduledFuture<?> controllerBalanceTask = null;
     private short itemMonitorTimeout;
     private Pair<Integer, String> timeMob = null;
     private short mobInterval = 5000;
@@ -891,6 +892,11 @@ public class MapleMap {
 
         characterStatUpdateTask.cancel(false);
         characterStatUpdateTask = null;
+
+        if (controllerBalanceTask != null) {
+            controllerBalanceTask.cancel(false);
+            controllerBalanceTask = null;
+        }
     }
 
     private void cleanItemMonitor() {
@@ -946,6 +952,10 @@ public class MapleMap {
             expireItemsTask = TimerManager.getInstance().register(() -> makeDisappearExpiredItemDrops(), YamlConfig.config.server.ITEM_EXPIRE_CHECK, YamlConfig.config.server.ITEM_EXPIRE_CHECK);
 
             characterStatUpdateTask = TimerManager.getInstance().register(() -> runCharacterStatUpdate(), 200, 200);
+
+            // Aggro, deaths and spawns all drift the controller counts over time. Re-level them
+            // periodically so one character does not end up driving every mob on the map again.
+            controllerBalanceTask = TimerManager.getInstance().register(() -> rebalanceMonsterControllers(), 10000, 10000);
 
             itemMonitorTimeout = 1;
         } finally {
@@ -1275,6 +1285,86 @@ public class MapleMap {
         }
 
         return list;
+    }
+
+    /**
+     * Spreads monster controllers evenly over every eligible player on the map.
+     *
+     * The controller runs the mob's wander and reports its position, so handing the whole map to
+     * one character makes everyone else a passive observer and puts all the traffic on one client.
+     * Assignments that still fit a player's quota are kept; only the surplus mobs are handed off.
+     */
+    public void rebalanceMonsterControllers() {
+        List<Character> players = new ArrayList<>();
+        for (Character chr : getAllPlayers()) {
+            if (chr != null && !chr.isHidden() && chr.isAlive() && chr.isLoggedinWorld()
+                    && chr.getMap() == this) {
+                players.add(chr);
+            }
+        }
+
+        if (players.isEmpty()) {
+            return;
+        }
+
+        players.sort(Comparator.comparingInt(Character::getId));
+
+        List<Monster> monsters = new ArrayList<>();
+        for (Monster mob : getAllMonsters()) {
+            if (mob.isAlive() && !mob.isFake()) {
+                monsters.add(mob);
+            }
+        }
+
+        // Keep mobs that are chasing their current controller where possible; idle mobs move first
+        // so a rebalance does not interrupt an ongoing fight.
+        monsters.sort(Comparator.comparingInt((Monster m) -> m.isControllerHasAggro() ? 0 : 1)
+                .thenComparingInt(m -> m.getObjectId()));
+
+        int playerCount = players.size();
+        int perPlayer = monsters.size() / playerCount;
+        int remainder = monsters.size() % playerCount;
+
+        Map<Integer, Integer> quota = new HashMap<>();
+        Map<Integer, Integer> assigned = new HashMap<>();
+        for (int i = 0; i < playerCount; i++) {
+            int cid = players.get(i).getId();
+            quota.put(cid, perPlayer + (i < remainder ? 1 : 0));
+            assigned.put(cid, 0);
+        }
+
+        List<Monster> toHandOff = new LinkedList<>();
+        for (Monster mob : monsters) {
+            Character owner = mob.getController();
+            Integer limit = owner == null ? null : quota.get(owner.getId());
+            Integer used = owner == null ? null : assigned.get(owner.getId());
+            boolean valid = owner != null && limit != null && owner.getMap() == this
+                    && owner.isAlive() && !owner.isHidden();
+
+            if (valid && used < limit) {
+                assigned.put(owner.getId(), used + 1);
+            } else {
+                toHandOff.add(mob);
+            }
+        }
+
+        for (Monster mob : toHandOff) {
+            Character target = null;
+            for (Character chr : players) {
+                int cid = chr.getId();
+                if (assigned.get(cid) < quota.get(cid)) {
+                    target = chr;
+                    break;
+                }
+            }
+
+            if (target == null) {
+                break;
+            }
+
+            assigned.put(target.getId(), assigned.get(target.getId()) + 1);
+            mob.aggroSwitchController(target, false);
+        }
     }
 
     public int countItems() {
@@ -2828,6 +2918,10 @@ public class MapleMap {
                 this.broadcastPacket(chr, PacketCreator.removeDragon(chr.getId()));
             }
         }
+
+        // The departing character's mobs were redirected to whoever had the fewest; level the
+        // remaining controllers now instead of leaving them lopsided until the next map entry.
+        rebalanceMonsterControllers();
     }
 
     public void broadcastMessage(Packet packet) {
@@ -4581,6 +4675,11 @@ public class MapleMap {
             if (characterStatUpdateTask != null) {
                 characterStatUpdateTask.cancel(false);
                 characterStatUpdateTask = null;
+            }
+
+            if (controllerBalanceTask != null) {
+                controllerBalanceTask.cancel(false);
+                controllerBalanceTask = null;
             }
         } finally {
             chrWLock.unlock();

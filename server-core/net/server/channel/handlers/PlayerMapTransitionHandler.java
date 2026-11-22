@@ -26,6 +26,7 @@ import client.Client;
 import net.AbstractPacketHandler;
 import net.packet.InPacket;
 import server.life.Monster;
+import server.maps.MapleMap;
 import server.maps.MapObject;
 import tools.PacketCreator;
 import tools.Pair;
@@ -52,21 +53,25 @@ public final class PlayerMapTransitionHandler extends AbstractPacketHandler {
         }
 
         if (!chr.isHidden()) {  // thanks Lame (Conrad) for noticing hidden characters controlling mobs
-            for (MapObject mo : chr.getMap().getMonsters()) {    // thanks BHB, IxianMace, Jefe for noticing several issues regarding mob statuses (such as freeze)
+            MapleMap map = chr.getMap();
+            for (MapObject mo : map.getMonsters()) {    // thanks BHB, IxianMace, Jefe for noticing several issues regarding mob statuses (such as freeze)
                 Monster m = (Monster) mo;
                 if (m.getSpawnEffect() == 0 || m.getHp() < m.getMaxHp()) {     // avoid effect-spawning mobs
+                    // Rebuild this client's view of the mob so statuses are reset. This used to end
+                    // with aggroSwitchController(chr, ...) for every mob, which handed the entire
+                    // map to whichever character entered last.
+                    m.sendDestroyData(c);
+
                     if (m.getController() == chr) {
-                        c.sendPacket(PacketCreator.stopControllingMonster(m.getObjectId()));
-                        m.sendDestroyData(c);
                         m.aggroRemoveController();
-                    } else {
-                        m.sendDestroyData(c);
                     }
 
                     m.sendSpawnData(c);
-                    m.aggroSwitchController(chr, false);
                 }
             }
+
+            // Share the mobs between everyone on the map instead of accumulating them on one client.
+            map.rebalanceMonsterControllers();
         }
     }
 }
