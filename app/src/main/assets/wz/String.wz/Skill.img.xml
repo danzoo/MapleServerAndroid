@@ -2,6 +2,7 @@
 <imgdir name="Skill.img">
   <imgdir name="000">
     <string name="bookName" value="冒险的技术"/>
+    <string name="jobName" value="新手"/>
   </imgdir>
   <imgdir name="0000008">
     <string name="desc" value="[最高等级：1]可携带多只宠物，最多携带3只。"/>
@@ -38,135 +39,179 @@
   </imgdir>
   <imgdir name="100">
     <string name="bookName" value="战士技能"/>
+    <string name="jobName" value="战士"/>
   </imgdir>
   <imgdir name="110">
     <string name="bookName" value="剑客技能"/>
+    <string name="jobName" value="剑客"/>
   </imgdir>
   <imgdir name="111">
     <string name="bookName" value="勇士技能"/>
+    <string name="jobName" value="勇士"/>
   </imgdir>
   <imgdir name="112">
     <string name="bookName" value="终极英雄"/>
+    <string name="jobName" value="英雄"/>
   </imgdir>
   <imgdir name="120">
     <string name="bookName" value="准骑士技能"/>
+    <string name="jobName" value="准骑士"/>
   </imgdir>
   <imgdir name="121">
     <string name="bookName" value="骑士技能"/>
+    <string name="jobName" value="骑士"/>
   </imgdir>
   <imgdir name="122">
     <string name="bookName" value="光之圣骑士"/>
+    <string name="jobName" value="圣骑士"/>
   </imgdir>
   <imgdir name="130">
     <string name="bookName" value="枪战士技能"/>
+    <string name="jobName" value="枪战士"/>
   </imgdir>
   <imgdir name="131">
     <string name="bookName" value="龙骑士技能"/>
+    <string name="jobName" value="龙骑士"/>
   </imgdir>
   <imgdir name="132">
     <string name="bookName" value="暗之黑骑士"/>
+    <string name="jobName" value="黑骑士"/>
   </imgdir>
   <imgdir name="200">
     <string name="bookName" value="魔法师技能"/>
+    <string name="jobName" value="魔法师"/>
   </imgdir>
   <imgdir name="210">
     <string name="bookName" value="火毒魔法技能"/>
+    <string name="jobName" value="火毒巫师"/>
   </imgdir>
   <imgdir name="211">
     <string name="bookName" value="巫师（火毒）技能"/>
+    <string name="jobName" value="火毒魔导师"/>
   </imgdir>
   <imgdir name="212">
     <string name="bookName" value="最高级火, 毒魔法"/>
+    <string name="jobName" value="火毒大魔导师"/>
   </imgdir>
   <imgdir name="220">
     <string name="bookName" value="冰雷魔法技能"/>
+    <string name="jobName" value="冰雷巫师"/>
   </imgdir>
   <imgdir name="221">
     <string name="bookName" value="巫师（冰雷）技能"/>
+    <string name="jobName" value="冰雷魔导师"/>
   </imgdir>
   <imgdir name="222">
     <string name="bookName" value="最高级冷气,雷电魔法"/>
+    <string name="jobName" value="冰雷大魔导师"/>
   </imgdir>
   <imgdir name="230">
     <string name="bookName" value="神圣魔法技能"/>
+    <string name="jobName" value="牧师"/>
   </imgdir>
   <imgdir name="231">
     <string name="bookName" value="祭司技能"/>
+    <string name="jobName" value="祭司"/>
   </imgdir>
   <imgdir name="232">
     <string name="bookName" value="最高级神圣魔法"/>
+    <string name="jobName" value="主教"/>
   </imgdir>
   <imgdir name="300">
     <string name="bookName" value="弓箭手技能"/>
+    <string name="jobName" value="弓箭手"/>
   </imgdir>
   <imgdir name="310">
     <string name="bookName" value="猎人技能"/>
+    <string name="jobName" value="猎人"/>
   </imgdir>
   <imgdir name="311">
     <string name="bookName" value="射手技能"/>
+    <string name="jobName" value="游侠"/>
   </imgdir>
   <imgdir name="312">
     <string name="bookName" value="神射手"/>
+    <string name="jobName" value="神射手"/>
   </imgdir>
   <imgdir name="320">
     <string name="bookName" value="弩弓手技能"/>
+    <string name="jobName" value="弩弓手"/>
   </imgdir>
   <imgdir name="321">
     <string name="bookName" value="游侠技能"/>
+    <string name="jobName" value="狙击手"/>
   </imgdir>
   <imgdir name="322">
     <string name="bookName" value="弩箭神"/>
+    <string name="jobName" value="箭神"/>
   </imgdir>
   <imgdir name="400">
     <string name="bookName" value="飞侠技能"/>
+    <string name="jobName" value="飞侠"/>
   </imgdir>
   <imgdir name="410">
     <string name="bookName" value="刺客技能"/>
+    <string name="jobName" value="刺客"/>
   </imgdir>
   <imgdir name="411">
     <string name="bookName" value="无影人技能"/>
+    <string name="jobName" value="无影人"/>
   </imgdir>
   <imgdir name="412">
     <string name="bookName" value="隐之侠士"/>
+    <string name="jobName" value="隐士"/>
   </imgdir>
   <imgdir name="420">
     <string name="bookName" value="侠客技能"/>
+    <string name="jobName" value="侠客"/>
   </imgdir>
   <imgdir name="421">
     <string name="bookName" value="独行客技能"/>
+    <string name="jobName" value="独行客"/>
   </imgdir>
   <imgdir name="422">
     <string name="bookName" value="盗之侠客"/>
+    <string name="jobName" value="侠盗"/>
   </imgdir>
   <imgdir name="500">
     <string name="bookName" value="海盗入门书"/>
+    <string name="jobName" value="海盗"/>
   </imgdir>
   <imgdir name="510">
     <string name="bookName" value="拳手介绍书"/>
+    <string name="jobName" value="拳手"/>
   </imgdir>
   <imgdir name="511">
     <string name="bookName" value="斗士之路"/>
+    <string name="jobName" value="斗士"/>
   </imgdir>
   <imgdir name="512">
     <string name="bookName" value="冲锋队长的达成"/>
+    <string name="jobName" value="冲锋队长"/>
   </imgdir>
   <imgdir name="520">
     <string name="bookName" value="火枪手介绍书"/>
+    <string name="jobName" value="火枪手"/>
   </imgdir>
   <imgdir name="521">
     <string name="bookName" value="大副之路"/>
+    <string name="jobName" value="神枪手"/>
   </imgdir>
   <imgdir name="522">
     <string name="bookName" value="船长的完成"/>
+    <string name="jobName" value="船长"/>
   </imgdir>
   <imgdir name="800">
     <string name="bookName" value="管理员技能书"/>
+    <string name="jobName" value="管理员"/>
   </imgdir>
   <imgdir name="900">
     <string name="bookName" value="运营者技能书"/>
+    <string name="jobName" value="管理员"/>
   </imgdir>
   <imgdir name="910">
     <string name="bookName" value="管理员技能书(超级)"/>
+    <string name="jobName" value="超级管理员"/>
   </imgdir>
   <imgdir name="0001000">
     <string name="desc" value="[最高等级：3]\n投掷蜗牛壳来攻击远距离的怪物。"/>
@@ -177,6 +222,7 @@
   </imgdir>
   <imgdir name="1000">
     <string name="bookName" value="高级职业技能"/>
+    <string name="jobName" value="贵族"/>
   </imgdir>
   <imgdir name="0001001">
     <string name="desc" value="[最高等级 : 3]\n30秒内持续恢复HP. \n#c再次使用时间间隔 : 2分#"/>
@@ -273,78 +319,103 @@
   </imgdir>
   <imgdir name="1100">
     <string name="bookName" value="魂骑士的基本"/>
+    <string name="jobName" value="魂骑士"/>
   </imgdir>
   <imgdir name="1110">
     <string name="bookName" value="魂骑士之路"/>
+    <string name="jobName" value="魂骑士"/>
   </imgdir>
   <imgdir name="1111">
     <string name="bookName" value="魂骑士的一切"/>
+    <string name="jobName" value="魂骑士"/>
   </imgdir>
   <imgdir name="1112">
     <string name="bookName" value="魂骑士的完成"/>
+    <string name="jobName" value="魂骑士"/>
   </imgdir>
   <imgdir name="1200">
     <string name="bookName" value="炎术士入门书"/>
+    <string name="jobName" value="炎术士"/>
   </imgdir>
   <imgdir name="1210">
     <string name="bookName" value="炎术士守护"/>
+    <string name="jobName" value="炎术士"/>
   </imgdir>
   <imgdir name="1211">
     <string name="bookName" value="高级火焰魔法"/>
+    <string name="jobName" value="炎术士"/>
   </imgdir>
   <imgdir name="1212">
     <string name="bookName" value="最高级火焰魔法"/>
+    <string name="jobName" value="炎术士"/>
   </imgdir>
   <imgdir name="1300">
     <string name="bookName" value="风灵使者的基础"/>
+    <string name="jobName" value="风灵使者"/>
   </imgdir>
   <imgdir name="1310">
     <string name="bookName" value="风灵使者的技能"/>
+    <string name="jobName" value="风灵使者"/>
   </imgdir>
   <imgdir name="1311">
     <string name="bookName" value="风灵使者之路"/>
+    <string name="jobName" value="风灵使者"/>
   </imgdir>
   <imgdir name="1312">
     <string name="bookName" value="风灵使者的完成"/>
+    <string name="jobName" value="风灵使者"/>
   </imgdir>
   <imgdir name="1400">
     <string name="bookName" value="夜行者入门书"/>
+    <string name="jobName" value="夜行者"/>
   </imgdir>
   <imgdir name="1410">
     <string name="bookName" value="夜行者守护"/>
+    <string name="jobName" value="夜行者"/>
   </imgdir>
   <imgdir name="1411">
     <string name="bookName" value="夜行者之路"/>
+    <string name="jobName" value="夜行者"/>
   </imgdir>
   <imgdir name="1412">
     <string name="bookName" value="奇袭者秘技"/>
+    <string name="jobName" value="夜行者"/>
   </imgdir>
   <imgdir name="1500">
     <string name="bookName" value="奇袭者入门书"/>
+    <string name="jobName" value="奇袭者"/>
   </imgdir>
   <imgdir name="1510">
     <string name="bookName" value="奇袭者守护"/>
+    <string name="jobName" value="奇袭者"/>
   </imgdir>
   <imgdir name="1511">
     <string name="bookName" value="奇袭者之路"/>
+    <string name="jobName" value="奇袭者"/>
   </imgdir>
   <imgdir name="1512">
     <string name="bookName" value="奇袭者完成"/>
+    <string name="jobName" value="奇袭者"/>
   </imgdir>
   <imgdir name="2000">
     <string name="bookName" value="战童技能"/>
+    <string name="jobName" value="战童"/>
   </imgdir>
   <imgdir name="2100">
     <string name="bookName" value="战神"/>
+    <string name="jobName" value="战神"/>
   </imgdir>
   <imgdir name="2110">
     <string name="bookName" value="战神"/>
+    <string name="jobName" value="战神"/>
   </imgdir>
   <imgdir name="2111">
     <string name="bookName" value="战神"/>
+    <string name="jobName" value="战神"/>
   </imgdir>
   <imgdir name="2112">
     <string name="bookName" value="战神"/>
+    <string name="jobName" value="战神"/>
   </imgdir>
   <imgdir name="0009000">
     <string name="desc" value="[最高等级：1]\n给猪猪造成150%的伤害。"/>
@@ -9808,13 +9879,6 @@
     <string name="h1" value="在地图椅上休息，被动地恢复额外的HP和MP                    "/>
     <string name="name" value="椅子大师"/>
   </imgdir>
-  <imgdir name="10001000">
-    <string name="desc" value="[最高等级：3]\n投掷蜗牛壳来攻击远距离的怪物。"/>
-    <string name="h1" value="消耗MP3，造成伤害10                    "/>
-    <string name="h2" value="消耗MP5，造成伤害25                    "/>
-    <string name="h3" value="消耗MP7，造成伤害40                    "/>
-    <string name="name" value="蜗牛投掷术"/>
-  </imgdir>
   <imgdir name="10001001">
     <string name="desc" value="[最高等级：3]\n30秒内持续时间恢复HP。\n#c再次使用时间间隔 : 2分#"/>
     <string name="h1" value="消耗MP5，30秒内恢复HP24，冷却时间120秒                    "/>
@@ -12260,13 +12324,6 @@
     <string name="desc" value="[最高等级 : 1]\n在使用地图椅时获得额外的恢复收益"/>
     <string name="h1" value="在地图椅上休息，被动地恢复额外的HP和MP                    "/>
     <string name="name" value="椅子大师"/>
-  </imgdir>
-  <imgdir name="20001000">
-    <string name="desc" value="[最高等级：3]\n投掷蜗牛壳来攻击远距离的怪物。"/>
-    <string name="h1" value="消耗MP3，造成伤害10                    "/>
-    <string name="h2" value="消耗MP5，造成伤害25                    "/>
-    <string name="h3" value="消耗MP7，造成伤害40                    "/>
-    <string name="name" value="蜗牛投掷术"/>
   </imgdir>
   <imgdir name="20001001">
     <string name="desc" value="[最高等级：3]\n30秒内持续恢复HP。\n#c再次使用时间间隔：2分#"/>
