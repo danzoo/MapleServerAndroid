@@ -40367,7 +40367,7 @@
       <string name="_hash" value="1b4cf9d5242dc3c7ad4d23d2d1dfd6c6663eba3f644ea247d05804595f3948b8"/>
       <vector name="origin" x="2" y="2"/>
     </canvas>
-    <canvas name="backgrnd" width="172" height="335">
+    <canvas name="backgrnd" width="280" height="335">
       <string name="_hash" value="5ccd316be8ffc88a06160a693eae6792da420cf679e901719b6e7fde36011b9e"/>
       <vector name="origin" x="0" y="0"/>
       <int name="z" value="0"/>
@@ -40377,7 +40377,7 @@
       <vector name="origin" x="-6" y="-23"/>
       <int name="z" value="1"/>
     </canvas>
-    <canvas name="backgrnd3" width="158" height="255">
+    <canvas name="backgrnd3" width="266" height="255">
       <string name="_hash" value="a13575574dccdeb9c6d73de1d104c89ac93cdecfaef1f349bf3358fd0e7da9ac"/>
       <vector name="origin" x="-7" y="-45"/>
       <int name="z" value="2"/>
@@ -40481,7 +40481,7 @@
       <vector name="origin" x="0" y="0"/>
       <int name="z" value="0"/>
     </canvas>
-    <canvas name="productionBackgrnd2" width="160" height="306">
+    <canvas name="productionBackgrnd2" width="268" height="306">
       <string name="_hash" value="51ee0e670847a0bb0c059c3015f04259c99da6c2c06209496ff05d2b398576d4"/>
       <vector name="origin" x="-6" y="-23"/>
       <int name="z" value="1"/>
@@ -41542,134 +41542,6 @@
           <string name="_hash" value="38a1e456b7c8a91f9a0f088854ba9ff67e94b4253fd426020c50e2056cbed423"/>
           <vector name="origin" x="-147" y="-239"/>
         </canvas>
-      </imgdir>
-    </imgdir>
-    <imgdir name="KeyType">
-      <imgdir name="alert">
-        <canvas name="alternate" width="249" height="142">
-          <string name="_hash" value="b7f67663b0fbc64db75d3346ce8b23b8461859723e84bcdcbed25cb81ee69da7"/>
-          <vector name="origin" x="0" y="0"/>
-          <int name="z" value="0"/>
-        </canvas>
-        <imgdir name="btOk">
-          <imgdir name="disabled">
-            <canvas name="0" width="50" height="23">
-              <string name="_hash" value="dd279f0e3363c9a9aa3699d1ca743a2e84b1a69ecfb66599fc42da806064d59b"/>
-              <vector name="origin" x="-100" y="-105"/>
-            </canvas>
-          </imgdir>
-          <imgdir name="mouseOver">
-            <canvas name="0" width="50" height="23">
-              <string name="_hash" value="28a42b302395669316c2c41b24ea4b348851a47200db7a097e0c3bc7ca427917"/>
-              <vector name="origin" x="-100" y="-105"/>
-            </canvas>
-          </imgdir>
-          <imgdir name="normal">
-            <canvas name="0" width="50" height="23">
-              <string name="_hash" value="29bf21a605c3203bb976f378ea815e18cf79a18e01785da5633a55e4433f67da"/>
-              <vector name="origin" x="-100" y="-105"/>
-            </canvas>
-          </imgdir>
-          <imgdir name="pressed">
-            <canvas name="0" width="50" height="23">
-              <string name="_hash" value="3a4ddd376461d3ec334951404e5a83ab15ac34b40f7bb9eed3cdeb24882e442b"/>
-              <vector name="origin" x="-100" y="-105"/>
-            </canvas>
-          </imgdir>
-        </imgdir>
-        <canvas name="default" width="249" height="142">
-          <string name="_hash" value="6f2a497ab37025ef94a9367b56bee5775eea025e194a60342a98452c02712ca6"/>
-          <vector name="origin" x="0" y="0"/>
-          <int name="z" value="0"/>
-        </canvas>
-        <canvas name="noselect" width="249" height="142">
-          <string name="_hash" value="aa94f3e7c407b3c642242441b6ee5f56192244697bcb6cc71319a6d41243da9a"/>
-          <vector name="origin" x="0" y="0"/>
-          <int name="z" value="0"/>
-        </canvas>
-      </imgdir>
-      <canvas name="backgrnd" width="439" height="311">
-        <string name="_hash" value="07ce433f85255b449c3ccbd4de53a786b44a3f08129609202aa8a759c0e416e4"/>
-        <vector name="origin" x="0" y="0"/>
-        <int name="z" value="0"/>
-      </canvas>
-      <imgdir name="btClose">
-        <imgdir name="disabled">
-          <canvas name="0" width="16" height="17">
-            <string name="_hash" value="06f0a2282bf2c968fdbf9329ed687704cb1e1c77a82162493bcbf3aaa947905a"/>
-            <vector name="origin" x="-409" y="-13"/>
-          </canvas>
-        </imgdir>
-        <imgdir name="mouseOver">
-          <canvas name="0" width="16" height="17">
-            <string name="_hash" value="2160d2df11f429615fde1db3cfc4819262348e1041181551d02d92d801ab9d12"/>
-            <vector name="origin" x="-409" y="-13"/>
-          </canvas>
-        </imgdir>
-        <imgdir name="normal">
-          <canvas name="0" width="16" height="17">
-            <string name="_hash" value="73dd16fe66a528f516d85e38f91d3c37adde7c85670af6c9d284596db96f0bde"/>
-            <vector name="origin" x="-409" y="-13"/>
-          </canvas>
-        </imgdir>
-        <imgdir name="pressed">
-          <canvas name="0" width="16" height="17">
-            <string name="_hash" value="ff51041ac336baae9bd878cbc2f57acbc9b63300b12b5d46697b5127a79e0539"/>
-            <vector name="origin" x="-409" y="-13"/>
-          </canvas>
-        </imgdir>
-      </imgdir>
-      <imgdir name="btTypeA">
-        <imgdir name="disabled">
-          <canvas name="0" width="397" height="104">
-            <string name="_inlink" value="KeyConfig/KeyType/btTypeA/normal/0"/>
-            <vector name="origin" x="-22" y="-70"/>
-          </canvas>
-        </imgdir>
-        <imgdir name="mouseOver">
-          <canvas name="0" width="397" height="104">
-            <string name="_hash" value="e542826fac614e9a1d19799794c02bf04308211f24826efa40d9cfbf1404f42d"/>
-            <vector name="origin" x="-22" y="-70"/>
-          </canvas>
-        </imgdir>
-        <imgdir name="normal">
-          <canvas name="0" width="397" height="104">
-            <string name="_hash" value="0815d4d691506f370b82ed138b5ad34f916c23f60f5a4c1c1d5f0c0fac8aa499"/>
-            <vector name="origin" x="-22" y="-70"/>
-          </canvas>
-        </imgdir>
-        <imgdir name="pressed">
-          <canvas name="0" width="397" height="104">
-            <string name="_hash" value="f466638427bf7766272d94b5bad48f2de5cef73e20c0656591dd7a580bdbff3f"/>
-            <vector name="origin" x="-22" y="-70"/>
-          </canvas>
-        </imgdir>
-      </imgdir>
-      <imgdir name="btTypeB">
-        <imgdir name="disabled">
-          <canvas name="0" width="397" height="104">
-            <string name="_inlink" value="KeyConfig/KeyType/btTypeB/normal/0"/>
-            <vector name="origin" x="-22" y="-183"/>
-          </canvas>
-        </imgdir>
-        <imgdir name="mouseOver">
-          <canvas name="0" width="400" height="107">
-            <string name="_hash" value="8f586c65a05bed49226829b279d8ef54de5977a309201bf39e45ca53b2c4ef82"/>
-            <vector name="origin" x="-22" y="-183"/>
-          </canvas>
-        </imgdir>
-        <imgdir name="normal">
-          <canvas name="0" width="397" height="104">
-            <string name="_hash" value="fd97c485071982d82544507890766f136423a86dff65f2a820f5e0b24d7f6c02"/>
-            <vector name="origin" x="-22" y="-183"/>
-          </canvas>
-        </imgdir>
-        <imgdir name="pressed">
-          <canvas name="0" width="397" height="104">
-            <string name="_hash" value="876bebef22cae6c27a77796cf497007040fc5a181f39975691d85c50fb8f265b"/>
-            <vector name="origin" x="-22" y="-183"/>
-          </canvas>
-        </imgdir>
       </imgdir>
     </imgdir>
     <canvas name="backgrnd" width="622" height="374">
