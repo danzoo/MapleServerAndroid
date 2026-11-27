@@ -327,9 +327,9 @@ public class Character extends AbstractCharacterObject {
         savedLocations = new SavedLocation[SavedLocationType.values().length];
 
         for (InventoryType type : InventoryType.values()) {
-            byte b = 24;
+            byte b = 42;
             if (type == InventoryType.CASH) {
-                b = 96;
+                b = 126;
             }
             inventory[type.ordinal()] = new Inventory(this, type, b);
         }
@@ -394,10 +394,10 @@ public class Character extends AbstractCharacterObject {
         ret.accountid = c.getAccID();
         ret.buddylist = new BuddyList(20);
         ret.maplemount = null;
-        ret.getInventory(InventoryType.EQUIP).setSlotLimit(24);
-        ret.getInventory(InventoryType.USE).setSlotLimit(24);
-        ret.getInventory(InventoryType.SETUP).setSlotLimit(24);
-        ret.getInventory(InventoryType.ETC).setSlotLimit(24);
+        ret.getInventory(InventoryType.EQUIP).setSlotLimit(42);
+        ret.getInventory(InventoryType.USE).setSlotLimit(42);
+        ret.getInventory(InventoryType.SETUP).setSlotLimit(42);
+        ret.getInventory(InventoryType.ETC).setSlotLimit(42);
 
         // Select a keybinding method
         int[] selectedKey;
@@ -9558,7 +9558,7 @@ public class Character extends AbstractCharacterObject {
     }
 
     public byte getSlots(int type) {
-        return type == InventoryType.CASH.getType() ? 96 : inventory[type].getSlotLimit();
+        return type == InventoryType.CASH.getType() ? 126 : inventory[type].getSlotLimit();
     }
 
     public boolean canGainSlots(int type, int slots) {
