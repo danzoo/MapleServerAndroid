@@ -72,7 +72,9 @@ public final class ScrollHandler extends AbstractPacketHandler {
                 }
                 byte oldLevel = toScroll.getLevel();
                 byte oldSlots = toScroll.getUpgradeSlots();
-                Inventory useInventory = chr.getInventory(InventoryType.USE);
+                // Scrolls (204xxxx/234xxxx, incl. white scroll 2340000) live in the dedicated
+                // SCROLL inventory now, not USE; the client sends the slot within that tab.
+                Inventory useInventory = chr.getInventory(InventoryType.SCROLL);
                 Item scroll = useInventory.getItem(scrollSlot);
                 Item wscroll = null;
 

@@ -1004,12 +1004,12 @@ public class EventInstanceManager {
         }
     }
 
-    private byte getRewardListRequirements(int level) {
+    private int getRewardListRequirements(int level) {
         if (level >= collectionSet.size()) {
             return 0;
         }
 
-        byte rewardTypes = 0;
+        int rewardTypes = 0;
         List<Integer> list = collectionSet.get(level);
 
         for (Integer itemId : list) {
@@ -1020,10 +1020,13 @@ public class EventInstanceManager {
     }
 
     private boolean hasRewardSlot(Character player, int eventLevel) {
-        byte listReq = getRewardListRequirements(eventLevel);   //gets all types of items present in the event reward list
+        int listReq = getRewardListRequirements(eventLevel);   //gets all types of items present in the event reward list
 
-        //iterating over all valid inventory types
-        for (byte type = 1; type <= 5; type++) {
+        //iterating over all valid inventory types (skip CANHOLD=6; include custom SCROLL=7/ORE=8)
+        for (byte type = 1; type <= 8; type++) {
+            if (type == 6) {
+                continue;
+            }
             if ((listReq >> type) % 2 == 1 && !player.hasEmptySlot(type)) {
                 return false;
             }

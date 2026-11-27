@@ -297,7 +297,8 @@ public final class InventorySortHandler extends AbstractPacketHandler {
         }
 
         byte invType = p.readByte();
-        if (invType < 1 || invType > 5) {
+        // Allow the 5 standard inventories plus the custom SCROLL(7)/ORE(8) tabs; reject CANHOLD(6).
+        if (!((invType >= 1 && invType <= 5) || invType == 7 || invType == 8)) {
             c.disconnect(false, false);
             return;
         }

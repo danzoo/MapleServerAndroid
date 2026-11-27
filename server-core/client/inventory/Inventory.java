@@ -534,8 +534,9 @@ public class Inventory implements Iterable<Item> {
     }
 
     public static boolean checkSpotsAndOwnership(Character chr, List<Pair<Item, InventoryType>> items, boolean useProofInv) {
-        List<Integer> zeroedList = new ArrayList<>(5);
-        for (byte i = 0; i < 5; i++) {
+        int invTypesSize = InventoryType.values().length;
+        List<Integer> zeroedList = new ArrayList<>(invTypesSize);
+        for (byte i = 0; i < invTypesSize; i++) {
             zeroedList.add(0);
         }
 

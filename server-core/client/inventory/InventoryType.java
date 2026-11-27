@@ -32,6 +32,8 @@ public enum InventoryType {
     ETC(4),
     CASH(5),
     CANHOLD(6),   //Proof-guard for inserting after removal checks
+    SCROLL(7),    //Custom: dedicated tab for upgrade/blessing scrolls (204xxxx, 234xxxx)
+    ORE(8),       //Custom: dedicated tab for minerals/gems/mother-ores
     EQUIPPED(-1); //Seems nexon screwed something when removing an item T_T
 
     final byte type;

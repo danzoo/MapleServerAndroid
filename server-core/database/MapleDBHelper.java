@@ -33,6 +33,24 @@ public class MapleDBHelper extends SQLiteOpenHelper {
                 throw new Error("ErrorCopyingDataBase");
             }
         }
+        migrateInventoryTypes();
+    }
+
+    // Idempotent migration for the dedicated scroll/ore inventories: move pre-existing scrolls
+    // (USE, type 2) and ores (ETC, type 4) into SCROLL(7)/ORE(8). Runs on every start but matches
+    // nothing once applied, so it is safe to repeat. The desktop SQLiteOpenHelper shim never calls
+    // onUpgrade, so the migration must be driven from here instead of a version bump.
+    private void migrateInventoryTypes() {
+        SQLiteDatabase db = getWritableDatabase();
+        db.execSQL("UPDATE inventoryitems SET inventorytype = 7 WHERE inventorytype = 2 "
+            + "AND (itemid / 10000 = 204 OR itemid / 10000 = 234)");
+        db.execSQL("UPDATE inventoryitems SET inventorytype = 8 WHERE inventorytype = 4 AND ("
+            + "(itemid BETWEEN 4004000 AND 4004004) OR "
+            + "(itemid BETWEEN 4010000 AND 4010007) OR "
+            + "(itemid BETWEEN 4011000 AND 4011008) OR "
+            + "(itemid BETWEEN 4020000 AND 4020008) OR "
+            + "(itemid BETWEEN 4021000 AND 4021008) OR "
+            + "itemid IN (4001018, 4001154, 4001197))");
     }
 
     private boolean checkDataBase() {

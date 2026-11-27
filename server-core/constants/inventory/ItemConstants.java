@@ -184,13 +184,35 @@ public final class ItemConstants {
 
         InventoryType ret = InventoryType.UNDEFINED;
 
-        final byte type = (byte) (itemId / 1000000);
-        if (type >= 1 && type <= 5) {
-            ret = InventoryType.getByType(type);
+        if (isScrollItem(itemId)) {
+            ret = InventoryType.SCROLL;
+        } else if (isOreItem(itemId)) {
+            ret = InventoryType.ORE;
+        } else {
+            final byte type = (byte) (itemId / 1000000);
+            if (type >= 1 && type <= 5) {
+                ret = InventoryType.getByType(type);
+            }
         }
 
         inventoryTypeCache.put(itemId, ret);
         return ret;
+    }
+
+    // Custom dedicated inventories. Scrolls and ores are subsets of USE/ETC by id prefix, so they
+    // must be matched before the generic itemId/1000000 routing below.
+    public static boolean isScrollItem(final int itemId) {
+        final int prefix = itemId / 10000;
+        return prefix == 204 || prefix == 234;   // upgrade scrolls + blessing scroll
+    }
+
+    public static boolean isOreItem(final int itemId) {
+        return (itemId >= 4004000 && itemId <= 4004004)   // attribute mother-ores
+            || (itemId >= 4010000 && itemId <= 4010007)   // mineral mother-ores
+            || (itemId >= 4011000 && itemId <= 4011008)   // refined minerals
+            || (itemId >= 4020000 && itemId <= 4020008)   // gem mother-ores (excl. 4020009 time fragment)
+            || (itemId >= 4021000 && itemId <= 4021008)   // refined gems (excl. 4021009/4021010)
+            || itemId == 4001018 || itemId == 4001154 || itemId == 4001197;  // scattered ores
     }
 
     public static boolean isMakerReagent(int itemId) {

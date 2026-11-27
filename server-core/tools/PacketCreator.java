@@ -454,6 +454,9 @@ public class PacketCreator {
         for (byte i = 1; i <= 5; i++) {
             p.writeByte(chr.getInventory(InventoryType.getByType(i)).getSlotLimit());
         }
+        // Custom dedicated inventories; the client reads these two limits right after CASH.
+        p.writeByte(chr.getInventory(InventoryType.SCROLL).getSlotLimit());
+        p.writeByte(chr.getInventory(InventoryType.ORE).getSlotLimit());
         p.writeLong(getTime(-2));
         Inventory iv = chr.getInventory(InventoryType.EQUIPPED);
         Collection<Item> equippedC = iv.list();
@@ -487,6 +490,14 @@ public class PacketCreator {
         }
         p.writeByte(0);
         for (Item item : chr.getInventory(InventoryType.ETC).list()) {
+            addItemInfo(p, item);
+        }
+        p.writeByte(0);
+        for (Item item : chr.getInventory(InventoryType.SCROLL).list()) {
+            addItemInfo(p, item);
+        }
+        p.writeByte(0);
+        for (Item item : chr.getInventory(InventoryType.ORE).list()) {
             addItemInfo(p, item);
         }
         p.writeByte(0);
