@@ -39615,34 +39615,34 @@
     </imgdir>
     <imgdir name="BtGather3">
       <imgdir name="disabled">
-        <canvas name="0" width="16" height="16">
+        <canvas name="0" width="32" height="32">
           <string name="_hash" value="0cb69fc29b2b1593a3827f15f5332bb8067cd6c6700c508efbf922df32f9ea1e"/>
           <string name="_outlink" value="UI/UIWindowBT.img/CharacterUI/Item/BtGather/disabled/0"/>
-          <vector name="origin" x="-130" y="-267"/>
+          <vector name="origin" x="-237" y="-294"/>
           <int name="z" value="3"/>
         </canvas>
       </imgdir>
       <imgdir name="mouseOver">
-        <canvas name="0" width="16" height="16">
+        <canvas name="0" width="32" height="32">
           <string name="_hash" value="ff6aee1cf69ba7baa6cfdf9c5eb0090b1fe2c5c861e9684bbbc5bca3fb14f5ea"/>
           <string name="_outlink" value="UI/UIWindowBT.img/CharacterUI/Item/BtGather/mouseOver/0"/>
-          <vector name="origin" x="-130" y="-267"/>
+          <vector name="origin" x="-237" y="-294"/>
           <int name="z" value="3"/>
         </canvas>
       </imgdir>
       <imgdir name="normal">
-        <canvas name="0" width="16" height="16">
+        <canvas name="0" width="32" height="32">
           <string name="_hash" value="64d08b7a71d7447f1c06715355950a783412b40c700b78d2bce22582eac76f7f"/>
           <string name="_outlink" value="UI/UIWindowBT.img/CharacterUI/Item/BtGather/normal/0"/>
-          <vector name="origin" x="-130" y="-267"/>
+          <vector name="origin" x="-237" y="-294"/>
           <int name="z" value="3"/>
         </canvas>
       </imgdir>
       <imgdir name="pressed">
-        <canvas name="0" width="16" height="16">
+        <canvas name="0" width="32" height="32">
           <string name="_hash" value="72aab8fcd4981dc591877afd5338afa6d4508392b1189c78da60bd5b3e3bc53d"/>
           <string name="_outlink" value="UI/UIWindowBT.img/CharacterUI/Item/BtGather/pressed/0"/>
-          <vector name="origin" x="-130" y="-267"/>
+          <vector name="origin" x="-237" y="-294"/>
           <int name="z" value="3"/>
         </canvas>
       </imgdir>
@@ -39681,28 +39681,28 @@
       <imgdir name="disabled">
         <canvas name="0" width="82" height="16">
           <string name="_hash" value="8b9d53600c29056a2f756ffe97e42991276651e8bfc536efa0d69d6e00f68a61"/>
-          <vector name="origin" x="-9" y="-285"/>
+          <vector name="origin" x="-9" y="-284"/>
           <int name="z" value="2"/>
         </canvas>
       </imgdir>
       <imgdir name="mouseOver">
         <canvas name="0" width="82" height="16">
           <string name="_hash" value="d0aedc7accfa8382d04588cabfdee30f96ed85c8d57721d6ad0bfeae459acbd3"/>
-          <vector name="origin" x="-9" y="-285"/>
+          <vector name="origin" x="-9" y="-284"/>
           <int name="z" value="2"/>
         </canvas>
       </imgdir>
       <imgdir name="normal">
         <canvas name="0" width="82" height="16">
           <string name="_hash" value="c56f0454793139ddac4d68810014ed89881f4dd7b53cc6f5b9ef5c9742633b6f"/>
-          <vector name="origin" x="-9" y="-285"/>
+          <vector name="origin" x="-9" y="-284"/>
           <int name="z" value="2"/>
         </canvas>
       </imgdir>
       <imgdir name="pressed">
         <canvas name="0" width="82" height="16">
           <string name="_hash" value="95a364e9f6c7862f76b990b0af0f1a962bcb845f6791c5249bd2bf4d7bed609c"/>
-          <vector name="origin" x="-9" y="-285"/>
+          <vector name="origin" x="-9" y="-284"/>
           <int name="z" value="2"/>
         </canvas>
       </imgdir>
@@ -39866,33 +39866,33 @@
     </imgdir>
     <imgdir name="BtSort3">
       <imgdir name="disabled">
-        <canvas name="0" width="16" height="16">
+        <canvas name="0" width="32" height="32">
           <string name="_hash" value="b8b205c2ca8970a5b818c3f9b1ecef519a0996e96db752f5cdefd7cd7f3b3b7f"/>
           <string name="_outlink" value="UI/UIWindowBT.img/CharacterUI/Item/BtSort/disabled/0"/>
-          <vector name="origin" x="-130" y="-267"/>
+          <vector name="origin" x="-237" y="-294"/>
           <int name="z" value="3"/>
         </canvas>
       </imgdir>
       <imgdir name="mouseOver">
-        <canvas name="0" width="16" height="16">
+        <canvas name="0" width="32" height="32">
           <string name="_outlink" value="UI/UIWindowBT.img/CharacterUI/Item/BtSort/disabled/0"/>
-          <vector name="origin" x="-130" y="-267"/>
+          <vector name="origin" x="-237" y="-294"/>
           <int name="z" value="3"/>
         </canvas>
       </imgdir>
       <imgdir name="normal">
-        <canvas name="0" width="16" height="16">
+        <canvas name="0" width="32" height="32">
           <string name="_hash" value="f0f6c4fdb72dd60329899d997265fb9236f89e5805106ed70c68ea149f2477d5"/>
           <string name="_outlink" value="UI/UIWindowBT.img/CharacterUI/Item/BtSort/normal/0"/>
-          <vector name="origin" x="-130" y="-267"/>
+          <vector name="origin" x="-237" y="-294"/>
           <int name="z" value="3"/>
         </canvas>
       </imgdir>
       <imgdir name="pressed">
-        <canvas name="0" width="16" height="16">
+        <canvas name="0" width="32" height="32">
           <string name="_hash" value="16f618ec1ed3a67d9c2687c931f2e2824f044a647d422b82987d34cce4d3828e"/>
           <string name="_outlink" value="UI/UIWindowBT.img/CharacterUI/Item/BtSort/pressed/0"/>
-          <vector name="origin" x="-130" y="-267"/>
+          <vector name="origin" x="-237" y="-294"/>
           <int name="z" value="3"/>
         </canvas>
       </imgdir>
